@@ -19,7 +19,7 @@ const FeatureMovies = () => {
     }, []);
 
     return (
-        <div className="relative text-white">
+        <div className="relative text-white hidden">
             <Movie movies={movies} />
         </div>
     );
