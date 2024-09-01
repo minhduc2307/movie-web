@@ -7,7 +7,7 @@ const Header = () => {
 
     return (
         <div>
-            <header className="relative flex justify-between bg-slate-950 px-8 py-5 font-medium text-white">
+            <header className="relative flex justify-between bg-slate-950 px-5 py-5 font-medium text-white lg:px-8">
                 <button className="lg:hidden">
                     <img
                         src="/more.svg"

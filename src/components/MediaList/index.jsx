@@ -27,15 +27,17 @@ const MediaList = ({ title, tabs }) => {
     }, [currentTabId, tabs]);
 
     return (
-        <div className="px-8 bg-[#292e39] text-white text-[1.2vw] py-10">
-            <div className="flex items-center gap-5 mb-6">
-                <h2 className="text-[2vw] font-bold">{title}</h2>
-                <ul className="flex border border-white rounded-md">
+        <div className="bg-[#292e39] px-5 py-10 text-white lg:px-8">
+            <div className="mb-6 flex items-center gap-5">
+                <h2 className="text-xl font-bold lg:text-3xl">{title}</h2>
+                <ul className="flex rounded-md border border-white">
                     {tabs.map((tab) => (
                         <li
                             key={tab.id}
-                            className={` cursor-pointer px-6 py-1 rounded-md ${
-                                tab.id === currentTabId ? "text-black bg-white" : "text-[#9e9da8]"
+                            className={`cursor-pointer rounded-md px-3 py-1 md:px-6 lg:px-6 lg:py-2 ${
+                                tab.id === currentTabId
+                                    ? "bg-white text-black"
+                                    : "text-[#9e9da8]"
                             }`}
                             onClick={() => {
                                 setCurrentTabId(tab.id);
@@ -46,7 +48,7 @@ const MediaList = ({ title, tabs }) => {
                     ))}
                 </ul>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-7">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-6">
                 {mediaList.map((media) => (
                     <MovieCard
                         key={media.id}

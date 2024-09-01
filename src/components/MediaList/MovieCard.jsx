@@ -1,23 +1,23 @@
 const MovieCard = ({ mediaType, backdropPath, title, releaseDate, point }) => {
     const starRating = Math.round(point) / 2;
     return (
-        <article className="p-3 rounded-2xl bg-[#171c28] shadow-xl shadow-slate-700 flex flex-col">
-            <div className="relative pt-[100%] overflow-hidden">
+        <article className="flex flex-col rounded-2xl bg-[#171c28] p-3 shadow-xl shadow-slate-700">
+            <div className="relative overflow-hidden pt-[100%]">
                 {mediaType === "tv" && (
-                    <p className="absolute top-0 left-0 text-white bg-[#a3765d] p-1 font-medium shadow-lg rounded-lg">
+                    <p className="absolute left-0 top-0 rounded-lg bg-[#a3765d] p-1 font-medium text-white shadow-lg">
                         TV Show
                     </p>
                 )}
                 <img
                     src={`https://image.tmdb.org/t/p/w500${backdropPath}`}
                     alt=""
-                    className="absolute top-0 left-0 w-full h-full object-contain hover:scale-110 ease-in duration-200"
+                    className="absolute left-0 top-0 h-full w-full object-contain lg:duration-200 lg:ease-in lg:hover:scale-110"
                 />
             </div>
-            <h3 className="mt-1 mb-4 font-semibold">{title}</h3>
-            <div className="flex items-center mt-auto">
-                <p>{releaseDate}</p>
-                <span className="ml-auto mr-1">{starRating}</span>
+            <h3 className="mb-4 font-semibold lg:text-xl">{title}</h3>
+            <div className="mt-auto flex items-center">
+                <p className="lg:text-lg">{releaseDate}</p>
+                <span className="ml-auto mr-1 lg:text-lg">{starRating}</span>
                 <img src="star.svg" alt="" />
             </div>
         </article>
