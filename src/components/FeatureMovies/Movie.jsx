@@ -17,22 +17,28 @@ const Movie = (props) => {
                     <img
                         src={`https://image.tmdb.org/t/p/original${movie?.backdrop_path}`}
                         alt=""
-                        className="aspect-video brightness-50 w-full h-custom object-cover"
+                        className="aspect-video h-custom w-full object-cover brightness-50"
                     />
                     <div className="absolute bottom-[15%] left-8 w-1/2 sm:w-1/3">
                         <div>
-                            <h3 className="font-bold sm:text-[2vw] mb-2">{movie.original_title}</h3>
+                            <h3 className="mb-2 font-bold sm:text-[2vw]">
+                                {movie.original_title}
+                            </h3>
                             <div className="flex items-center gap-4 text-[1.2vw]">
-                                <p className="text-gray-400 border border-[#d2d1d6] inline-block p-2">18+</p>
-                                <p className="">{movie?.release_date}</p>
+                                <p className="inline-block border border-[#d2d1d6] p-2 text-gray-400">
+                                    18+
+                                </p>
+                                <p>{movie?.release_date}</p>
                             </div>
                         </div>
                         <div>
-                            <div className="hidden sm:block text-[1.2vw] mt-5">
-                                <p className="font-bold mb-2 text-[1.3vw]">Overview</p>
+                            <div className="mt-5 hidden text-[1.2vw] sm:block">
+                                <p className="mb-2 text-[1.3vw] font-bold">
+                                    Overview
+                                </p>
                                 <p>{movie?.overview}</p>
                             </div>
-                            <button className="mt-4 bg-slate-300/30 rounded py-2 px-4 text-[10px] lg:text-lg">
+                            <button className="mt-4 rounded bg-slate-300/30 px-4 py-2 text-[10px] lg:text-lg">
                                 Thông tin
                             </button>
                         </div>

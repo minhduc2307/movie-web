@@ -16,7 +16,6 @@ const Footer = () => {
                             href="/"
                             className="text-3xl font-bold uppercase text-red-500"
                         >
-                            {" "}
                             Mọt phim
                         </a>
                     </h2>
