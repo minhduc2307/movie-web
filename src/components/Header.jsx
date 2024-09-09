@@ -1,6 +1,7 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
     const [showMenuDrawer, setShowMenuDrawer] = useState(false);
@@ -20,7 +21,7 @@ const Header = () => {
                 </button>
                 <div className="flex items-center">
                     <h1 className="text-lg font-bold uppercase text-red-500 md:text-3xl">
-                        <a href="/">Mọt phim</a>
+                        <Link to="/">Mọt phim</Link>
                     </h1>
                     <nav
                         className={`-translate-x-full lg:mx-6 lg:translate-x-0 ${showMenuDrawer ? "fixed bottom-0 left-0 right-1/4 top-0 z-10 !block translate-x-0 bg-[#292e39] py-5 shadow-lg shadow-[#171c2866] transition-transform duration-500" : ""}`}
