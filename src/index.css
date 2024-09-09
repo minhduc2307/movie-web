@@ -4,7 +4,9 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-BoldItalic.woff2") format("woff2"), url("./fonts/Gordita-BoldItalic.woff") format("woff");
+    src:
+        url("/fonts/Gordita-BoldItalic.woff2") format("woff2"),
+        url("/fonts/Gordita-BoldItalic.woff") format("woff");
     font-weight: bold;
     font-style: italic;
     font-display: swap;
@@ -12,7 +14,9 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-Light.woff2") format("woff2"), url("./fonts/Gordita-Light.woff") format("woff");
+    src:
+        url("/fonts/Gordita-Light.woff2") format("woff2"),
+        url("/fonts/Gordita-Light.woff") format("woff");
     font-weight: 300;
     font-style: normal;
     font-display: swap;
@@ -20,7 +24,9 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-Bold.woff2") format("woff2"), url("./fonts/Gordita-Bold.woff") format("woff");
+    src:
+        url("/fonts/Gordita-Bold.woff2") format("woff2"),
+        url("/fonts/Gordita-Bold.woff") format("woff");
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -28,7 +34,9 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-Black.woff2") format("woff2"), url("./fonts/Gordita-Black.woff") format("woff");
+    src:
+        url("/fonts/Gordita-Black.woff2") format("woff2"),
+        url("/fonts/Gordita-Black.woff") format("woff");
     font-weight: 900;
     font-style: normal;
     font-display: swap;
@@ -36,8 +44,9 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-MediumItalic.woff2") format("woff2"),
-        url("./fonts/Gordita-MediumItalic.woff") format("woff");
+    src:
+        url("/fonts/Gordita-MediumItalic.woff2") format("woff2"),
+        url("/fonts/Gordita-MediumItalic.woff") format("woff");
     font-weight: 500;
     font-style: italic;
     font-display: swap;
@@ -45,8 +54,9 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-BlackItalic.woff2") format("woff2"),
-        url("./fonts/Gordita-BlackItalic.woff") format("woff");
+    src:
+        url("/fonts/Gordita-BlackItalic.woff2") format("woff2"),
+        url("/fonts/Gordita-BlackItalic.woff") format("woff");
     font-weight: 900;
     font-style: italic;
     font-display: swap;
@@ -54,7 +64,9 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-Medium.woff2") format("woff2"), url("./fonts/Gordita-Medium.woff") format("woff");
+    src:
+        url("/fonts/Gordita-Medium.woff2") format("woff2"),
+        url("/fonts/Gordita-Medium.woff") format("woff");
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -62,8 +74,9 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-LightItalic.woff2") format("woff2"),
-        url("./fonts/Gordita-LightItalic.woff") format("woff");
+    src:
+        url("/fonts/Gordita-LightItalic.woff2") format("woff2"),
+        url("/fonts/Gordita-LightItalic.woff") format("woff");
     font-weight: 300;
     font-style: italic;
     font-display: swap;
@@ -71,7 +84,9 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-Italic.woff2") format("woff2"), url("./fonts/Gordita-Italic.woff") format("woff");
+    src:
+        url("/fonts/Gordita-Italic.woff2") format("woff2"),
+        url("/fonts/Gordita-Italic.woff") format("woff");
     font-weight: normal;
     font-style: italic;
     font-display: swap;
@@ -79,14 +94,28 @@
 
 @font-face {
     font-family: "Gordita";
-    src: url("./fonts/Gordita-Regular.woff2") format("woff2"), url("./fonts/Gordita-Regular.woff") format("woff");
+    src:
+        url("/fonts/Gordita-Regular.woff2") format("woff2"),
+        url("/fonts/Gordita-Regular.woff") format("woff");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
 body {
-    font-family: Gordita, sans-serif;
+    /* font-family: Gordita, sans-serif; */
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        "Open Sans",
+        "Helvetica Neue",
+        sans-serif;
 }
 
 /* Reset CSS */
@@ -133,6 +162,6 @@ input:-webkit-autofill:hover {
 
 @layer components {
     .container {
-      @apply mx-auto flex max-w-screen-xl gap-6 px-6 py-10 sm:gap-8;
+        @apply mx-auto flex max-w-screen-xl gap-6 px-6 py-10 sm:gap-8;
     }
-  }
+}
