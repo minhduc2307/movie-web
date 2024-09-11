@@ -31,31 +31,32 @@ export const Banner = ({ mediaInfo }) => {
             <img
                 src={`https://image.tmdb.org/t/p/original${mediaInfo.backdrop_path}`}
                 alt=""
-                className="absolute inset-0 w-full object-cover brightness-[0.1]"
+                className="absolute inset-0 hidden w-full object-cover brightness-[0.1] xl:block"
             />
-            <div className="relative mx-auto flex max-w-screen-xl gap-6 px-6 py-10 lg:gap-8">
-                <figure className="flex-1">
+            <div className="absolute inset-0 bg-black xl:hidden"></div>
+            <div className="relative mx-auto flex max-w-screen-xl flex-col gap-6 px-6 py-10 lg:flex-row lg:gap-8">
+                <figure className="flex flex-1 justify-center">
                     <img
                         src={`https://media.themoviedb.org/t/p/w600_and_h900_bestv2${mediaInfo.poster_path}`}
                         alt=""
                         className="rounded-xl object-cover"
                     />
                 </figure>
-                <div className="h-96 flex-[2] text-white">
-                    <div className="flex items-center justify-between">
+                <div className="flex-[2] text-white">
+                    <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center">
                         <h1 className="text-3xl font-bold">
                             {mediaInfo.title}
                         </h1>
-                        <button className="flex items-center justify-center gap-2 rounded-full bg-[#ff0000] px-4 py-3 text-base">
+                        <button className="mt-4 flex items-center justify-center gap-2 rounded-full bg-[#ff0000] px-4 py-3 text-base lg:mt-0">
                             <img src="/add.svg" alt="" />
                             Thêm vào yêu thích
                         </button>
                     </div>
-                    <div className="mt-10 flex items-center">
+                    <div className="mt-10 flex flex-col items-start lg:flex-row lg:items-center">
                         <span className="border border-slate-400 p-1 text-gray-400">
                             {certification}
                         </span>
-                        <ul className="ml-3 flex flex-wrap gap-2">
+                        <ul className="mt-4 flex flex-wrap gap-2 lg:ml-3 lg:mt-0">
                             {(mediaInfo.genres || []).map((genre) => (
                                 <li
                                     key={genre.id}
@@ -80,51 +81,65 @@ export const Banner = ({ mediaInfo }) => {
                             Xem ngay
                         </button>
                     </div>
-                    <p className="mt-4 text-lg lg:text-xl">
-                        {mediaInfo.overview}
-                    </p>
-                    <div className="mt-6 space-y-2">
-                        <div className="flex gap-2">
-                            <p className="font-medium">Thể loại:</p>
-                            <p>
-                                {(mediaInfo.genres || [])
-                                    .map((genre) => genre.name)
-                                    .join(", ")}
-                            </p>
-                        </div>
-                        <div className="flex gap-2">
-                            <p className="font-medium">Ngày phát hành:</p>
-                            <p>{mediaInfo.release_date}</p>
-                        </div>
-                        <div className="flex gap-2">
-                            <p className="font-medium">Ngân sách:</p>
-                            <p>{formatCurrency(mediaInfo.budget)}</p>
-                        </div>
-                        <div className="flex gap-2">
-                            <p className="font-medium">Doanh thu:</p>
-                            <p>{formatCurrency(mediaInfo.revenue)}</p>
-                        </div>
-                        {groupedCrews["Director"] && (
+                    <div className="flex flex-col">
+                        <p className="order-2 mt-4 text-lg lg:order-1 lg:text-xl">
+                            {mediaInfo.overview}
+                        </p>
+                        <div className="order-1 mt-6 space-y-2 lg:order-2">
                             <div className="flex gap-2">
-                                <p className="font-medium">Đạo diễn:</p>
-                                <p>
-                                    {(groupedCrews["Director"] || []).map(
-                                        (crew) => crew.name,
-                                    )}
+                                <p className="flex-shrink-0 font-medium">
+                                    Thể loại:
                                 </p>
-                            </div>
-                        )}
-                        {groupedCrews["Writer"] && (
-                            <div className="flex gap-2">
-                                <p className="font-medium">Kịch bản:</p>
                                 <p>
-                                    {" "}
-                                    {(groupedCrews["Writer"] || [])
-                                        .map((crew) => crew.name)
+                                    {(mediaInfo.genres || [])
+                                        .map((genre) => genre.name)
                                         .join(", ")}
                                 </p>
                             </div>
-                        )}
+                            <div className="flex gap-2">
+                                <p className="flex-shrink-0 font-medium">
+                                    Ngày phát hành:
+                                </p>
+                                <p>{mediaInfo.release_date}</p>
+                            </div>
+                            <div className="flex gap-2">
+                                <p className="flex-shrink-0 font-medium">
+                                    Ngân sách:
+                                </p>
+                                <p>{formatCurrency(mediaInfo.budget)}</p>
+                            </div>
+                            <div className="flex gap-2">
+                                <p className="flex-shrink-0 font-medium">
+                                    Doanh thu:
+                                </p>
+                                <p>{formatCurrency(mediaInfo.revenue)}</p>
+                            </div>
+                            {groupedCrews["Director"] && (
+                                <div className="flex gap-2">
+                                    <p className="flex-shrink-0 font-medium">
+                                        Đạo diễn:
+                                    </p>
+                                    <p>
+                                        {(groupedCrews["Director"] || []).map(
+                                            (crew) => crew.name,
+                                        )}
+                                    </p>
+                                </div>
+                            )}
+                            {groupedCrews["Writer"] && (
+                                <div className="flex gap-2">
+                                    <p className="flex-shrink-0 font-medium">
+                                        Kịch bản:
+                                    </p>
+                                    <p>
+                                        {" "}
+                                        {(groupedCrews["Writer"] || [])
+                                            .map((crew) => crew.name)
+                                            .join(", ")}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
