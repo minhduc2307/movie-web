@@ -5,7 +5,7 @@ const ActorList = ({ actors }) => {
     const [isShowMore, setIsShowMore] = useState(false);
 
     const currentActors = isShowMore ? actors.slice(0, 30) : actors.slice(0, 6);
-    console.log(actors);
+
     return (
         <div>
             <h2 className="mb-4 text-xl font-bold">Danh sách diễn viên</h2>

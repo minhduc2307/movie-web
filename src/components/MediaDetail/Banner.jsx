@@ -1,6 +1,7 @@
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CircularProgressBar from "../CircularProgressBar";
+import { formatCurrency } from "../../libs/utils";
 
 export const Banner = ({ mediaInfo }) => {
     const certification = (
@@ -94,6 +95,14 @@ export const Banner = ({ mediaInfo }) => {
                         <div className="flex gap-2">
                             <p className="font-medium">Ngày phát hành:</p>
                             <p>{mediaInfo.release_date}</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <p className="font-medium">Ngân sách:</p>
+                            <p>{formatCurrency(mediaInfo.budget)}</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <p className="font-medium">Doanh thu:</p>
+                            <p>{formatCurrency(mediaInfo.revenue)}</p>
                         </div>
                         {groupedCrews["Director"] && (
                             <div className="flex gap-2">
