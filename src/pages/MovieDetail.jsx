@@ -2,12 +2,15 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Banner } from "../components/MediaDetail/Banner";
 import ActorList from "../components/MediaDetail/ActorList";
+import Spinner from "../components/Spinner";
 
 const MovieDetail = () => {
     const { id: movieId } = useParams();
     const [movieInfo, setMovieInfo] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        setIsLoading(true);
         fetch(
             `https://api.themoviedb.org/3/movie/${movieId}?language=vi&append_to_response=release_dates,credits`,
             {
@@ -17,13 +20,20 @@ const MovieDetail = () => {
                     Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
                 },
             },
-        ).then(async (res) => {
-            const data = await res.json();
-            setMovieInfo(data);
-        });
+        )
+            .then(async (res) => {
+                const data = await res.json();
+                setMovieInfo(data);
+            })
+            .catch((err) => console.error(err))
+            .finally(() => {
+                setIsLoading(false);
+            });
     }, [movieId]);
 
-    console.log(movieInfo);
+    if (isLoading) {
+        return <Spinner />;
+    }
 
     return (
         <div>
