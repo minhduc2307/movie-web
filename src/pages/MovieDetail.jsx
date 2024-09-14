@@ -31,13 +31,39 @@ const MovieDetail = () => {
             });
     }, [movieId]);
 
+    const certification = (
+        (movieInfo.release_dates?.results || []).find(
+            (result) => result.iso_3166_1 === "US",
+        )?.release_dates || []
+    ).find((releaseDate) => releaseDate.certification)?.certification;
+
+    const crews = (movieInfo.credits?.crew || [])
+        .filter((crew) => ["Director", "Writer"].includes(crew.job))
+        .map((person) => ({
+            id: person.id,
+            name: person.name,
+            job: person.job,
+        }));
+
     if (isLoading) {
         return <Spinner />;
     }
 
     return (
         <div>
-            <Banner mediaInfo={movieInfo} />
+            <Banner
+                backdropPath={movieInfo.backdrop_path}
+                posterPath={movieInfo.poster_path}
+                title={movieInfo.title}
+                genres={movieInfo.genres}
+                certification={certification}
+                crews={crews}
+                point={movieInfo.vote_average}
+                overview={movieInfo.overview}
+                releaseDate={movieInfo.release_date}
+                budget={movieInfo.budget}
+                revenue={movieInfo.revenue}
+            />
             <div className="bg-[#292d38] text-white">
                 <div className="mx-auto max-w-screen-xl px-6 py-10">
                     <ActorList actors={movieInfo.credits?.cast || []} />

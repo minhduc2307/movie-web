@@ -10,7 +10,7 @@ const MovieCard = ({
 }) => {
     const starRating = Math.round(point) / 2;
     return (
-        <Link to={`/movie/${id}`}>
+        <Link to={mediaType === "tv" ? `/tv/${id}` : `/movie/${id}`}>
             <article className="flex h-full flex-col rounded-2xl bg-[#171c28] p-3 shadow-xl shadow-slate-700">
                 <div className="relative overflow-hidden pt-[100%]">
                     {mediaType === "tv" && (
