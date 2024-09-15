@@ -61,8 +61,8 @@ const MovieDetail = () => {
                 point={movieInfo.vote_average}
                 overview={movieInfo.overview}
                 releaseDate={movieInfo.release_date}
-                budget={movieInfo.budget}
-                revenue={movieInfo.revenue}
+                budget={movieInfo.budget || 0}
+                revenue={movieInfo.revenue || 0}
             />
             <div className="bg-[#292d38] text-white">
                 <div className="mx-auto max-w-screen-xl px-6 py-10">

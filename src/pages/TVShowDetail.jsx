@@ -12,7 +12,7 @@ const TVShowDetail = () => {
     useEffect(() => {
         setIsLoading(true);
         fetch(
-            `https://api.themoviedb.org/3/tv/${tvId}?language=vi&append_to_response=release_dates,credits`,
+            `https://api.themoviedb.org/3/tv/${tvId}?language=vi&append_to_response=release_dates,aggregate_credits,content_ratings`,
             {
                 method: "GET",
                 headers: {
@@ -33,6 +33,23 @@ const TVShowDetail = () => {
 
     console.log(tvInfo);
 
+    const certification = (tvInfo.content_ratings?.results || []).find(
+        (result) => result.iso_3166_1 === "US",
+    )?.rating;
+
+    const crews = (tvInfo.aggregate_credits?.crew || [])
+        .filter((crew) => {
+            return crew.jobs.every(
+                (item) => item.job === "Director" || item.job === "Writer",
+            );
+        })
+        .slice(0, 8)
+        .map((person) => ({
+            id: person.id,
+            name: person.name,
+            job: person.jobs[0].job,
+        }));
+
     if (isLoading) {
         return <Spinner />;
     }
@@ -47,10 +64,21 @@ const TVShowDetail = () => {
                 point={tvInfo.vote_average}
                 overview={tvInfo.overview}
                 releaseDate={tvInfo.first_air_date}
+                certification={certification}
+                crews={crews}
+                networks={tvInfo.networks || []}
             />
             <div className="bg-[#292d38] text-white">
                 <div className="mx-auto max-w-screen-xl px-6 py-10">
-                    <ActorList actors={tvInfo.credits?.cast || []} />
+                    <ActorList
+                        actors={(tvInfo.aggregate_credits?.cast || []).map(
+                            (cast) => ({
+                                ...cast,
+                                character: cast.roles[0].character,
+                                episodeCount: cast.roles[0].episode_count,
+                            }),
+                        )}
+                    />
                 </div>
             </div>
         </div>

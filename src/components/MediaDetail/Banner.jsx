@@ -15,6 +15,7 @@ export const Banner = ({
     releaseDate,
     budget,
     revenue,
+    networks,
 }) => {
     const groupedCrews = (crews || []).reduce((acc, curr) => {
         if (!acc[curr.job]) {
@@ -88,37 +89,55 @@ export const Banner = ({
                             <p className="font-medium">Ngày phát hành:</p>
                             <p>{releaseDate}</p>
                         </div>
-                        {budget && (
+                        {budget ? (
                             <div className="flex gap-2">
                                 <p className="font-medium">Ngân sách:</p>
                                 <p>{formatCurrency(budget)}</p>
                             </div>
-                        )}
-                        {revenue && (
+                        ) : null}
+                        {revenue ? (
                             <div className="flex gap-2">
                                 <p className="font-medium">Doanh thu:</p>
                                 <p>{formatCurrency(revenue)}</p>
                             </div>
-                        )}
+                        ) : null}
                         {groupedCrews["Director"] && (
                             <div className="flex gap-2">
-                                <p className="font-medium">Đạo diễn:</p>
+                                <p className="flex-shrink-0 font-medium">
+                                    Đạo diễn:
+                                </p>
                                 <p>
-                                    {(groupedCrews["Director"] || []).map(
-                                        (crew) => crew.name,
-                                    )}
+                                    {(groupedCrews["Director"] || [])
+                                        .map((crew) => crew.name)
+                                        .join(", ")}
                                 </p>
                             </div>
                         )}
                         {groupedCrews["Writer"] && (
                             <div className="flex gap-2">
-                                <p className="font-medium">Kịch bản:</p>
+                                <p className="flex-shrink-0 font-medium">
+                                    Kịch bản:
+                                </p>
                                 <p>
                                     {" "}
                                     {(groupedCrews["Writer"] || [])
                                         .map((crew) => crew.name)
                                         .join(", ")}
                                 </p>
+                            </div>
+                        )}
+                        {networks && (
+                            <div className="flex gap-2">
+                                <p className="flex-shrink-0 font-medium">
+                                    Kênh chiếu:
+                                </p>
+                                {networks.map((network) => (
+                                    <img
+                                        className="mr-1 invert"
+                                        key={network.id}
+                                        src={`https://media.themoviedb.org/t/p/h30${network.logo_path}`}
+                                    />
+                                ))}
                             </div>
                         )}
                     </div>
