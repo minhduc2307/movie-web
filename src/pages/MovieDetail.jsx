@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { Banner } from "../components/MediaDetail/Banner";
 import ActorList from "../components/MediaDetail/ActorList";
 import Spinner from "../components/Spinner";
+import RelatedMediaList from "../components/MediaDetail/RelatedMediaList";
 
 const MovieDetail = () => {
     const { id: movieId } = useParams();
     const [movieInfo, setMovieInfo] = useState({});
+    const [relatedMovies, setRelatedMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -29,6 +31,20 @@ const MovieDetail = () => {
             .finally(() => {
                 setIsLoading(false);
             });
+    }, [movieId]);
+
+    useEffect(() => {
+        fetch(`https://api.themoviedb.org/3/movie/${movieId}/recommendations`, {
+            method: "GET",
+            headers: {
+                accept: "application/json",
+                Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
+            },
+        }).then(async (res) => {
+            const data = await res.json();
+            const currentRelatedMovies = (data.results || []).slice(0, 12);
+            setRelatedMovies(currentRelatedMovies);
+        });
     }, [movieId]);
 
     const certification = (
@@ -67,6 +83,7 @@ const MovieDetail = () => {
             <div className="bg-[#292d38] text-white">
                 <div className="mx-auto max-w-screen-xl px-6 py-10">
                     <ActorList actors={movieInfo.credits?.cast || []} />
+                    <RelatedMediaList mediaList={relatedMovies} />
                 </div>
             </div>
         </div>
