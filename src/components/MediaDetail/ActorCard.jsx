@@ -1,4 +1,4 @@
-const ActorCard = ({ name, character, profilePath }) => {
+const ActorCard = ({ name, character, profilePath, episodeCount }) => {
     return (
         <article className="rounded-2xl bg-[#171c28] p-2 text-white shadow-sm">
             <div className="relative pt-[100%]">
@@ -15,6 +15,11 @@ const ActorCard = ({ name, character, profilePath }) => {
             <div className="mt-1">
                 <h3 className="font-semibold lg:text-xl">{name}</h3>
                 <p className="mt-1 text-[#7C7A7A]">{character}</p>
+                {episodeCount && (
+                    <p className="mt-1 text-[#7C7A7A]">
+                        {episodeCount} tập phim
+                    </p>
+                )}
             </div>
         </article>
     );

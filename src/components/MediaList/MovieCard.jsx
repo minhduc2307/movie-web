@@ -10,7 +10,7 @@ const MovieCard = ({
 }) => {
     const starRating = Math.round(point) / 2;
     return (
-        <Link to={`/movie/${id}`}>
+        <Link to={mediaType === "tv" ? `/tv/${id}` : `/movie/${id}`}>
             <article className="flex h-full flex-col rounded-2xl bg-[#171c28] p-3 shadow-xl shadow-slate-700">
                 <div className="relative overflow-hidden pt-[100%]">
                     {mediaType === "tv" && (
@@ -19,7 +19,11 @@ const MovieCard = ({
                         </p>
                     )}
                     <img
-                        src={`https://image.tmdb.org/t/p/w500${backdropPath}`}
+                        src={
+                            backdropPath
+                                ? `https://image.tmdb.org/t/p/w500${backdropPath}`
+                                : `/NoImage.svg`
+                        }
                         alt=""
                         className="absolute left-0 top-0 h-full w-full object-contain lg:duration-200 lg:ease-in lg:hover:scale-110"
                     />
@@ -30,7 +34,7 @@ const MovieCard = ({
                     <span className="ml-auto mr-1 lg:text-lg">
                         {starRating}
                     </span>
-                    <img src="star.svg" alt="" />
+                    <img src="/star.svg" alt="" />
                 </div>
             </article>
         </Link>
