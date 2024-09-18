@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Banner } from "../components/MediaDetail/Banner";
-import ActorList from "../components/MediaDetail/ActorList";
-import Spinner from "../components/Spinner";
+import { Banner } from "@/components/MediaDetail/Banner";
+import Spinner from "@/components/Spinner";
+import ActorList from "@/components/MediaDetail/ActorList";
 
 const TVShowDetail = () => {
     const { id: tvId } = useParams();

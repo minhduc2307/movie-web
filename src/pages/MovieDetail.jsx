@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Banner } from "../components/MediaDetail/Banner";
-import ActorList from "../components/MediaDetail/ActorList";
-import Spinner from "../components/Spinner";
-import RelatedMediaList from "../components/MediaDetail/RelatedMediaList";
+import RelatedMediaList from "@/components/MediaDetail/RelatedMediaList";
+import { Banner } from "@/components/MediaDetail/Banner";
+import Spinner from "@/components/Spinner";
+import ActorList from "@/components/MediaDetail/ActorList";
 
 const MovieDetail = () => {
     const { id: movieId } = useParams();
