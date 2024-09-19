@@ -25,16 +25,13 @@ const Movie = (props) => {
                                 {movie.original_title}
                             </h3>
                             <div className="flex items-center gap-4 text-[1.2vw]">
-                                <p className="inline-block border border-[#d2d1d6] p-2 text-gray-400">
-                                    18+
-                                </p>
                                 <p>{movie?.release_date}</p>
                             </div>
                         </div>
                         <div>
                             <div className="mt-5 hidden text-[1.2vw] sm:block">
                                 <p className="mb-2 text-[1.3vw] font-bold">
-                                    Overview
+                                    Tóm tắt
                                 </p>
                                 <p>{movie?.overview}</p>
                             </div>

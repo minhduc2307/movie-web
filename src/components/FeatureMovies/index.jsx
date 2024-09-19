@@ -5,7 +5,7 @@ const FeatureMovies = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
-        fetch("https://api.themoviedb.org/3/movie/popular", {
+        fetch("https://api.themoviedb.org/3/movie/popular?language=vi", {
             method: "GET",
             headers: {
                 accept: "application/json",
@@ -19,7 +19,7 @@ const FeatureMovies = () => {
     }, []);
 
     return (
-        <div className="relative text-white hidden">
+        <div className="relative hidden text-white md:block">
             <Movie movies={movies} />
         </div>
     );
