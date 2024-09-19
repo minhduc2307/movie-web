@@ -5,15 +5,12 @@ const FeatureMovies = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
-        fetch("https://api.themoviedb.org/3/movie/popular?language=vi", {
-            method: "GET",
-            headers: {
-                accept: "application/json",
-                Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
-            },
-        }).then(async (res) => {
-            const data = await res.json();
-            const popularMovies = data.results.slice(0, 4);
+        fetch(
+            `${import.meta.env.VITE_API_HOST2}/v1/api/danh-sach/phim-bo`,
+        ).then(async (res) => {
+            const responseData = await res.json();
+            const data = responseData?.data;
+            const popularMovies = data.items.slice(1, 6);
             setMovies(popularMovies);
         });
     }, []);
