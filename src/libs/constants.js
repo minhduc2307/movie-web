@@ -1,30 +1,18 @@
-export const TRENDING_TABS = [
+export const TABS = [
     {
-        id: "all",
-        name: "Tất cả",
-        url: "https://api.themoviedb.org/3/trending/all/day?language=vi",
+        title: "Phim lẻ đề cử",
+        url: `${import.meta.env.VITE_API_HOST2}/v1/api/danh-sach/phim-le?limit=12`,
     },
     {
-        id: "movie",
-        name: "Phim",
-        url: "https://api.themoviedb.org/3/trending/movie/day?language=vi",
+        title: "Phim bộ đề cử",
+        url: `${import.meta.env.VITE_API_HOST2}/v1/api/danh-sach/phim-bo`,
     },
     {
-        id: "tv",
-        name: "TV",
-        url: "https://api.themoviedb.org/3/trending/tv/day?language=vi",
-    },
-];
-
-export const TOP_RATED_TABS = [
-    {
-        id: "movie",
-        name: "Phim",
-        url: "https://api.themoviedb.org/3/movie/top_rated?language=vi",
+        title: "Phim hoạt hình đề cử",
+        url: `${import.meta.env.VITE_API_HOST2}/v1/api/danh-sach/hoat-hinh`,
     },
     {
-        id: "tv",
-        name: "TV",
-        url: "https://api.themoviedb.org/3/tv/top_rated?language=vi",
+        title: "TV Shows đề cử",
+        url: `${import.meta.env.VITE_API_HOST2}/v1/api/danh-sach/tv-shows`,
     },
 ];

@@ -1,13 +1,15 @@
 import FeatureMovies from "@components/FeatureMovies";
 import MediaList from "@components/MediaList";
-import { TOP_RATED_TABS, TRENDING_TABS } from "@libs/constants";
+import { TABS } from "@libs/constants";
 
 function HomePage() {
     return (
         <div>
             <FeatureMovies />
-            <MediaList title="Xếp hạng cao" tabs={TOP_RATED_TABS} />
-            <MediaList title="Thịnh hành" tabs={TRENDING_TABS} />
+            <MediaList tab={TABS[0]} />
+            <MediaList tab={TABS[1]} />
+            <MediaList tab={TABS[2]} />
+            <MediaList tab={TABS[3]} />
         </div>
     );
 }
