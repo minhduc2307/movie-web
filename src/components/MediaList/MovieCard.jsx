@@ -23,7 +23,7 @@ const MovieCard = ({ name, year, posterUrl, type, time }) => {
                 <h3 className="my-1 line-clamp-2 font-semibold lg:text-xl">
                     {name}
                 </h3>
-                <div className="flex justify-between">
+                <div className="mt-auto flex justify-between">
                     <p className="lg:text-lg">{year}</p>
                     <p className="lg:text-lg">{time}</p>
                 </div>

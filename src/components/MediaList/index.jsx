@@ -7,11 +7,13 @@ const MediaList = ({ tab }) => {
     useEffect(() => {
         const url = tab?.url;
         if (url) {
-            fetch(`${url}`).then(async (res) => {
-                const responseData = await res.json();
-                const data = responseData?.data.items;
-                setMediaList(data);
-            });
+            fetch(`${url}`)
+                .then(async (res) => {
+                    const responseData = await res.json();
+                    const data = responseData?.data.items;
+                    setMediaList(data);
+                })
+                .catch((err) => console.error(err));
         }
     }, [tab]);
 
