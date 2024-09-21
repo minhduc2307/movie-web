@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Spinner from "@/components/Spinner";
@@ -13,7 +12,7 @@ const MovieDetail = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        fetch(`${import.meta.env.VITE_API_HOST2}/phim/${slug}`)
+        fetch(`${import.meta.env.VITE_API_HOST}/phim/${slug}`)
             .then(async (res) => {
                 const data = await res.json();
                 setMovieInfo(data.movie);
@@ -72,8 +71,8 @@ const MovieDetail = () => {
                             </ul>
                         </div>
                         <div className="left-5 mt-2 flex flex-wrap items-center gap-2 sm:mt-3">
-                            <Link
-                                to={`/watch/${movieInfo.slug}`}
+                            <a
+                                href={`/watch/${movieInfo.slug}`}
                                 className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ffb700] px-5 text-[#171c28]"
                             >
                                 <FontAwesomeIcon
@@ -81,7 +80,7 @@ const MovieDetail = () => {
                                     className="text-white"
                                 />
                                 Xem ngay
-                            </Link>
+                            </a>
                             <button className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ff0000] px-5 text-base text-white">
                                 <img src="/add.svg" alt="" />
                                 Thêm vào yêu thích

@@ -8,7 +8,7 @@ const FeatureMovies = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        fetch(`${import.meta.env.VITE_API_HOST2}/v1/api/danh-sach/phim-le`)
+        fetch(`${import.meta.env.VITE_API_HOST}/v1/api/danh-sach/phim-le`)
             .then(async (res) => {
                 const responseData = await res.json();
                 const data = responseData?.data;
