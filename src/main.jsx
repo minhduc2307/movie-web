@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "@pages/Root";
 import HomePage from "@pages/HomePage";
 import MovieDetail from "@pages/MovieDetail";
-import TVShowDetail from "@pages/TVShowDetail";
+import Watch from "@pages/Watch";
 
 const router = createBrowserRouter([
     {
@@ -20,8 +20,8 @@ const router = createBrowserRouter([
                 element: <MovieDetail />,
             },
             {
-                path: "/tv/:id",
-                element: <TVShowDetail />,
+                path: "/watch/:slug",
+                element: <Watch />,
             },
         ],
     },

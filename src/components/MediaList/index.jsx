@@ -17,8 +17,6 @@ const MediaList = ({ tab }) => {
         }
     }, [tab]);
 
-    console.log(mediaList);
-
     return (
         <div className="bg-[#292e39] px-5 py-10 text-white lg:px-8">
             <h2 className="mb-2 text-xl font-bold lg:text-3xl">{tab?.title}</h2>
