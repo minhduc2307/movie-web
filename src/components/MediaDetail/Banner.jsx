@@ -1,83 +1,84 @@
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CircularProgressBar from "../CircularProgressBar";
-import { formatCurrency } from "../../libs/utils";
+import { Link } from "react-router-dom";
 
 export const Banner = ({
-    backdropPath,
-    posterPath,
-    title,
-    genres,
-    certification,
-    crews,
+    name,
+    thumbUrl,
+    posterUrl,
+    time,
     point,
-    overview,
-    releaseDate,
-    budget,
-    revenue,
-    networks,
+    genres,
+    actors,
+    directors,
+    content,
+    year,
 }) => {
-    const groupedCrews = (crews || []).reduce((acc, curr) => {
-        if (!acc[curr.job]) {
-            acc[curr.job] = [];
-        }
-        acc[curr.job].push(curr);
-        return acc;
-    }, {});
-
     return (
-        <div className="relative overflow-hidden text-lg lg:text-xl">
-            <img
-                src={`https://image.tmdb.org/t/p/original${backdropPath}`}
-                alt=""
-                className="absolute inset-0 hidden w-full object-cover brightness-[0.1] xl:block"
-            />
-            <div className="absolute inset-0 bg-black xl:hidden"></div>
-            <div className="relative mx-auto flex max-w-screen-xl flex-col gap-6 px-6 py-10 lg:flex-row lg:gap-8">
-                <figure className="flex flex-1 justify-center">
-                    <img
-                        src={`https://media.themoviedb.org/t/p/w600_and_h900_bestv2${posterPath}`}
-                        alt=""
-                        className="rounded-xl object-cover"
-                    />
-                </figure>
-                <div className="h-96 flex-[2] text-white">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-3xl font-bold">{title}</h1>
-                        <button className="flex items-center justify-center gap-2 rounded-full bg-[#ff0000] px-4 py-3 text-base">
-                            <img src="/add.svg" alt="" />
-                            Thêm vào yêu thích
-                        </button>
-                    </div>
-                    <div className="mt-10 flex flex-col items-start lg:flex-row lg:items-center">
-                        <span className="border border-slate-400 p-1 text-gray-400">
-                            {certification}
-                        </span>
-                        <ul className="ml-3 flex flex-wrap gap-2">
-                            {(genres || []).map((genre) => (
-                                <li
-                                    key={genre.id}
-                                    className="rounded-lg bg-white p-2 text-base font-medium text-black"
-                                >
-                                    {genre.name}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    <div className="mt-4 flex items-center gap-4">
-                        <div className="flex items-center gap-1">
-                            <CircularProgressBar
-                                percent={Math.round(point * 10)}
-                            />
-                            <span>Rating</span>
+        <div className="bg-[#06121d] px-5 py-3 lg:py-5">
+            <div className="mx-auto max-w-screen-xl">
+                <div className="relative py-3">
+                    <figure className="h-[450px]">
+                        <img
+                            src={thumbUrl}
+                            alt=""
+                            className="h-full w-full object-cover brightness-50"
+                        />
+                    </figure>
+                    <figure className="absolute left-5 top-5 h-[285px] w-[200px]">
+                        <img
+                            src={posterUrl}
+                            alt=""
+                            className="h-full w-full object-cover"
+                        />
+                    </figure>
+                    <div className="absolute bottom-4 left-5 sm:bottom-6 lg:bottom-8">
+                        <div className="flex items-center gap-3">
+                            {point ? (
+                                <div className="flex items-center gap-1">
+                                    <CircularProgressBar
+                                        percent={Math.round(point * 10)}
+                                    />
+                                    <span className="text-white">Rating</span>
+                                </div>
+                            ) : null}
+                            <ul className="flex flex-wrap gap-2">
+                                {(genres || []).slice(0, 2).map((genre) => (
+                                    <li
+                                        key={genre.id}
+                                        className="rounded-lg bg-white p-2 text-sm font-medium text-black"
+                                    >
+                                        {genre.name}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                        <button>
-                            <FontAwesomeIcon icon={faPlay} className="mr-2" />
-                            Xem ngay
-                        </button>
+                        <div className="left-5 mt-2 flex flex-wrap items-center gap-2 sm:mt-3">
+                            <Link className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ffb700] px-5 text-[#171c28]">
+                                <FontAwesomeIcon
+                                    icon={faPlay}
+                                    className="text-white"
+                                />
+                                Xem ngay
+                            </Link>
+                            <button className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ff0000] px-5 text-base text-white">
+                                <img src="/add.svg" alt="" />
+                                Thêm vào yêu thích
+                            </button>
+                        </div>
                     </div>
-                    <p className="mt-4 text-lg lg:text-xl">{overview}</p>
-                    <div className="mt-6 space-y-2">
+                </div>
+                <div className="mt-3 space-y-2 text-base text-white lg:text-lg">
+                    <h1 className="text-2xl font-bold lg:text-3xl">
+                        Phim: {name}
+                    </h1>
+                    <div className="flex gap-2">
+                        <p className="font-medium">Thời gian:</p>
+                        <p>{time}</p>
+                    </div>
+                    <p>Nội dung: {content}</p>
+                    <div>
                         <div className="flex gap-2">
                             <p className="font-medium">Thể loại:</p>
                             <p>
@@ -87,61 +88,26 @@ export const Banner = ({
                             </p>
                         </div>
                         <div className="flex gap-2">
-                            <p className="font-medium">Ngày phát hành:</p>
-                            <p>{releaseDate}</p>
+                            <p className="font-medium">Năm phát hành:</p>
+                            <p>{year}</p>
                         </div>
-                        {budget ? (
-                            <div className="flex gap-2">
-                                <p className="font-medium">Ngân sách:</p>
-                                <p>{formatCurrency(budget)}</p>
-                            </div>
-                        ) : null}
-                        {revenue ? (
-                            <div className="flex gap-2">
-                                <p className="font-medium">Doanh thu:</p>
-                                <p>{formatCurrency(revenue)}</p>
-                            </div>
-                        ) : null}
-                        {groupedCrews["Director"] && (
-                            <div className="flex gap-2">
-                                <p className="flex-shrink-0 font-medium">
-                                    Đạo diễn:
-                                </p>
-                                <p>
-                                    {(groupedCrews["Director"] || [])
-                                        .map((crew) => crew.name)
-                                        .join(", ")}
-                                </p>
-                            </div>
-                        )}
-                        {groupedCrews["Writer"] && (
-                            <div className="flex gap-2">
-                                <p className="flex-shrink-0 font-medium">
-                                    Kịch bản:
-                                </p>
-                                <p>
-                                    {" "}
-                                    {(groupedCrews["Writer"] || [])
-                                        .map((crew) => crew.name)
-                                        .join(", ")}
-                                </p>
-                            </div>
-                        )}
-                        {networks && (
-                            <div className="flex gap-2">
-                                <p className="flex-shrink-0 font-medium">
-                                    Kênh chiếu:
-                                </p>
-                                {networks.map((network) => (
-                                    <img
-                                        className="mr-1 invert"
-                                        key={network.id}
-                                        src={`https://media.themoviedb.org/t/p/h30${network.logo_path}`}
-                                    />
-                                ))}
-                            </div>
-                        )}
+                        <div className="flex gap-2">
+                            <p className="flex-shrink-0 font-medium">
+                                Đạo diễn:
+                            </p>
+                            <p>
+                                {(directors || [])
+                                    .map((director) => director)
+                                    .join(", ")}
+                            </p>
+                        </div>
                     </div>
+                    <p className="font-medium">Diễn viên:</p>
+                    <ul>
+                        {(actors || []).slice(0, 10).map((actor) => (
+                            <li key={actor}>- {actor}</li>
+                        ))}
+                    </ul>
                 </div>
             </div>
         </div>

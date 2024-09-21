@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-const MovieCard = ({ name, year, posterUrl, type, time }) => {
+const MovieCard = ({ name, year, posterUrl, type, time, slug }) => {
     return (
-        <Link>
+        <Link to={`/info/${slug}`}>
             <article className="flex h-full flex-col rounded-2xl bg-[#171c28] p-3 shadow-xl shadow-slate-700">
                 <div className="relative overflow-hidden pt-[100%]">
                     {type === "tv" && (

@@ -1,5 +1,6 @@
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { Link } from "react-router-dom";
 
 const responsive = {
     desktop: {
@@ -8,8 +9,7 @@ const responsive = {
     },
 };
 
-const Movie = (props) => {
-    const { movies } = props;
+const Movie = ({ movies }) => {
     return (
         <Carousel responsive={responsive} autoPlay={true} autoPlaySpeed={3000}>
             {movies.map((movie) => (
@@ -30,9 +30,12 @@ const Movie = (props) => {
                         </div>
                         <div>
                             <p className="text-xl">{movie.time}</p>
-                            <button className="mt-4 rounded bg-slate-300/30 px-4 py-2 lg:text-lg">
+                            <Link
+                                to={`/info/${movie.slug}`}
+                                className="mt-4 inline-block rounded bg-slate-300/30 px-4 py-2 lg:text-lg"
+                            >
                                 Thông tin
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

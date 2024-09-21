@@ -1,4 +1,4 @@
-const CircularProgressBar = ({ percent = 0, size = 50, strokeWidth = 5 }) => {
+const CircularProgressBar = ({ percent = 0, size = 44, strokeWidth = 5 }) => {
     const radius = size / 2 - strokeWidth;
     const perimeter = 2 * Math.PI * radius;
     const strokeOffset = ((100 - percent) / 100) * perimeter;
