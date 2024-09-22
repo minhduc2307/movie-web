@@ -11,7 +11,7 @@ const Header = () => {
                 <img
                     src="/more.svg"
                     alt=""
-                    className="brightness-0 brightness-[1.08] contrast-[1.07] hue-rotate-[42deg] invert saturate-100 sepia"
+                    className="brightness-[1.08] contrast-[1.07] hue-rotate-[42deg] invert saturate-100 sepia"
                     onClick={() => {
                         setShowMenuDrawer(true);
                     }}
@@ -35,7 +35,7 @@ const Header = () => {
                         <img
                             src="/back.svg"
                             alt=""
-                            className="brightness-0 brightness-[1.08] contrast-[1.07] hue-rotate-[42deg] invert saturate-100 sepia"
+                            className="brightness-[1.08] contrast-[1.07] hue-rotate-[42deg] invert saturate-100 sepia"
                             onClick={() => {
                                 setShowMenuDrawer(false);
                             }}
@@ -44,7 +44,7 @@ const Header = () => {
                     <ul className="flex flex-col px-5 lg:flex-row lg:gap-6">
                         <li>
                             <a
-                                href="#!"
+                                href="/movie"
                                 className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-2" : ""}`}
                             >
                                 Phim lẻ
@@ -52,7 +52,7 @@ const Header = () => {
                         </li>
                         <li>
                             <a
-                                href="#!"
+                                href="/tv"
                                 className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-2" : ""}`}
                             >
                                 Phim bộ
@@ -60,10 +60,10 @@ const Header = () => {
                         </li>
                         <li>
                             <a
-                                href="#!"
+                                href="/cartoon"
                                 className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-2" : ""}`}
                             >
-                                Phim mới
+                                Phim hoạt hình
                             </a>
                         </li>
                         <li>
