@@ -15,6 +15,7 @@ const MovieDetail = () => {
         fetch(`${import.meta.env.VITE_API_HOST}/phim/${slug}`)
             .then(async (res) => {
                 const data = await res.json();
+                document.title = data.movie.name;
                 setMovieInfo(data.movie);
             })
             .catch((err) => console.error(err))

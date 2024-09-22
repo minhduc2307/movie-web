@@ -13,7 +13,7 @@ const Watch = () => {
         fetch(`${import.meta.env.VITE_API_HOST}/phim/${slug}`).then(
             async (res) => {
                 const data = await res.json();
-                // console.log(data);
+                document.title = data?.movie.name;
                 setChapterList(data?.episodes[0]?.server_data);
                 setSrcMovie(
                     data?.episodes[0]?.server_data[currentChap]?.link_m3u8,
@@ -22,8 +22,6 @@ const Watch = () => {
             },
         );
     }, [slug, currentChap]);
-
-    console.log(chapterList);
 
     useEffect(() => {
         const video = document.getElementById("film-video");
