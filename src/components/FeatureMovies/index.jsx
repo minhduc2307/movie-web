@@ -8,11 +8,10 @@ const FeatureMovies = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        fetch(`${import.meta.env.VITE_API_HOST}/v1/api/danh-sach/phim-le`)
+        fetch(`${import.meta.env.VITE_API_HOST}/danh-sach/phim-moi-cap-nhat`)
             .then(async (res) => {
-                const responseData = await res.json();
-                const data = responseData?.data;
-                const popularMovies = data.items.slice(1, 6);
+                const data = await res.json();
+                const popularMovies = data.items;
                 setMovies(popularMovies);
             })
             .catch((err) => console.error(err))
