@@ -85,7 +85,7 @@ const Header = () => {
             </div>
             <div className="flex items-center gap-5">
                 <a
-                    href="#!"
+                    href="/sign-in"
                     className="hidden items-center justify-center px-5 lg:flex lg:h-11 lg:text-lg"
                 >
                     Đăng nhập

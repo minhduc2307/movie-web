@@ -7,6 +7,8 @@ import HomePage from "@pages/HomePage";
 import MovieDetail from "@pages/MovieDetail";
 import Watch from "@pages/Watch";
 import SearchPage from "@pages/SearchPage";
+import SignIn from "@pages/SignIn";
+import SignUp from "@pages/SignUp";
 
 const router = createBrowserRouter([
     {
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
                 element: <SearchPage />,
             },
         ],
+    },
+    {
+        path: "/sign-in",
+        element: <SignIn />,
+    },
+    {
+        path: "/sign-up",
+        element: <SignUp />,
     },
 ]);
 
