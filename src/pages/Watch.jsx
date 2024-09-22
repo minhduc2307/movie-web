@@ -70,12 +70,12 @@ const Watch = () => {
                         </div>
                     </div>
                     <div className="flex-1">
-                        <div className="h-[300px] overflow-auto bg-[#1a1c21] p-3 lg:h-[400px]">
+                        <div className="h-[300px] overflow-auto overscroll-none bg-[#1a1c21] p-3 lg:h-[400px]">
                             <p className="text-lg font-medium">Chọn tập phim</p>
                             <ul className="mt-4 flex flex-wrap items-center gap-3">
                                 {chapterList.map((chap, index) => (
                                     <li
-                                        key={chap.slug}
+                                        key={chap.link_m3u8}
                                         className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg ${currentChap === index ? "bg-green-700" : "bg-[#292e39]"}`}
                                         onClick={() => {
                                             setCurrentChap(index);

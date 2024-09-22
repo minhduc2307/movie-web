@@ -6,6 +6,7 @@ import Root from "@pages/Root";
 import HomePage from "@pages/HomePage";
 import MovieDetail from "@pages/MovieDetail";
 import Watch from "@pages/Watch";
+import SearchPage from "@pages/SearchPage";
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
             {
                 path: "/watch/:slug",
                 element: <Watch />,
+            },
+            {
+                path: "/search",
+                element: <SearchPage />,
             },
         ],
     },

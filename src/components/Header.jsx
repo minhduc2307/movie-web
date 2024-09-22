@@ -77,7 +77,7 @@ const Header = () => {
                     </ul>
                 </nav>
                 <a
-                    href="#!"
+                    href="/search"
                     className="ml-10 hidden h-12 w-12 items-center justify-center rounded-lg bg-[#292d38] shadow-[#00000033] lg:flex"
                 >
                     <FontAwesomeIcon icon={faMagnifyingGlass} />

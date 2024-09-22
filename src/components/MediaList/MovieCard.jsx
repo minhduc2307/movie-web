@@ -16,7 +16,7 @@ const MovieCard = ({ name, year, posterUrl, type, time, slug }) => {
                                 ? `https://phimimg.com/${posterUrl}`
                                 : `/NoImage.svg`
                         }
-                        alt=""
+                        alt={name || "card-film"}
                         className="absolute left-0 top-0 h-full w-full object-cover lg:duration-200 lg:ease-in lg:hover:scale-110"
                     />
                 </div>
