@@ -18,7 +18,7 @@ const Header = () => {
                 />
             </button>
             <div className="flex items-center">
-                <h1>
+                <h1 className="absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] lg:static lg:translate-x-0 lg:translate-y-0">
                     <a
                         href="/"
                         className="text-2xl font-bold uppercase text-red-500 md:text-3xl"
@@ -68,7 +68,7 @@ const Header = () => {
                         </li>
                         <li>
                             <a
-                                href="#!"
+                                href="/search"
                                 className={`hidden ${showMenuDrawer ? "!flex h-full items-center rounded-lg py-2 shadow-[#00000033] lg:h-12 lg:w-12 lg:justify-center lg:py-0" : ""}`}
                             >
                                 <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -91,7 +91,7 @@ const Header = () => {
                     Đăng nhập
                 </a>
                 <a
-                    href="#!"
+                    href="/sign-up"
                     className="flex h-10 items-center justify-center rounded-2xl bg-[#ffb700] px-2 text-[#171c28] lg:ml-5 lg:h-11 lg:px-5 lg:text-lg"
                 >
                     Đăng ký

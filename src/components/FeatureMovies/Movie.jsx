@@ -26,18 +26,15 @@ const Movie = ({ movies }) => {
                     />
                     <div className="absolute bottom-[15%] left-8">
                         <div>
-                            <h3 className="mb-2 text-xl font-bold lg:text-2xl">
+                            <h3 className="mb-1 text-xl font-bold">
                                 {movie?.name}
                             </h3>
-                            <div className="flex items-center gap-4 text-lg lg:text-xl">
-                                <p>{movie?.year}</p>
-                            </div>
+                            <p className="text-lg">{movie?.year}</p>
                         </div>
                         <div>
-                            <p className="text-xl">{movie.time}</p>
                             <a
                                 href={`/info/${movie.slug}`}
-                                className="mt-4 inline-block rounded bg-slate-300/30 px-4 py-2 lg:text-lg"
+                                className="mt-3 inline-block rounded bg-slate-300/30 px-4 py-2 lg:text-lg"
                             >
                                 Thông tin
                             </a>
