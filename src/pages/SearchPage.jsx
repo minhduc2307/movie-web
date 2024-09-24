@@ -1,4 +1,5 @@
 import MovieCard from "@components/MediaList/MovieCard";
+import Spinner from "@components/Spinner";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
@@ -6,15 +7,18 @@ import { useState } from "react";
 const SearchPage = () => {
     const [searchText, setSearchText] = useState("");
     const [movieList, setMovieList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSearch = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         const res = await fetch(
             `${import.meta.env.VITE_API_HOST}/v1/api/tim-kiem?keyword=${searchText}&limit=18`,
         );
         const responseData = await res.json();
         const data = responseData?.data;
         setMovieList(data?.items);
+        setIsLoading(false);
     };
 
     return (
@@ -57,19 +61,23 @@ const SearchPage = () => {
                     <div className="bg-red-50"></div>
                 </form>
 
-                <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-                    {movieList.map((media) => (
-                        <MovieCard
-                            key={media._id}
-                            name={media.name}
-                            posterUrl={media.poster_url}
-                            year={media.year}
-                            time={media.time}
-                            type={media.type}
-                            slug={media.slug}
-                        />
-                    ))}
-                </div>
+                {isLoading ? (
+                    <Spinner />
+                ) : (
+                    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+                        {movieList.map((media) => (
+                            <MovieCard
+                                key={media._id}
+                                name={media.name}
+                                posterUrl={media.poster_url}
+                                year={media.year}
+                                time={media.time}
+                                type={media.type}
+                                slug={media.slug}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

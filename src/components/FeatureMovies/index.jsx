@@ -18,11 +18,15 @@ const FeatureMovies = () => {
             .finally(() => setIsLoading(false));
     }, []);
 
-    if (isLoading) return <Spinner />;
-
     return (
-        <div className="relative hidden text-white md:block">
-            <Movie movies={movies} />
+        <div className="bg-[#292e39]">
+            {isLoading ? (
+                <Spinner />
+            ) : (
+                <div className="relative hidden text-white md:block">
+                    <Movie movies={movies} />
+                </div>
+            )}
         </div>
     );
 };

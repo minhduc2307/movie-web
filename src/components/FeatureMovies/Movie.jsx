@@ -18,11 +18,11 @@ const Movie = ({ movies }) => {
     return (
         <Carousel responsive={responsive} autoPlay={true} autoPlaySpeed={3000}>
             {movies.map((movie) => (
-                <div key={movie._id}>
+                <div key={movie._id} className="h-full w-full">
                     <img
                         src={movie?.thumb_url}
                         alt=""
-                        className="w-full object-cover brightness-50"
+                        className="h-full w-full object-cover brightness-50"
                     />
                     <div className="absolute bottom-[15%] left-8">
                         <div>
