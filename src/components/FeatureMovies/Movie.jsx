@@ -1,3 +1,4 @@
+import Img from "@components/Img";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
@@ -19,9 +20,10 @@ const Movie = ({ movies }) => {
         <Carousel responsive={responsive} autoPlay={true} autoPlaySpeed={3000}>
             {movies.map((movie) => (
                 <div key={movie._id} className="h-full w-full">
-                    <img
+                    <Img
                         src={movie?.thumb_url}
-                        alt=""
+                        width={634}
+                        height={357}
                         className="h-full w-full object-cover brightness-50"
                     />
                     <div className="absolute bottom-[15%] left-8">

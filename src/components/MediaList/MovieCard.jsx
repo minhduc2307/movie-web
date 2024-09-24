@@ -1,3 +1,4 @@
+import Img from "@components/Img";
 import { Link } from "react-router-dom";
 
 const MovieCard = ({ name, year, posterUrl, type, time, slug }) => {
@@ -10,12 +11,10 @@ const MovieCard = ({ name, year, posterUrl, type, time, slug }) => {
                             TV Show
                         </p>
                     )}
-                    <img
-                        src={
-                            posterUrl
-                                ? `https://phimimg.com/${posterUrl}`
-                                : `/NoImage.svg`
-                        }
+                    <Img
+                        src={posterUrl && `https://phimimg.com/${posterUrl}`}
+                        width={273}
+                        height={273}
                         alt={name || "card-film"}
                         className="absolute left-0 top-0 h-full w-full object-cover lg:duration-200 lg:ease-in lg:hover:scale-110"
                     />

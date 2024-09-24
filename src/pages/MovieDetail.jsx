@@ -4,6 +4,7 @@ import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Spinner from "@/components/Spinner";
 import CircularProgressBar from "@components/CircularProgressBar";
+import Img from "@components/Img";
 
 const MovieDetail = () => {
     const { slug } = useParams();
@@ -32,16 +33,18 @@ const MovieDetail = () => {
                 <div className="mx-auto max-w-screen-xl">
                     <div className="relative py-3">
                         <figure className="h-[450px]">
-                            <img
+                            <Img
                                 src={movieInfo?.thumb_url}
-                                alt=""
+                                width={1280}
+                                height={450}
                                 className="h-full w-full object-cover brightness-50"
                             />
                         </figure>
                         <figure className="absolute left-5 top-5 h-[285px] w-[200px]">
-                            <img
+                            <Img
                                 src={movieInfo?.poster_url}
-                                alt=""
+                                width={200}
+                                height={285}
                                 className="h-full w-full object-cover"
                             />
                         </figure>
