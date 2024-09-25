@@ -5,7 +5,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "@pages/Root";
 import HomePage from "@pages/HomePage";
 import MovieDetail from "@pages/MovieDetail";
-import TVShowDetail from "@pages/TVShowDetail";
+import Watch from "@pages/Watch";
+import SearchPage from "@pages/SearchPage";
+import SignIn from "@pages/SignIn";
+import SignUp from "@pages/SignUp";
+import SingleMovie from "@pages/SingleMovie";
+import TV from "@pages/TV";
+import CartoonMovie from "@pages/CartoonMovie";
+import NotFound from "@pages/NotFound";
 
 const router = createBrowserRouter([
     {
@@ -16,14 +23,42 @@ const router = createBrowserRouter([
                 element: <HomePage />,
             },
             {
-                path: "/movie/:id",
+                path: "/info/:slug",
                 element: <MovieDetail />,
             },
             {
-                path: "/tv/:id",
-                element: <TVShowDetail />,
+                path: "/watch/:slug",
+                element: <Watch />,
+            },
+            {
+                path: "/search",
+                element: <SearchPage />,
+            },
+            {
+                path: "/movie",
+                element: <SingleMovie />,
+            },
+            {
+                path: "/tv",
+                element: <TV />,
+            },
+            {
+                path: "/cartoon",
+                element: <CartoonMovie />,
             },
         ],
+    },
+    {
+        path: "/sign-in",
+        element: <SignIn />,
+    },
+    {
+        path: "/sign-up",
+        element: <SignUp />,
+    },
+    {
+        path: "/*",
+        element: <NotFound />,
     },
 ]);
 

@@ -1,30 +1,33 @@
-export const TRENDING_TABS = [
+export const TABS = [
     {
-        id: "all",
-        name: "Tất cả",
-        url: "https://api.themoviedb.org/3/trending/all/day?language=vi",
+        title: "Phim lẻ đề cử",
+        url: `${import.meta.env.VITE_API_HOST}/v1/api/danh-sach/phim-le?limit=6`,
     },
     {
-        id: "movie",
-        name: "Phim",
-        url: "https://api.themoviedb.org/3/trending/movie/day?language=vi",
+        title: "Phim bộ đề cử",
+        url: `${import.meta.env.VITE_API_HOST}/v1/api/danh-sach/phim-bo?limit=6`,
     },
     {
-        id: "tv",
-        name: "TV",
-        url: "https://api.themoviedb.org/3/trending/tv/day?language=vi",
+        title: "Phim hoạt hình đề cử",
+        url: `${import.meta.env.VITE_API_HOST}/v1/api/danh-sach/hoat-hinh?limit=6`,
+    },
+    {
+        title: "TV Shows đề cử",
+        url: `${import.meta.env.VITE_API_HOST}/v1/api/danh-sach/tv-shows?limit=6`,
     },
 ];
 
-export const TOP_RATED_TABS = [
+export const MEDIA_TABS = [
     {
-        id: "movie",
-        name: "Phim",
-        url: "https://api.themoviedb.org/3/movie/top_rated?language=vi",
+        title: "PHIM LẺ",
+        url: `${import.meta.env.VITE_API_HOST}/v1/api/danh-sach/phim-le?limit=24&page=2`,
     },
     {
-        id: "tv",
-        name: "TV",
-        url: "https://api.themoviedb.org/3/tv/top_rated?language=vi",
+        title: "PHIM BỘ",
+        url: `${import.meta.env.VITE_API_HOST}/v1/api/danh-sach/phim-bo?limit=24&page=2`,
+    },
+    {
+        title: "Phim hoạt hình đề cử",
+        url: `${import.meta.env.VITE_API_HOST}/v1/api/danh-sach/hoat-hinh?limit=24&page=2`,
     },
 ];

@@ -1,63 +1,37 @@
 import { useEffect, useState } from "react";
 import MovieCard from "./MovieCard";
 
-const MediaList = ({ title, tabs }) => {
+const MediaList = ({ tab }) => {
     const [mediaList, setMediaList] = useState([]);
-    const [currentTabId, setCurrentTabId] = useState(tabs[0]?.id);
 
     useEffect(() => {
-        const url = tabs.find((tab) => tab.id === currentTabId)?.url;
+        const url = tab?.url;
         if (url) {
-            fetch(url, {
-                method: "GET",
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
-                },
-            })
+            fetch(`${url}`)
                 .then(async (res) => {
-                    const data = await res.json();
-                    const trendingMediaList = data.results.slice(0, 12);
-                    setMediaList(trendingMediaList);
+                    const responseData = await res.json();
+                    const data = responseData?.data.items;
+                    setMediaList(data);
                 })
-                .catch((err) => {
-                    console.error(err);
-                });
+                .catch((err) => console.error(err));
         }
-    }, [currentTabId, tabs]);
+    }, [tab]);
 
     return (
-        <div className="bg-[#292e39] px-5 py-10 text-white lg:px-8">
-            <div className="mb-6 flex items-center gap-5">
-                <h2 className="text-xl font-bold lg:text-3xl">{title}</h2>
-                <ul className="flex rounded-md border border-white">
-                    {tabs.map((tab) => (
-                        <li
-                            key={tab.id}
-                            className={`cursor-pointer rounded-md px-3 py-1 md:px-6 lg:px-6 lg:py-2 ${
-                                tab.id === currentTabId
-                                    ? "bg-white text-black"
-                                    : "text-[#9e9da8]"
-                            }`}
-                            onClick={() => {
-                                setCurrentTabId(tab.id);
-                            }}
-                        >
-                            {tab.name}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+        <div className="bg-[#292e39] px-5 py-6 text-white lg:px-8 lg:py-10">
+            <h2 className="mb-2 text-xl font-bold md:text-2xl lg:text-3xl">
+                {tab?.title}
+            </h2>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
                 {mediaList.map((media) => (
                     <MovieCard
-                        key={media.id}
-                        id={media.id}
-                        mediaType={media.media_type || currentTabId}
-                        backdropPath={media.backdrop_path}
-                        title={media.title || media.name}
-                        releaseDate={media.release_date || media.first_air_date}
-                        point={media.vote_average}
+                        key={media._id}
+                        name={media.name}
+                        posterUrl={media.poster_url}
+                        year={media.year}
+                        time={media.time}
+                        type={media.type}
+                        slug={media.slug}
                     />
                 ))}
             </div>

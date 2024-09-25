@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Footer = () => {
     return (
         <footer className="bg-[#171c28] px-6 py-12 text-white">
-            <div className="mx-auto grid gap-[60px] sm:grid-cols-2 lg:max-w-screen-2xl lg:grid-cols-footer">
+            <div className="mx-auto grid gap-[60px] sm:grid-cols-2 lg:max-w-screen-xl lg:grid-cols-footer">
                 <div>
                     <h2>
                         <a
@@ -61,15 +61,15 @@ const Footer = () => {
                         </li>
                         <li>
                             <a
-                                href="#!"
+                                href="/cartoon"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
-                                Phim chiếu rạp
+                                Phim hoạt hình
                             </a>
                         </li>
                         <li>
                             <a
-                                href="#!"
+                                href="/tv"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim bộ
@@ -77,7 +77,7 @@ const Footer = () => {
                         </li>
                         <li>
                             <a
-                                href="#!"
+                                href="/movie"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim lẻ

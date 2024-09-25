@@ -1,91 +1,143 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import RelatedMediaList from "@/components/MediaDetail/RelatedMediaList";
-import { Banner } from "@/components/MediaDetail/Banner";
+import { useParams } from "react-router-dom";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Spinner from "@/components/Spinner";
-import ActorList from "@/components/MediaDetail/ActorList";
+import CircularProgressBar from "@components/CircularProgressBar";
+import Img from "@components/Img";
 
 const MovieDetail = () => {
-    const { id: movieId } = useParams();
+    const { slug } = useParams();
     const [movieInfo, setMovieInfo] = useState({});
-    const [relatedMovies, setRelatedMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
-        fetch(
-            `https://api.themoviedb.org/3/movie/${movieId}?language=vi&append_to_response=release_dates,credits`,
-            {
-                method: "GET",
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
-                },
-            },
-        )
+        fetch(`${import.meta.env.VITE_API_HOST}/phim/${slug}`)
             .then(async (res) => {
                 const data = await res.json();
-                setMovieInfo(data);
+                document.title = data.movie.name;
+                setMovieInfo(data.movie);
             })
             .catch((err) => console.error(err))
             .finally(() => {
                 setIsLoading(false);
             });
-    }, [movieId]);
-
-    useEffect(() => {
-        fetch(`https://api.themoviedb.org/3/movie/${movieId}/recommendations`, {
-            method: "GET",
-            headers: {
-                accept: "application/json",
-                Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
-            },
-        }).then(async (res) => {
-            const data = await res.json();
-            const currentRelatedMovies = (data.results || []).slice(0, 12);
-            setRelatedMovies(currentRelatedMovies);
-        });
-    }, [movieId]);
-
-    const certification = (
-        (movieInfo.release_dates?.results || []).find(
-            (result) => result.iso_3166_1 === "US",
-        )?.release_dates || []
-    ).find((releaseDate) => releaseDate.certification)?.certification;
-
-    const crews = (movieInfo.credits?.crew || [])
-        .filter((crew) => ["Director", "Writer"].includes(crew.job))
-        .map((person) => ({
-            id: person.id,
-            name: person.name,
-            job: person.job,
-        }));
-
-    if (isLoading) {
-        return <Spinner />;
-    }
+    }, [slug]);
 
     return (
-        <div>
-            <Banner
-                backdropPath={movieInfo.backdrop_path}
-                posterPath={movieInfo.poster_path}
-                title={movieInfo.title}
-                genres={movieInfo.genres}
-                certification={certification}
-                crews={crews}
-                point={movieInfo.vote_average}
-                overview={movieInfo.overview}
-                releaseDate={movieInfo.release_date}
-                budget={movieInfo.budget || 0}
-                revenue={movieInfo.revenue || 0}
-            />
-            <div className="bg-[#292d38] text-white">
-                <div className="mx-auto max-w-screen-xl px-6 py-10">
-                    <ActorList actors={movieInfo.credits?.cast || []} />
-                    <RelatedMediaList mediaList={relatedMovies} />
+        <div className="min-h-[40vh] bg-[#06121d] px-5 py-3 lg:py-5">
+            {isLoading ? (
+                <Spinner />
+            ) : (
+                <div className="mx-auto max-w-screen-xl">
+                    <div className="relative py-3">
+                        <figure className="h-[450px]">
+                            <Img
+                                src={movieInfo?.thumb_url}
+                                width={1280}
+                                height={450}
+                                className="h-full w-full object-cover brightness-50"
+                            />
+                        </figure>
+                        <figure className="absolute left-5 top-5 h-[285px] w-[200px]">
+                            <Img
+                                src={movieInfo?.poster_url}
+                                width={200}
+                                height={285}
+                                className="h-full w-full object-cover"
+                            />
+                        </figure>
+                        <div className="absolute bottom-4 left-5 sm:bottom-6 lg:bottom-8">
+                            <div className="flex items-center gap-3">
+                                {movieInfo?.tmdb?.vote_average ? (
+                                    <div className="flex items-center gap-1">
+                                        <CircularProgressBar
+                                            percent={Math.round(
+                                                movieInfo?.tmdb?.vote_average *
+                                                    10,
+                                            )}
+                                        />
+                                        <span className="text-white">
+                                            Rating
+                                        </span>
+                                    </div>
+                                ) : null}
+                                <ul className="flex flex-wrap gap-2">
+                                    {(movieInfo.category || [])
+                                        .slice(0, 2)
+                                        .map((genre) => (
+                                            <li
+                                                key={genre.id}
+                                                className="rounded-lg bg-white p-2 text-sm font-medium text-black"
+                                            >
+                                                {genre.name}
+                                            </li>
+                                        ))}
+                                </ul>
+                            </div>
+                            <div className="left-5 mt-2 flex flex-wrap items-center gap-2 sm:mt-3">
+                                <a
+                                    href={`/watch/${movieInfo.slug}`}
+                                    className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ffb700] px-5 text-[#171c28]"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faPlay}
+                                        className="text-white"
+                                    />
+                                    Xem ngay
+                                </a>
+                                <button className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ff0000] px-5 text-base text-white">
+                                    <img src="/add.svg" alt="" />
+                                    Thêm vào yêu thích
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mt-3 space-y-2 text-base text-white lg:text-lg">
+                        <h1 className="text-2xl font-bold lg:text-3xl">
+                            Phim: {movieInfo?.name}
+                        </h1>
+                        <div className="flex gap-2">
+                            <p className="font-medium">Thời gian:</p>
+                            <p>{movieInfo?.time}</p>
+                        </div>
+                        <p>Nội dung: {movieInfo?.content}</p>
+                        <div>
+                            <div className="flex gap-2">
+                                <p className="font-medium">Thể loại:</p>
+                                <p>
+                                    {(movieInfo?.genres || [])
+                                        .map((genre) => genre.name)
+                                        .join(", ")}
+                                </p>
+                            </div>
+                            <div className="flex gap-2">
+                                <p className="font-medium">Năm phát hành:</p>
+                                <p>{movieInfo?.year}</p>
+                            </div>
+                            <div className="flex gap-2">
+                                <p className="flex-shrink-0 font-medium">
+                                    Đạo diễn:
+                                </p>
+                                <p>
+                                    {(movieInfo?.director || [])
+                                        .map((person) => person)
+                                        .join(", ")}
+                                </p>
+                            </div>
+                        </div>
+                        <p className="font-medium">Diễn viên:</p>
+                        <ul>
+                            {(movieInfo?.actor || [])
+                                .slice(0, 10)
+                                .map((person) => (
+                                    <li key={person}>- {person}</li>
+                                ))}
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
