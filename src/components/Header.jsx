@@ -45,7 +45,7 @@ const Header = () => {
                         <li>
                             <a
                                 href="/movie"
-                                className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-2" : ""}`}
+                                className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-3" : ""}`}
                             >
                                 Phim lẻ
                             </a>
@@ -53,7 +53,7 @@ const Header = () => {
                         <li>
                             <a
                                 href="/tv"
-                                className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-2" : ""}`}
+                                className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-3" : ""}`}
                             >
                                 Phim bộ
                             </a>
@@ -61,7 +61,7 @@ const Header = () => {
                         <li>
                             <a
                                 href="/cartoon"
-                                className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-2" : ""}`}
+                                className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-3" : ""}`}
                             >
                                 Phim hoạt hình
                             </a>
@@ -69,7 +69,7 @@ const Header = () => {
                         <li>
                             <a
                                 href="/search"
-                                className={`hidden ${showMenuDrawer ? "!flex h-full items-center rounded-lg py-2 shadow-[#00000033] lg:h-12 lg:w-12 lg:justify-center lg:py-0" : ""}`}
+                                className={`hidden ${showMenuDrawer ? "!flex h-full items-center rounded-lg py-3 shadow-[#00000033] lg:h-12 lg:w-12 lg:justify-center lg:py-0" : ""}`}
                             >
                                 <FontAwesomeIcon icon={faMagnifyingGlass} />
                             </a>

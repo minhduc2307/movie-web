@@ -1,6 +1,7 @@
 import Img from "@components/Img";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import "@components/FeatureMovies/carousel.css";
 
 const responsive = {
     desktop: {
@@ -17,7 +18,12 @@ const responsive = {
 
 const Movie = ({ movies }) => {
     return (
-        <Carousel responsive={responsive} autoPlay={true} autoPlaySpeed={3000}>
+        <Carousel
+            responsive={responsive}
+            autoPlay={true}
+            autoPlaySpeed={4000}
+            infinite={true}
+        >
             {movies.map((movie) => (
                 <div key={movie._id} className="h-full w-full">
                     <Img
