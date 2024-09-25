@@ -48,8 +48,8 @@ const MovieDetail = () => {
                                 className="h-full w-full object-cover"
                             />
                         </figure>
-                        <div className="absolute bottom-4 left-5 sm:bottom-6 lg:bottom-8">
-                            <div className="flex items-center gap-3">
+                        <div className="absolute bottom-5 left-5 sm:bottom-6 md:bottom-7 lg:bottom-9">
+                            <div className="flex items-center gap-[10px]">
                                 {movieInfo?.tmdb?.vote_average ? (
                                     <div className="flex items-center gap-1">
                                         <CircularProgressBar
@@ -65,11 +65,11 @@ const MovieDetail = () => {
                                 ) : null}
                                 <ul className="flex flex-wrap gap-2">
                                     {(movieInfo.category || [])
-                                        .slice(0, 2)
+                                        .slice(0, 3)
                                         .map((genre) => (
                                             <li
                                                 key={genre.id}
-                                                className="rounded-lg bg-white p-2 text-sm font-medium text-black"
+                                                className="rounded-lg bg-white p-[6px] text-sm font-medium text-black"
                                             >
                                                 {genre.name}
                                             </li>
@@ -79,7 +79,7 @@ const MovieDetail = () => {
                             <div className="left-5 mt-2 flex flex-wrap items-center gap-2 sm:mt-3">
                                 <a
                                     href={`/watch/${movieInfo.slug}`}
-                                    className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ffb700] px-5 text-[#171c28]"
+                                    className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ffb700] px-5 font-medium text-[#171c28]"
                                 >
                                     <FontAwesomeIcon
                                         icon={faPlay}
@@ -87,10 +87,6 @@ const MovieDetail = () => {
                                     />
                                     Xem ngay
                                 </a>
-                                <button className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ff0000] px-5 text-base text-white">
-                                    <img src="/add.svg" alt="" />
-                                    Thêm vào yêu thích
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -102,39 +98,31 @@ const MovieDetail = () => {
                             <p className="font-medium">Thời gian:</p>
                             <p>{movieInfo?.time}</p>
                         </div>
-                        <p>Nội dung: {movieInfo?.content}</p>
-                        <div>
-                            <div className="flex gap-2">
-                                <p className="font-medium">Thể loại:</p>
-                                <p>
-                                    {(movieInfo?.genres || [])
-                                        .map((genre) => genre.name)
-                                        .join(", ")}
-                                </p>
-                            </div>
-                            <div className="flex gap-2">
-                                <p className="font-medium">Năm phát hành:</p>
-                                <p>{movieInfo?.year}</p>
-                            </div>
-                            <div className="flex gap-2">
-                                <p className="flex-shrink-0 font-medium">
-                                    Đạo diễn:
-                                </p>
-                                <p>
-                                    {(movieInfo?.director || [])
-                                        .map((person) => person)
-                                        .join(", ")}
-                                </p>
-                            </div>
+                        <div className="flex gap-2">
+                            <p className="font-medium">Thể loại:</p>
+                            <p>
+                                {(movieInfo?.category || [])
+                                    .map((genre) => genre.name)
+                                    .join(", ")}
+                            </p>
                         </div>
-                        <p className="font-medium">Diễn viên:</p>
-                        <ul>
-                            {(movieInfo?.actor || [])
-                                .slice(0, 10)
-                                .map((person) => (
-                                    <li key={person}>- {person}</li>
-                                ))}
-                        </ul>
+                        <div className="flex gap-2">
+                            <p className="font-medium">Năm phát hành:</p>
+                            <p>{movieInfo?.year}</p>
+                        </div>
+                        <p>Nội dung: {movieInfo?.content}</p>
+                        <div className="flex gap-2">
+                            <p className="flex-shrink-0 font-medium">
+                                Đạo diễn:
+                            </p>
+                            <p>{(movieInfo?.director || []).join(", ")}</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <p className="flex-shrink-0 font-medium">
+                                Diễn viên:
+                            </p>
+                            <p>{(movieInfo?.actor || []).join(", ")}</p>
+                        </div>
                     </div>
                 </div>
             )}

@@ -1,8 +1,8 @@
 import { lazy, StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "@pages/Root";
+import "./index.css";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 const MovieDetail = lazy(() => import("@pages/MovieDetail"));
