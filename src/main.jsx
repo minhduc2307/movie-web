@@ -12,6 +12,7 @@ import SignUp from "@pages/SignUp";
 import SingleMovie from "@pages/SingleMovie";
 import TV from "@pages/TV";
 import CartoonMovie from "@pages/CartoonMovie";
+import NotFound from "@pages/NotFound";
 
 const router = createBrowserRouter([
     {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
     {
         path: "/sign-up",
         element: <SignUp />,
+    },
+    {
+        path: "/*",
+        element: <NotFound />,
     },
 ]);
 
