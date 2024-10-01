@@ -91,38 +91,35 @@ const MovieDetail = () => {
                         </div>
                     </div>
                     <div className="mt-3 space-y-2 text-base text-white lg:text-lg">
-                        <h1 className="text-2xl font-bold lg:text-3xl">
-                            Phim: {movieInfo?.name}
+                        <h1 className="text-3xl font-bold lg:text-4xl">
+                            {movieInfo?.name}
                         </h1>
-                        <div className="flex gap-2">
-                            <p className="font-medium">Thời gian:</p>
-                            <p>{movieInfo?.time}</p>
-                        </div>
-                        <div className="flex gap-2">
-                            <p className="font-medium">Thể loại:</p>
-                            <p>
-                                {(movieInfo?.category || [])
-                                    .map((genre) => genre.name)
-                                    .join(", ")}
-                            </p>
-                        </div>
-                        <div className="flex gap-2">
-                            <p className="font-medium">Năm phát hành:</p>
-                            <p>{movieInfo?.year}</p>
-                        </div>
-                        <p>Nội dung: {movieInfo?.content}</p>
-                        <div className="flex gap-2">
-                            <p className="flex-shrink-0 font-medium">
-                                Đạo diễn:
-                            </p>
-                            <p>{(movieInfo?.director || []).join(", ")}</p>
-                        </div>
-                        <div className="flex gap-2">
-                            <p className="flex-shrink-0 font-medium">
-                                Diễn viên:
-                            </p>
-                            <p>{(movieInfo?.actor || []).join(", ")}</p>
-                        </div>
+                        <p>
+                            <span className="font-medium">Thời gian:</span>{" "}
+                            {movieInfo?.time}
+                        </p>
+                        <p>
+                            <span className="font-medium">Năm phát hành:</span>{" "}
+                            {movieInfo?.year}
+                        </p>
+                        <p>
+                            <span className="font-medium">Thể loại:</span>{" "}
+                            {(movieInfo?.category || [])
+                                .map((genre) => genre.name)
+                                .join(", ")}
+                        </p>
+                        <p>
+                            <span className="font-medium">Nội dung:</span>{" "}
+                            {movieInfo?.content}
+                        </p>
+                        <p>
+                            <span className="font-medium">Đạo diễn:</span>{" "}
+                            {(movieInfo?.director || []).join(", ")}
+                        </p>
+                        <p>
+                            <span className="font-medium">Diễn viên:</span>{" "}
+                            {(movieInfo?.actor || []).join(", ")}
+                        </p>
                     </div>
                 </div>
             )}
