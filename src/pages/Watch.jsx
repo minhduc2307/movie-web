@@ -31,9 +31,6 @@ const Watch = () => {
             const hls = new Hls();
             hls.loadSource(srcMovie);
             hls.attachMedia(video);
-            // hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            //     video.play();
-            // });
 
             return () => {
                 hls.destroy();
@@ -55,7 +52,9 @@ const Watch = () => {
         <div className="bg-[#06121d] px-5 py-3 text-white lg:py-5">
             <div className="mx-auto max-w-screen-xl">
                 <h1 className="text-2xl font-bold lg:text-3xl">
-                    {movieInfo.name} ~ Tập {currentChap + 1}
+                    {movieInfo?.type === "single"
+                        ? movieInfo.name
+                        : `${movieInfo.name} ~ Tập ${currentChap + 1}`}
                 </h1>
                 <div className="mt-5 flex flex-col gap-2 md:flex-row">
                     <div className="flex-[3]">
@@ -67,27 +66,32 @@ const Watch = () => {
                             ></video>
                         </div>
                     </div>
-                    <div className="flex-1">
-                        <div className="h-[300px] overflow-auto overscroll-none bg-[#1a1c21] p-3 lg:h-[400px]">
-                            <p className="text-lg font-medium">Chọn tập phim</p>
-                            <ul className="mt-4 flex flex-wrap items-center gap-3">
-                                {chapterList.map((chap, index) => (
-                                    <li
-                                        key={chap.link_m3u8}
-                                        className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg ${currentChap === index ? "bg-green-700" : "bg-[#292e39]"}`}
-                                        onClick={() => {
-                                            setCurrentChap(index);
-                                            setSrcMovie(
-                                                chapterList[index].link_m3u8,
-                                            );
-                                        }}
-                                    >
-                                        {index + 1}
-                                    </li>
-                                ))}
-                            </ul>
+                    {movieInfo?.type !== "single" && (
+                        <div className="flex-1">
+                            <div className="h-[300px] overflow-auto overscroll-none bg-[#1a1c21] p-3 lg:h-[400px]">
+                                <p className="text-lg font-medium">
+                                    Chọn tập phim
+                                </p>
+                                <ul className="mt-4 flex flex-wrap items-center gap-3">
+                                    {chapterList.map((chap, index) => (
+                                        <li
+                                            key={chap.link_m3u8}
+                                            className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg ${currentChap === index ? "bg-green-700" : "bg-[#292e39]"}`}
+                                            onClick={() => {
+                                                setCurrentChap(index);
+                                                setSrcMovie(
+                                                    chapterList[index]
+                                                        .link_m3u8,
+                                                );
+                                            }}
+                                        >
+                                            {index + 1}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
                 <div className="mt-4 space-y-3 lg:text-lg">
                     <div className="flex gap-2">
