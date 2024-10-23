@@ -5,10 +5,12 @@ import { TABS } from "@libs/constants";
 function HomePage() {
     const screenWidth = document.documentElement.clientWidth;
     let sliderItem;
-    if (screenWidth <= 1024) {
+    if (screenWidth > 1024) {
+        sliderItem = screenWidth / 3;
+    } else if (screenWidth >= 768) {
         sliderItem = screenWidth / 2;
     } else {
-        sliderItem = screenWidth / 3;
+        sliderItem = 0;
     }
 
     const ratio = 0.5635;
@@ -16,9 +18,11 @@ function HomePage() {
 
     return (
         <div>
-            <div style={{ height: `${sliderHeight}px` }}>
-                <FeatureMovies />
-            </div>
+            {sliderHeight ? (
+                <div style={{ height: `${sliderHeight}px` }}>
+                    <FeatureMovies />
+                </div>
+            ) : null}
             <div className="min-h-screen bg-[#292e39]">
                 <MediaList tab={TABS[0]} />
                 <MediaList tab={TABS[1]} />
