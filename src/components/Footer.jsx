@@ -167,25 +167,28 @@ const Footer = () => {
                         href="#!"
                         className="flex h-8 w-8 items-center justify-center rounded-md bg-[#4863a9] transition-transform duration-300 hover:-translate-y-1"
                     >
-                        <FontAwesomeIcon icon={faFacebookF} className="w-4" />
+                        <FontAwesomeIcon
+                            icon={faFacebookF}
+                            className="h-4 w-4"
+                        />
                     </a>
                     <a
                         href="#!"
                         className="flex h-8 w-8 items-center justify-center rounded-md bg-[#f00] transition-transform duration-300 hover:-translate-y-1"
                     >
-                        <FontAwesomeIcon icon={faYoutube} />
+                        <FontAwesomeIcon icon={faYoutube} className="h-4 w-4" />
                     </a>
                     <a
                         href="#!"
                         className="flex h-8 w-8 items-center justify-center rounded-md bg-[#000] transition-transform duration-300 hover:-translate-y-1"
                     >
-                        <FontAwesomeIcon icon={faTiktok} />
+                        <FontAwesomeIcon icon={faTiktok} className="h-4 w-4" />
                     </a>
                     <a
                         href="#!"
                         className="flex h-8 w-8 items-center justify-center rounded-md bg-[#4999e6] transition-transform duration-300 hover:-translate-y-1"
                     >
-                        <FontAwesomeIcon icon={faTwitter} />
+                        <FontAwesomeIcon icon={faTwitter} className="h-4 w-4" />
                     </a>
                 </div>
             </div>
