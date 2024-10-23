@@ -19,11 +19,11 @@ const FeatureMovies = () => {
     }, []);
 
     return (
-        <div className="bg-[#292e39]">
+        <div className="h-full bg-[#292e39]">
             {isLoading ? (
                 <Spinner />
             ) : (
-                <div className="relative hidden text-white md:block">
+                <div className="relative hidden h-full text-white md:block">
                     <Movie movies={movies} />
                 </div>
             )}

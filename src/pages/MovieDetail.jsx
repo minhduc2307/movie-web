@@ -26,7 +26,7 @@ const MovieDetail = () => {
     }, [slug]);
 
     return (
-        <div className="min-h-[40vh] bg-[#06121d] px-5 py-3 lg:py-5">
+        <div className="min-h-[866px] bg-[#06121d] px-5 py-3 lg:py-5">
             {isLoading ? (
                 <Spinner />
             ) : (
