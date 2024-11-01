@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faFilm, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Spinner from "@/components/Spinner";
 import CircularProgressBar from "@components/CircularProgressBar";
 import Img from "@components/Img";
 import Toast, { showSuccessToast } from "@components/Toast/Toast";
 import { useUserContext } from "@context/UserProvider";
+import { useModalContext } from "@context/ModalProvider";
 
 const MovieDetail = () => {
     const { slug } = useParams();
     const [movieInfo, setMovieInfo] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const { favoriteList, setFavoriteList, userInfo } = useUserContext();
+    const { openPopup } = useModalContext();
 
     useEffect(() => {
         setIsLoading(true);
@@ -37,6 +39,8 @@ const MovieDetail = () => {
         setFavoriteList([movieInfo, ...favoriteList]);
     };
 
+    const trailerKey = (movieInfo?.trailer_url || "").split("?v=")[1];
+
     return (
         <div className="min-h-[866px] bg-[#06121d] px-5 py-3 lg:py-5">
             {isLoading ? (
@@ -44,7 +48,7 @@ const MovieDetail = () => {
             ) : (
                 <div className="mx-auto max-w-screen-xl">
                     <div className="relative py-3">
-                        <figure className="h-[450px]">
+                        <figure className="h-[490px] lg:h-[450px]">
                             <Img
                                 src={movieInfo?.thumb_url}
                                 width={1280}
@@ -99,6 +103,26 @@ const MovieDetail = () => {
                                     />
                                     Xem ngay
                                 </a>
+                                {movieInfo?.trailer_url && (
+                                    <button
+                                        className="flex h-10 items-center justify-center gap-2 rounded-full bg-black px-3 font-medium text-white"
+                                        onClick={() => {
+                                            openPopup(
+                                                <iframe
+                                                    src={`https://www.youtube.com/embed/${trailerKey}`}
+                                                    className="aspect-video w-[80vw] sm:w-[70vw]"
+                                                    title="YouTube video player"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                    referrerPolicy="strict-origin-when-cross-origin"
+                                                    allowFullScreen
+                                                ></iframe>,
+                                            );
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faFilm} />
+                                        Trailer
+                                    </button>
+                                )}
                                 {userInfo && (
                                     <button
                                         className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ff0000] px-5 text-base text-white"

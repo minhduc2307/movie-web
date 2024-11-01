@@ -5,6 +5,7 @@ import Root from "@pages/Root";
 import "./index.css";
 import UserProvider from "./context/UserProvider";
 import FavoriteList from "@pages/FavoriteList";
+import ModalProvider from "@context/ModalProvider";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 const MovieDetail = lazy(() => import("@pages/MovieDetail"));
@@ -72,7 +73,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
     <StrictMode>
         <UserProvider>
-            <RouterProvider router={router} />
+            <ModalProvider>
+                <RouterProvider router={router} />
+            </ModalProvider>
         </UserProvider>
     </StrictMode>,
 );
