@@ -119,10 +119,7 @@ const HeaderLogined = ({ userInfo, setUserInfo }) => {
                         </div>
                         <ul className="mt-8">
                             <li>
-                                <a
-                                    href="/profile"
-                                    className="inline-block py-2"
-                                >
+                                <a href="#!" className="inline-block py-2">
                                     Trang cá nhân
                                 </a>
                             </li>

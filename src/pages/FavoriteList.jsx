@@ -10,7 +10,7 @@ const FavoriteList = () => {
         setFavoriteList(updatedMediaList);
     };
     return (
-        <div className="bg-[#292e39] px-5 py-6 text-white lg:px-8 lg:py-10">
+        <div className="min-h-[38vh] bg-[#292e39] px-5 py-6 text-white lg:px-8 lg:py-10">
             <div className="mx-auto max-w-screen-2xl">
                 <h1 className="mb-8 rounded-xl bg-red-500 py-4 text-center text-xl font-medium text-white">
                     Danh sách yêu thích
@@ -20,7 +20,9 @@ const FavoriteList = () => {
                         <div key={movie._id} className="relative">
                             <MovieCard
                                 name={movie.name}
-                                posterUrl={movie.poster_url}
+                                posterUrl={
+                                    (movie.poster_url || "").split(".com/")[1]
+                                }
                                 year={movie.year}
                                 time={movie.time}
                                 type={movie.type}
