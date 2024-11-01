@@ -8,9 +8,9 @@ const SignIn = () => {
     const navigate = useNavigate();
     const { setUserInfo } = useUserContext();
     const onSubmit = (data) => {
-        const { email, password } = data;
-        setUserInfo({ email, password });
-        showSuccessToast("Đăng nhập thành công");
+        const { email } = data;
+        setUserInfo({ email });
+        showSuccessToast("Thành công", "Đăng nhập thành công");
         setTimeout(() => {
             navigate("/");
         }, 1000);

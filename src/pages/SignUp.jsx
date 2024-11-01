@@ -18,9 +18,9 @@ const SignIn = () => {
             return;
         }
         setErrorMessage("");
-        const { email, password } = data;
-        setUserInfo({ email, password });
-        showSuccessToast("Đăng ký thành công");
+        const { email } = data;
+        setUserInfo({ email });
+        showSuccessToast("Thành công", "Đăng ký thành công");
         setTimeout(() => {
             navigate("/");
         }, 1000);

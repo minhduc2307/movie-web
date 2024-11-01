@@ -1,9 +1,10 @@
 import { lazy, StrictMode } from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "@pages/Root";
 import "./index.css";
 import UserProvider from "./context/UserProvider";
+import FavoriteList from "@pages/FavoriteList";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 const MovieDetail = lazy(() => import("@pages/MovieDetail"));
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
                 path: "/cartoon",
                 element: <CartoonMovie />,
             },
+            {
+                path: "/favorite",
+                element: <FavoriteList />,
+            },
         ],
     },
     {
@@ -64,17 +69,10 @@ const router = createBrowserRouter([
     },
 ]);
 
-const container = document.getElementById("root");
-const root = ReactDOM.createRoot(container);
-
-function renderApp() {
-    root.render(
-        <StrictMode>
-            <UserProvider>
-                <RouterProvider router={router} />
-            </UserProvider>
-        </StrictMode>,
-    );
-}
-
-renderApp();
+createRoot(document.getElementById("root")).render(
+    <StrictMode>
+        <UserProvider>
+            <RouterProvider router={router} />
+        </UserProvider>
+    </StrictMode>,
+);

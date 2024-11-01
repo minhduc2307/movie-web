@@ -8,14 +8,12 @@
 .toast {
     display: flex;
     align-items: center;
-    /* background: #fff; */
     background: #292e39;
     padding: 20px 0;
-    min-width: 400px;
+    min-width: 300px;
     max-width: 450px;
     border-radius: 2px;
     border-left: 4px solid;
-    /* box-shadow: 0 5px 8px rgba(0, 0, 0, 0.08); */
     box-shadow: 0 5px 8px rgba(255, 255, 255, 0.08);
 
     transition: all linear 0.3s;
@@ -86,14 +84,12 @@
 .toast__title {
     font-size: 16px;
     font-weight: 600;
-    /* color: #333; */
     color: #fff;
 }
 
 .toast__msg {
     margin-top: 6px;
     font-size: 14px;
-    /* color: #888; */
     color: #fff;
     line-height: 1.5;
 }
@@ -101,7 +97,6 @@
 .toast__close {
     padding: 0 16px;
     font-size: 20px;
-    /* color: rgba(0, 0, 0, 0.3); */
     color: #fff;
     cursor: pointer;
 }

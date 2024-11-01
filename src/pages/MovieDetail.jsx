@@ -5,11 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Spinner from "@/components/Spinner";
 import CircularProgressBar from "@components/CircularProgressBar";
 import Img from "@components/Img";
+import Toast, { showSuccessToast } from "@components/Toast/Toast";
+import { useUserContext } from "@context/UserProvider";
 
 const MovieDetail = () => {
     const { slug } = useParams();
     const [movieInfo, setMovieInfo] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    const { favoriteList, setFavoriteList, userInfo } = useUserContext();
 
     useEffect(() => {
         setIsLoading(true);
@@ -24,6 +27,15 @@ const MovieDetail = () => {
                 setIsLoading(false);
             });
     }, [slug]);
+
+    const addFavoriteList = (movieInfo) => {
+        const searchedMovie = (favoriteList || []).find((movie) => {
+            return movie._id === movieInfo._id;
+        });
+        if (searchedMovie) return;
+        showSuccessToast("Thành công", "Đã thêm phim vào danh sách yêu thích");
+        setFavoriteList([movieInfo, ...favoriteList]);
+    };
 
     return (
         <div className="min-h-[866px] bg-[#06121d] px-5 py-3 lg:py-5">
@@ -87,6 +99,21 @@ const MovieDetail = () => {
                                     />
                                     Xem ngay
                                 </a>
+                                {userInfo && (
+                                    <button
+                                        className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ff0000] px-5 text-base text-white"
+                                        onClick={() =>
+                                            addFavoriteList(movieInfo)
+                                        }
+                                    >
+                                        <img
+                                            src="/heart.svg"
+                                            alt=""
+                                            className="invert"
+                                        />
+                                        Thêm vào yêu thích
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -123,6 +150,7 @@ const MovieDetail = () => {
                     </div>
                 </div>
             )}
+            <Toast />
         </div>
     );
 };
