@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "@pages/Root";
 import "./index.css";
+import UserProvider from "./context/UserProvider";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 const MovieDetail = lazy(() => import("@pages/MovieDetail"));
@@ -65,8 +66,15 @@ const router = createBrowserRouter([
 
 const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container);
-root.render(
-    <StrictMode>
-        <RouterProvider router={router} />
-    </StrictMode>,
-);
+
+function renderApp() {
+    root.render(
+        <StrictMode>
+            <UserProvider>
+                <RouterProvider router={router} />
+            </UserProvider>
+        </StrictMode>,
+    );
+}
+
+renderApp();

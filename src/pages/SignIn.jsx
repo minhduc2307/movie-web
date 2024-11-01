@@ -1,7 +1,24 @@
+import { useForm } from "react-hook-form";
+import { useUserContext } from "@context/UserProvider";
+import Toast, { showSuccessToast } from "@components/Toast/Toast";
+import { useNavigate } from "react-router-dom";
+
 const SignIn = () => {
+    const { handleSubmit, register } = useForm();
+    const navigate = useNavigate();
+    const { setUserInfo } = useUserContext();
+    const onSubmit = (data) => {
+        const { email, password } = data;
+        setUserInfo({ email, password });
+        showSuccessToast("Đăng nhập thành công");
+        setTimeout(() => {
+            navigate("/");
+        }, 1000);
+    };
+
     return (
-        <div className="flex h-[100vh]">
-            <div className="w-content-inner mx-auto px-5 py-20 lg:py-40">
+        <div className="flex h-[100vh] lg:items-center">
+            <div className="mx-auto w-content-inner px-5 py-20">
                 <div className="flex flex-col items-center">
                     <h1>
                         <a
@@ -16,18 +33,23 @@ const SignIn = () => {
                         Chào mừng trở lại. Vui lòng nhập thông tin tài khoản của
                         bạn
                     </p>
-                    <form action="" className="mt-7 w-full">
+                    <form
+                        action=""
+                        className="mt-7 w-full"
+                        onSubmit={handleSubmit(onSubmit)}
+                        method="POST"
+                    >
                         <div className="mt-6">
                             <div className="flex h-12 items-center rounded-xl border-2 border-solid border-[#d9d9d9] px-3 focus-within:border-[#77dae6]">
                                 <input
                                     type="email"
-                                    name="email"
+                                    {...register("email")}
                                     id="email"
                                     required
                                     placeholder="Email"
                                     className="h-full w-full text-base"
                                     autoFocus
-                                    pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+                                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
                                 />
                                 <img
                                     src="/message.svg"
@@ -40,7 +62,7 @@ const SignIn = () => {
                             <div className="flex h-12 items-center rounded-xl border-2 border-solid border-[#d9d9d9] px-3 focus-within:border-[#77dae6]">
                                 <input
                                     type="password"
-                                    name="password"
+                                    {...register("password")}
                                     id="password"
                                     required
                                     minLength={6}
@@ -67,6 +89,7 @@ const SignIn = () => {
                     </p>
                 </div>
             </div>
+            <Toast />
         </div>
     );
 };
