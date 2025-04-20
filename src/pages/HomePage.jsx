@@ -20,7 +20,7 @@ function HomePage() {
         <div>
             {sliderHeight ? (
                 <div style={{ height: `${sliderHeight}px` }}>
-                    <FeatureMovies />
+                    <FeatureMovies height={sliderHeight} />
                 </div>
             ) : null}
             <div className="min-h-screen bg-[#292e39]">
