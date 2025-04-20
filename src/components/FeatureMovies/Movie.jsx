@@ -16,20 +16,27 @@ const responsive = {
     },
 };
 
-const Movie = ({ movies }) => {
+const Movie = ({ movies, height }) => {
     return (
         <Carousel
             responsive={responsive}
             autoPlay={true}
             autoPlaySpeed={4000}
+            shouldResetAutoplay
+            showDots
             infinite={true}
+            arrows={false}
         >
             {movies.map((movie) => (
-                <div key={movie._id} className="h-full w-full">
+                <div
+                    key={movie._id}
+                    className="h-full w-full"
+                    style={{ height: `${height}px` }}
+                >
                     <Img
                         src={movie?.thumb_url}
                         width={634}
-                        height={357}
+                        height={height || 357}
                         className="h-full w-full object-cover brightness-50"
                     />
                     <div className="absolute bottom-[15%] left-8">

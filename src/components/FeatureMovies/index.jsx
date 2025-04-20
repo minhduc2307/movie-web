@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Movie from "./Movie";
 import Spinner from "@components/Spinner";
 
-const FeatureMovies = () => {
+const FeatureMovies = ({ height }) => {
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -24,7 +24,7 @@ const FeatureMovies = () => {
                 <Spinner />
             ) : (
                 <div className="relative hidden h-full text-white md:block">
-                    <Movie movies={movies} />
+                    <Movie movies={movies} height={height} />
                 </div>
             )}
         </div>
