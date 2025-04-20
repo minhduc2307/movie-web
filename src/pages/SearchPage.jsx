@@ -2,33 +2,40 @@ import MovieCard from "@components/MediaList/MovieCard";
 import Spinner from "@components/Spinner";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import useDebounce from "@hooks/useDebounce";
+import { useEffect, useState } from "react";
 
 const SearchPage = () => {
     const [searchText, setSearchText] = useState("");
     const [movieList, setMovieList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const keyword = useDebounce(searchText);
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        const res = await fetch(
-            `${import.meta.env.VITE_API_HOST}/v1/api/tim-kiem?keyword=${searchText}&limit=18`,
-        );
-        const responseData = await res.json();
-        const data = responseData?.data;
-        setMovieList(data?.items);
-        setIsLoading(false);
-    };
+    useEffect(() => {
+        if (!keyword) return;
+        const fetchSearch = async () => {
+            setIsLoading(true);
+            const res = await fetch(
+                `${import.meta.env.VITE_API_HOST}/v1/api/tim-kiem?keyword=${keyword.trim()}&limit=18`,
+            );
+            const responseData = await res.json();
+            const data = responseData?.data;
+            setMovieList(data?.items);
+            setIsLoading(false);
+        };
+        fetchSearch();
+    }, [keyword]);
 
     return (
         <div className="min-h-[40vh] bg-[#292e39] px-5 py-3 text-white lg:py-5">
             <div className="mx-auto max-w-screen-xl">
-                <form
-                    onSubmit={handleSearch}
-                    className="flex items-center gap-2"
-                >
-                    <div className="flex h-12 w-full items-center rounded-lg border-[2px] border-solid border-[#d2d1d6] px-3 sm:w-1/2 xl:w-1/3">
+                <form className="flex items-center gap-2">
+                    <div className="flex h-12 w-full items-center rounded-lg border-[2px] border-solid border-[#d2d1d6] px-3 focus-within:border-[#77dae6] sm:w-1/2 xl:w-1/3">
+                        <img
+                            src="/search.svg"
+                            alt="Search"
+                            className="mr-2 h-4 w-4 invert"
+                        />
                         <input
                             type="text"
                             placeholder="Nhập tên phim bạn cần tìm"
@@ -37,35 +44,26 @@ const SearchPage = () => {
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
                         />
-                        <button
-                            type="reset"
-                            className="ml-3"
-                            onClick={() => {
-                                setSearchText("");
-                                setMovieList([]);
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faXmark} />
-                        </button>
+                        {searchText && (
+                            <button
+                                type="reset"
+                                className="ml-3"
+                                onClick={() => {
+                                    setSearchText("");
+                                    setMovieList([]);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faXmark} />
+                            </button>
+                        )}
                     </div>
-                    <button
-                        className="flex h-[52px] items-center justify-center rounded-lg bg-[#0d6efd] px-5"
-                        type="submit"
-                    >
-                        <img
-                            src="/search.svg"
-                            alt="Search"
-                            className="invert"
-                        />
-                    </button>
-                    <div className="bg-red-50"></div>
                 </form>
 
                 {isLoading ? (
                     <Spinner />
                 ) : (
                     <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-                        {movieList.map((media) => (
+                        {(movieList || []).map((media) => (
                             <MovieCard
                                 key={media._id}
                                 name={media.name}
