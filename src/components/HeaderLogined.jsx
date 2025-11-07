@@ -1,6 +1,7 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const HeaderLogined = ({ userInfo, setUserInfo }) => {
     const [showMenuDrawer, setShowMenuDrawer] = useState(false);
@@ -19,19 +20,18 @@ const HeaderLogined = ({ userInfo, setUserInfo }) => {
             </button>
             <div className="flex items-center">
                 <h1 className="absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] lg:static lg:translate-x-0 lg:translate-y-0">
-                    <a
-                        href="/"
+                    <Link
+                        to="/"
                         className="text-2xl font-bold uppercase text-red-500 md:text-3xl"
                     >
                         Mọt phim
-                    </a>
+                    </Link>
                 </h1>
                 <nav
-                    className={`-translate-x-full lg:mx-6 lg:translate-x-0 ${
-                        showMenuDrawer
-                            ? "fixed bottom-0 left-0 right-1/4 top-0 z-10 !block translate-x-0 bg-[#292e39] py-5 shadow-lg shadow-[#171c2866] transition-transform duration-500"
-                            : ""
-                    }`}
+                    className={`-translate-x-full lg:mx-6 lg:translate-x-0 ${showMenuDrawer
+                        ? "fixed bottom-0 left-0 right-1/4 top-0 z-10 !block translate-x-0 bg-[#292e39] py-5 shadow-lg shadow-[#171c2866] transition-transform duration-500"
+                        : ""
+                        }`}
                 >
                     <button
                         className={`hidden px-5 pb-3 ${showMenuDrawer ? "!block" : ""}`}
@@ -47,55 +47,51 @@ const HeaderLogined = ({ userInfo, setUserInfo }) => {
                     </button>
                     <ul className="flex flex-col px-5 lg:flex-row lg:gap-6">
                         <li>
-                            <a
-                                href="/movie"
-                                className={`hidden md:text-lg lg:block lg:py-0 ${
-                                    showMenuDrawer ? "!inline-block py-3" : ""
-                                }`}
+                            <Link
+                                to="/movie"
+                                className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-3" : ""
+                                    }`}
                             >
                                 Phim lẻ
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="/tv"
-                                className={`hidden md:text-lg lg:block lg:py-0 ${
-                                    showMenuDrawer ? "!inline-block py-3" : ""
-                                }`}
+                            <Link
+                                to="/tv"
+                                className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-3" : ""
+                                    }`}
                             >
                                 Phim bộ
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="/cartoon"
-                                className={`hidden md:text-lg lg:block lg:py-0 ${
-                                    showMenuDrawer ? "!inline-block py-3" : ""
-                                }`}
+                            <Link
+                                to="/cartoon"
+                                className={`hidden md:text-lg lg:block lg:py-0 ${showMenuDrawer ? "!inline-block py-3" : ""
+                                    }`}
                             >
                                 Phim hoạt hình
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="/search"
-                                className={`hidden ${
-                                    showMenuDrawer
-                                        ? "!flex h-full items-center rounded-lg py-3 shadow-[#00000033] lg:h-12 lg:w-12 lg:justify-center lg:py-0"
-                                        : ""
-                                }`}
+                            <Link
+                                to="/search"
+                                className={`hidden ${showMenuDrawer
+                                    ? "!flex h-full items-center rounded-lg py-3 shadow-[#00000033] lg:h-12 lg:w-12 lg:justify-center lg:py-0"
+                                    : ""
+                                    }`}
                             >
                                 <FontAwesomeIcon icon={faMagnifyingGlass} />
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </nav>
-                <a
-                    href="/search"
+                <Link
+                    to="/search"
                     className="ml-10 hidden h-12 w-12 items-center justify-center rounded-lg bg-[#292d38] shadow-[#00000033] lg:flex"
                 >
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
-                </a>
+                </Link>
             </div>
             <div className="group relative">
                 <img
@@ -119,26 +115,26 @@ const HeaderLogined = ({ userInfo, setUserInfo }) => {
                         </div>
                         <ul className="mt-8">
                             <li>
-                                <a href="#!" className="inline-block py-2">
+                                <Link to="#!" className="inline-block py-2">
                                     Trang cá nhân
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a
-                                    href="/favorite"
+                                <Link
+                                    to="/favorite"
                                     className="inline-block py-2"
                                 >
                                     Danh sách yêu thích
-                                </a>
+                                </Link>
                             </li>
                             <li className="mt-3 border-t border-solid border-t-[#292e39] pt-3">
-                                <a
-                                    href="#!"
+                                <Link
+                                    to="#!"
                                     className="inline-block py-2"
                                     onClick={() => setUserInfo(null)}
                                 >
                                     Đăng xuất
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>
@@ -146,11 +142,10 @@ const HeaderLogined = ({ userInfo, setUserInfo }) => {
             </div>
 
             <div
-                className={`hidden opacity-0 ${
-                    showMenuDrawer
-                        ? "fixed inset-0 z-[9] !block bg-black/30 opacity-100 transition-opacity"
-                        : ""
-                }`}
+                className={`hidden opacity-0 ${showMenuDrawer
+                    ? "fixed inset-0 z-[9] !block bg-black/30 opacity-100 transition-opacity"
+                    : ""
+                    }`}
                 onClick={() => {
                     setShowMenuDrawer(false);
                 }}

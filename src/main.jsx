@@ -1,4 +1,4 @@
-import { lazy, StrictMode } from "react";
+import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "@pages/Root";
@@ -6,6 +6,7 @@ import "./index.css";
 import UserProvider from "./context/UserProvider";
 import FavoriteList from "@pages/FavoriteList";
 import ModalProvider from "@context/ModalProvider";
+import Spinner from "@components/Spinner";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 const MovieDetail = lazy(() => import("@pages/MovieDetail"));
@@ -58,15 +59,27 @@ const router = createBrowserRouter([
     },
     {
         path: "/sign-in",
-        element: <SignIn />,
+        element: (
+            <Suspense fallback={<Spinner />}>
+                <SignIn />
+            </Suspense>
+        ),
     },
     {
         path: "/sign-up",
-        element: <SignUp />,
+        element: (
+            <Suspense fallback={<Spinner />}>
+                <SignUp />
+            </Suspense>
+        ),
     },
     {
         path: "/*",
-        element: <NotFound />,
+        element: (
+            <Suspense fallback={<Spinner />}>
+                <NotFound />
+            </Suspense>
+        ),
     },
 ]);
 

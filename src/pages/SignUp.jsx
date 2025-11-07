@@ -2,7 +2,7 @@ import Toast, { showSuccessToast } from "@components/Toast/Toast";
 import { useUserContext } from "@context/UserProvider";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignIn = () => {
     const { handleSubmit, register } = useForm();
@@ -31,12 +31,12 @@ const SignIn = () => {
             <div className="mx-auto w-content-inner px-5 py-10">
                 <div className="flex flex-col items-center">
                     <h1>
-                        <a
-                            href="/"
+                        <Link
+                            to="/"
                             className="text-3xl font-bold uppercase text-red-500"
                         >
                             Mọt phim
-                        </a>
+                        </Link>
                     </h1>
                     <h2 className="mt-10 text-3xl text-[#010101]">Đăng ký</h2>
                     <p className="mt-3 text-center text-[#777e90]">
@@ -115,12 +115,12 @@ const SignIn = () => {
                     </form>
                     <p className="mt-7 flex gap-1">
                         Đã có tài khoản?
-                        <a
-                            href="/sign-in"
+                        <Link
+                            to="/sign-in"
                             className="font-medium text-[#0166ff]"
                         >
                             Đăng nhập ngay
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>

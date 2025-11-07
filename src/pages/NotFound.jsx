@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const NotFound = () => {
     return (
         <div className="relative min-h-[100vh] bg-[#1E1E1E]">
@@ -12,13 +14,13 @@ const NotFound = () => {
                     <p className="mt-8 text-center text-6xl text-[#9E9BB2]">
                         Không tìm thấy trang!
                     </p>
-                    <a
-                        href="/"
+                    <Link
+                        to="/"
                         className="mt-10 flex items-center gap-1 text-3xl text-white"
                     >
                         <img src="/back.svg" alt="" className="invert" />
                         Về trang chủ
-                    </a>
+                    </Link>
                 </div>
             </div>
             <img

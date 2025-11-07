@@ -5,6 +5,7 @@ import {
     faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
@@ -12,12 +13,12 @@ const Footer = () => {
             <div className="mx-auto grid gap-[60px] sm:grid-cols-2 lg:max-w-screen-xl lg:grid-cols-footer">
                 <div>
                     <h2>
-                        <a
-                            href="/"
+                        <Link
+                            to="/"
                             className="text-3xl font-bold uppercase text-red-500"
                         >
                             Mọt phim
-                        </a>
+                        </Link>
                     </h2>
                     <p className="mt-5 max-w-[90%]">
                         Trang web xem phim trực tuyến miễn phí chất lượng cao
@@ -52,36 +53,36 @@ const Footer = () => {
                     <h3 className="text-lg font-bold uppercase">Danh mục</h3>
                     <ul className="mt-4">
                         <li>
-                            <a
-                                href="#!"
+                            <Link
+                                to="#!"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim mới
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="/cartoon"
+                            <Link
+                                to="/cartoon"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim hoạt hình
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="/tv"
+                            <Link
+                                to="/tv"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim bộ
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="/movie"
+                            <Link
+                                to="/movie"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim lẻ
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </div>
@@ -89,36 +90,36 @@ const Footer = () => {
                     <h3 className="text-lg font-bold uppercase">Thể loại</h3>
                     <ul className="mt-4">
                         <li>
-                            <a
-                                href="#!"
+                            <Link
+                                to="#!"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim Cổ Trang
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="#!"
+                            <Link
+                                to="#!"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim Hành Động
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="#!"
+                            <Link
+                                to="#!"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim Bách Hợp
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="#!"
+                            <Link
+                                to="#!"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Phim Viễn Tưởng
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </div>
@@ -126,36 +127,36 @@ const Footer = () => {
                     <h3 className="text-lg font-bold uppercase">Điều khoản</h3>
                     <ul className="mt-4">
                         <li>
-                            <a
-                                href="#!"
+                            <Link
+                                to="#!"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 DMCA
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="#!"
+                            <Link
+                                to="#!"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Liên hệ
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="#!"
+                            <Link
+                                to="#!"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Quyền riêng tư
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a
-                                href="#!"
+                            <Link
+                                to="#!"
                                 className="inline-block py-1 hover:text-[#0071dc]"
                             >
                                 Điều khoản dịch vụ
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </div>
@@ -163,33 +164,33 @@ const Footer = () => {
             <div className="mx-auto mt-10 flex flex-col items-center justify-between gap-3 border-t border-zinc-700 py-3 md:flex-row lg:max-w-screen-xl">
                 <p>© 2024 Mot Phim. All rights reserved.</p>
                 <div className="flex items-center gap-5">
-                    <a
-                        href="#!"
+                    <Link
+                        to="#!"
                         className="flex h-8 w-8 items-center justify-center rounded-md bg-[#4863a9] transition-transform duration-300 hover:-translate-y-1"
                     >
                         <FontAwesomeIcon
                             icon={faFacebookF}
                             className="h-4 w-4"
                         />
-                    </a>
-                    <a
-                        href="#!"
+                    </Link>
+                    <Link
+                        to="#!"
                         className="flex h-8 w-8 items-center justify-center rounded-md bg-[#f00] transition-transform duration-300 hover:-translate-y-1"
                     >
                         <FontAwesomeIcon icon={faYoutube} className="h-4 w-4" />
-                    </a>
-                    <a
-                        href="#!"
+                    </Link>
+                    <Link
+                        to="#!"
                         className="flex h-8 w-8 items-center justify-center rounded-md bg-[#000] transition-transform duration-300 hover:-translate-y-1"
                     >
                         <FontAwesomeIcon icon={faTiktok} className="h-4 w-4" />
-                    </a>
-                    <a
-                        href="#!"
+                    </Link>
+                    <Link
+                        to="#!"
                         className="flex h-8 w-8 items-center justify-center rounded-md bg-[#4999e6] transition-transform duration-300 hover:-translate-y-1"
                     >
                         <FontAwesomeIcon icon={faTwitter} className="h-4 w-4" />
-                    </a>
+                    </Link>
                 </div>
             </div>
         </footer>
