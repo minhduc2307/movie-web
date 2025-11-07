@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { faFilm, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Spinner from "@/components/Spinner";
@@ -71,7 +71,7 @@ const MovieDetail = () => {
                                         <CircularProgressBar
                                             percent={Math.round(
                                                 movieInfo?.tmdb?.vote_average *
-                                                    10,
+                                                10,
                                             )}
                                         />
                                         <span className="text-white">
@@ -93,8 +93,8 @@ const MovieDetail = () => {
                                 </ul>
                             </div>
                             <div className="left-5 mt-2 flex flex-wrap items-center gap-2 sm:mt-3">
-                                <a
-                                    href={`/watch/${movieInfo.slug}`}
+                                <Link
+                                    to={`/watch/${movieInfo.slug}`}
                                     className="flex h-10 items-center justify-center gap-2 rounded-full bg-[#ffb700] px-5 font-medium text-[#171c28]"
                                 >
                                     <FontAwesomeIcon
@@ -102,7 +102,7 @@ const MovieDetail = () => {
                                         className="text-white"
                                     />
                                     Xem ngay
-                                </a>
+                                </Link>
                                 {movieInfo?.trailer_url && (
                                     <button
                                         className="flex h-10 items-center justify-center gap-2 rounded-full bg-black px-3 font-medium text-white"

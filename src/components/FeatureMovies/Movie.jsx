@@ -2,6 +2,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "@components/FeatureMovies/carousel.css";
 import Img from "@components/Img";
+import { Link } from "react-router-dom";
 
 const responsive = {
     desktop: {
@@ -47,12 +48,12 @@ const Movie = ({ movies, height }) => {
                             <p className="text-lg">{movie?.year}</p>
                         </div>
                         <div>
-                            <a
-                                href={`/info/${movie.slug}`}
+                            <Link
+                                to={`/info/${movie.slug}`}
                                 className="mt-3 inline-block rounded bg-slate-300/30 px-4 py-2 lg:text-lg"
                             >
                                 Thông tin
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
