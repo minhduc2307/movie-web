@@ -1,0 +1,7 @@
+.spinner-container {
+    @apply flex h-[40vh] items-center justify-center bg-transparent py-5;
+}
+
+.spinner {
+    @apply h-20 w-20 animate-spin rounded-[50%] border-[10px] border-[#f3f3f3] border-t-[#3498db];
+}

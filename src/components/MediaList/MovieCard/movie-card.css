@@ -1,0 +1,31 @@
+.movie-card-link {
+    /* Link wrapper has no specific styles */
+}
+
+.movie-card {
+    @apply flex h-full flex-col rounded-2xl bg-[#171c28] p-3 shadow-xl shadow-slate-700;
+}
+
+.movie-card-poster-wrapper {
+    @apply relative overflow-hidden pt-[100%];
+}
+
+.movie-card-tv-badge {
+    @apply absolute left-0 top-0 rounded-lg bg-[#a3765d] p-1 font-medium text-white shadow-lg;
+}
+
+.movie-card-poster {
+    @apply absolute left-0 top-0 h-full w-full object-cover lg:duration-200 lg:ease-in lg:hover:scale-110;
+}
+
+.movie-card-title {
+    @apply my-1 line-clamp-2 font-semibold lg:text-xl;
+}
+
+.movie-card-footer {
+    @apply mt-auto flex justify-between;
+}
+
+.movie-card-info {
+    @apply lg:text-lg;
+}

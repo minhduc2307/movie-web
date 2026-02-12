@@ -1,0 +1,7 @@
+.feature-movies-container {
+    @apply h-full bg-[#292e39];
+}
+
+.feature-movies-slider {
+    @apply relative hidden h-full text-white md:block;
+}

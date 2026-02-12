@@ -1,0 +1,35 @@
+.not-found-container {
+    @apply relative min-h-[100vh] bg-[#1E1E1E];
+}
+
+.not-found-moon {
+    @apply absolute left-0 hidden brightness-[0.4] xl:block;
+}
+
+.not-found-content-wrapper {
+    @apply relative flex justify-center;
+}
+
+.not-found-content {
+    @apply mt-20 flex flex-col items-center;
+}
+
+.not-found-code {
+    @apply text-9xl text-[#D7D5E4];
+}
+
+.not-found-message {
+    @apply mt-8 text-center text-6xl text-[#9E9BB2];
+}
+
+.not-found-home-link {
+    @apply mt-10 flex items-center gap-1 text-3xl text-white;
+}
+
+.not-found-home-icon {
+    @apply invert;
+}
+
+.not-found-astronaut {
+    @apply absolute bottom-[10%] right-0 hidden brightness-[0.4] xl:block;
+}

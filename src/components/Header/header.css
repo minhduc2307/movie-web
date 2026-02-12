@@ -1,0 +1,83 @@
+.header {
+    @apply sticky top-0 z-[8] flex justify-between bg-slate-950 px-5 py-5 font-medium text-white lg:px-8;
+}
+
+.header-mobile-menu-button {
+    @apply lg:hidden;
+}
+
+.header-menu-icon {
+    @apply brightness-[1.08] contrast-[1.07] hue-rotate-[42deg] invert saturate-100 sepia;
+}
+
+.header-logo-container {
+    @apply flex items-center;
+}
+
+.header-logo-wrapper {
+    @apply absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] lg:static lg:translate-x-0 lg:translate-y-0;
+}
+
+.header-logo {
+    @apply text-2xl font-bold uppercase text-red-500 md:text-3xl;
+}
+
+.header-nav {
+    @apply -translate-x-full lg:mx-6 lg:translate-x-0;
+}
+
+.header-nav-mobile {
+    @apply fixed bottom-0 left-0 right-1/4 top-0 z-10 !block translate-x-0 bg-[#292e39] py-5 shadow-lg shadow-[#171c2866] transition-transform duration-500;
+}
+
+.header-nav-back-button {
+    @apply hidden px-5 pb-3;
+}
+
+.header-nav-back-button-mobile {
+    @apply !block;
+}
+
+.header-nav-list {
+    @apply flex flex-col px-5 lg:flex-row lg:gap-6;
+}
+
+.header-nav-link {
+    @apply hidden md:text-lg lg:block lg:py-0;
+}
+
+.header-nav-link-mobile {
+    @apply !inline-block py-3;
+}
+
+.header-search-link-mobile {
+    @apply hidden;
+}
+
+.header-search-link-mobile-active {
+    @apply !flex h-full items-center rounded-lg py-3 shadow-[#00000033] lg:h-12 lg:w-12 lg:justify-center lg:py-0;
+}
+
+.header-search-button {
+    @apply ml-10 hidden h-12 w-12 items-center justify-center rounded-lg bg-[#292d38] shadow-[#00000033] lg:flex;
+}
+
+.header-auth-buttons {
+    @apply flex items-center gap-5;
+}
+
+.header-signin-button {
+    @apply hidden items-center justify-center px-5 lg:flex lg:h-11 lg:text-lg;
+}
+
+.header-signup-button {
+    @apply flex h-10 items-center justify-center rounded-2xl bg-[#ffb700] px-2 text-[#171c28] lg:ml-5 lg:h-11 lg:px-5 lg:text-lg;
+}
+
+.header-overlay {
+    @apply hidden opacity-0;
+}
+
+.header-overlay-active {
+    @apply fixed inset-0 z-[9] !block bg-black/30 opacity-100 transition-opacity;
+}

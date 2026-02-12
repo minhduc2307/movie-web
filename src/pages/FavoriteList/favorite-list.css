@@ -1,0 +1,27 @@
+.favorite-list-container {
+    @apply min-h-[38vh] bg-[#292e39] px-5 py-6 text-white lg:px-8 lg:py-10;
+}
+
+.favorite-list-inner {
+    @apply mx-auto max-w-screen-2xl;
+}
+
+.favorite-list-title {
+    @apply mb-8 rounded-xl bg-red-500 py-4 text-center text-xl font-medium text-white;
+}
+
+.favorite-list-grid {
+    @apply grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6;
+}
+
+.favorite-list-item {
+    @apply relative;
+}
+
+.favorite-list-delete-button {
+    @apply absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-[50%] bg-[#fd5465] hover:bg-[#f7941e];
+}
+
+.favorite-list-delete-icon {
+    @apply h-1 w-4 rounded-sm bg-white;
+}

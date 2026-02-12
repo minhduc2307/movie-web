@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Movie from "./Movie";
 import Spinner from "@components/Spinner";
+import "./feature-movies.css";
 
 const FeatureMovies = ({ height }) => {
     const [movies, setMovies] = useState([]);
@@ -19,11 +20,11 @@ const FeatureMovies = ({ height }) => {
     }, []);
 
     return (
-        <div className="h-full bg-[#292e39]">
+        <div className="feature-movies-container">
             {isLoading ? (
                 <Spinner />
             ) : (
-                <div className="relative hidden h-full text-white md:block">
+                <div className="feature-movies-slider">
                     <Movie movies={movies} height={height} />
                 </div>
             )}
