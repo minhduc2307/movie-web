@@ -1,0 +1,75 @@
+.footer {
+    @apply bg-[#171c28] px-6 py-12 text-white;
+}
+
+.footer-grid {
+    @apply mx-auto grid gap-[60px] sm:grid-cols-2 lg:max-w-screen-xl lg:grid-cols-footer;
+}
+
+.footer-logo {
+    @apply text-3xl font-bold uppercase text-red-500;
+}
+
+.footer-description {
+    @apply mt-5 max-w-[90%];
+}
+
+.footer-subscribe-text {
+    @apply mt-8;
+}
+
+.footer-form {
+    @apply my-4 flex gap-2;
+}
+
+.footer-input {
+    @apply w-full rounded-md border border-solid border-[#d2d1d6] px-3 py-2 font-medium;
+}
+
+.footer-submit-button {
+    @apply flex h-10 items-center justify-center rounded-md bg-[#ffb700] px-5 text-lg font-medium text-[#171c28];
+}
+
+.footer-section-title {
+    @apply text-lg font-bold uppercase;
+}
+
+.footer-menu {
+    @apply mt-4;
+}
+
+.footer-link {
+    @apply inline-block py-1 hover:text-[#0071dc];
+}
+
+.footer-bottom {
+    @apply mx-auto mt-10 flex flex-col items-center justify-between gap-3 border-t border-zinc-700 py-3 md:flex-row lg:max-w-screen-xl;
+}
+
+.footer-social-links {
+    @apply flex items-center gap-5;
+}
+
+.footer-social-link {
+    @apply flex h-8 w-8 items-center justify-center rounded-md transition-transform duration-300 hover:-translate-y-1;
+}
+
+.footer-social-icon {
+    @apply h-4 w-4;
+}
+
+.footer-facebook {
+    @apply bg-[#4863a9];
+}
+
+.footer-youtube {
+    @apply bg-[#f00];
+}
+
+.footer-tiktok {
+    @apply bg-[#000];
+}
+
+.footer-twitter {
+    @apply bg-[#4999e6];
+}

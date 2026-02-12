@@ -1,0 +1,59 @@
+.signin-container {
+    @apply flex h-[100vh] lg:items-center;
+}
+
+.signin-inner {
+    @apply mx-auto w-content-inner px-5 py-20;
+}
+
+.signin-content {
+    @apply flex flex-col items-center;
+}
+
+.signin-logo {
+    @apply text-3xl font-bold uppercase text-red-500;
+}
+
+.signin-title {
+    @apply mt-10 text-3xl text-[#010101];
+}
+
+.signin-subtitle {
+    @apply mt-3 text-center text-[#777e90];
+}
+
+.signin-form {
+    @apply mt-7 w-full;
+}
+
+.signin-input-group {
+    @apply mt-6;
+}
+
+.signin-input-wrapper {
+    @apply flex h-12 items-center rounded-xl border-2 border-solid border-[#d9d9d9] px-3 focus-within:border-[#77dae6];
+}
+
+.signin-input {
+    @apply h-full w-full text-base;
+}
+
+.signin-input-icon {
+    @apply ml-3;
+}
+
+.signin-button-wrapper {
+    @apply mt-10;
+}
+
+.signin-button {
+    @apply flex h-10 w-full items-center justify-center whitespace-nowrap rounded-md bg-[#0166ff] px-5 text-white;
+}
+
+.signin-footer {
+    @apply mt-7 flex gap-1;
+}
+
+.signin-link {
+    @apply font-medium text-[#0166ff];
+}

@@ -1,0 +1,3 @@
+.cartoon-movie-container {
+    @apply min-h-screen bg-[#292e39];
+}

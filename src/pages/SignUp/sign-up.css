@@ -1,0 +1,67 @@
+.signup-container {
+    @apply flex h-[100vh] lg:items-center;
+}
+
+.signup-inner {
+    @apply mx-auto w-content-inner px-5 py-10;
+}
+
+.signup-content {
+    @apply flex flex-col items-center;
+}
+
+.signup-logo {
+    @apply text-3xl font-bold uppercase text-red-500;
+}
+
+.signup-title {
+    @apply mt-10 text-3xl text-[#010101];
+}
+
+.signup-subtitle {
+    @apply mt-3 text-center text-[#777e90];
+}
+
+.signup-form {
+    @apply mt-7 w-full;
+}
+
+.signup-input-group {
+    @apply mt-6;
+}
+
+.signup-input-wrapper {
+    @apply flex h-12 items-center rounded-xl border-2 border-solid border-[#d9d9d9] px-3 focus-within:border-[#77dae6];
+}
+
+.signup-input-wrapper-error {
+    @apply flex h-12 items-center rounded-xl border-2 border-solid border-[#ed4337] px-3 focus-within:border-[#77dae6];
+}
+
+.signup-input {
+    @apply h-full w-full text-base;
+}
+
+.signup-input-icon {
+    @apply ml-3;
+}
+
+.signup-error-message {
+    @apply mt-2 text-sm font-medium text-red-500;
+}
+
+.signup-button-wrapper {
+    @apply mt-10;
+}
+
+.signup-button {
+    @apply flex h-10 w-full items-center justify-center whitespace-nowrap rounded-md bg-[#0166ff] px-5 text-white;
+}
+
+.signup-footer {
+    @apply mt-7 flex gap-1;
+}
+
+.signup-link {
+    @apply font-medium text-[#0166ff];
+}

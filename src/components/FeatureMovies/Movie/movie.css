@@ -1,0 +1,23 @@
+.feature-movie-item {
+    @apply h-full w-full;
+}
+
+.feature-movie-image {
+    @apply h-full w-full object-cover brightness-50;
+}
+
+.feature-movie-info {
+    @apply absolute bottom-[15%] left-8;
+}
+
+.feature-movie-title {
+    @apply mb-1 text-xl font-bold;
+}
+
+.feature-movie-year {
+    @apply text-lg;
+}
+
+.feature-movie-link {
+    @apply mt-3 inline-block rounded bg-slate-300/30 px-4 py-2 lg:text-lg;
+}

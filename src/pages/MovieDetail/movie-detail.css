@@ -1,0 +1,83 @@
+.movie-detail-container {
+    @apply min-h-[866px] bg-[#06121d] px-5 py-3 lg:py-5;
+}
+
+.movie-detail-inner {
+    @apply mx-auto max-w-screen-xl;
+}
+
+.movie-detail-hero {
+    @apply relative py-3;
+}
+
+.movie-detail-backdrop {
+    @apply h-[490px] lg:h-[450px];
+}
+
+.movie-detail-backdrop-img {
+    @apply h-full w-full object-cover brightness-50;
+}
+
+.movie-detail-poster {
+    @apply absolute left-5 top-5 h-[285px] w-[200px];
+}
+
+.movie-detail-poster-img {
+    @apply h-full w-full object-cover;
+}
+
+.movie-detail-info-wrapper {
+    @apply absolute bottom-5 left-5 sm:bottom-6 md:bottom-7 lg:bottom-9;
+}
+
+.movie-detail-rating-genres {
+    @apply flex items-center gap-[10px];
+}
+
+.movie-detail-rating {
+    @apply flex items-center gap-1;
+}
+
+.movie-detail-rating-text {
+    @apply text-white;
+}
+
+.movie-detail-genres {
+    @apply flex flex-wrap gap-2;
+}
+
+.movie-detail-genre-item {
+    @apply rounded-lg bg-white p-[6px] text-sm font-medium text-black;
+}
+
+.movie-detail-actions {
+    @apply left-5 mt-2 flex flex-wrap items-center gap-2 sm:mt-3;
+}
+
+.movie-detail-watch-button {
+    @apply flex h-10 items-center justify-center gap-2 rounded-full bg-[#ffb700] px-5 font-medium text-[#171c28];
+}
+
+.movie-detail-trailer-button {
+    @apply flex h-10 items-center justify-center gap-2 rounded-full bg-black px-3 font-medium text-white;
+}
+
+.movie-detail-favorite-button {
+    @apply flex h-10 items-center justify-center gap-2 rounded-full bg-[#ff0000] px-5 text-base text-white;
+}
+
+.movie-detail-favorite-icon {
+    @apply invert;
+}
+
+.movie-detail-description {
+    @apply mt-3 space-y-2 text-base text-white lg:text-lg;
+}
+
+.movie-detail-title {
+    @apply text-3xl font-bold lg:text-4xl;
+}
+
+.movie-detail-info-label {
+    @apply font-medium;
+}

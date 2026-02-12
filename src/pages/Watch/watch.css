@@ -1,0 +1,67 @@
+.watch-container {
+    @apply bg-[#06121d] px-5 py-3 text-white lg:py-5;
+}
+
+.watch-inner {
+    @apply mx-auto max-w-screen-xl;
+}
+
+.watch-title {
+    @apply text-2xl font-bold lg:text-3xl;
+}
+
+.watch-content {
+    @apply mt-5 flex flex-col gap-2 md:flex-row;
+}
+
+.watch-video-wrapper {
+    @apply flex-[3];
+}
+
+.watch-video-container {
+    @apply relative w-full bg-black pt-[56.25%];
+}
+
+.watch-video {
+    @apply absolute left-0 top-0 h-full w-full;
+}
+
+.watch-chapters-wrapper {
+    @apply flex-1;
+}
+
+.watch-chapters-container {
+    @apply h-[300px] overflow-auto overscroll-none bg-[#1a1c21] p-3 lg:h-[400px];
+}
+
+.watch-chapters-title {
+    @apply text-lg font-medium;
+}
+
+.watch-chapters-list {
+    @apply mt-4 flex flex-wrap items-center gap-3;
+}
+
+.watch-chapter-item {
+    @apply flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg bg-[#292e39];
+}
+
+.watch-chapter-item-active {
+    @apply flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg bg-green-700;
+}
+
+.watch-info {
+    @apply mt-4 space-y-3 lg:text-lg;
+}
+
+.watch-info-row {
+    @apply flex gap-2;
+}
+
+.watch-info-label {
+    @apply font-medium;
+}
+
+.watch-info-label-nowrap {
+    @apply whitespace-nowrap font-medium;
+}
