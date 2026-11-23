@@ -3,6 +3,25 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>
+            (function () {
+                try {
+                    var theme = localStorage.getItem("motphim-theme");
+                    if (
+                        theme === "dark" ||
+                        (!theme &&
+                            !window.matchMedia("(prefers-color-scheme: light)")
+                                .matches)
+                    ) {
+                        document.documentElement.classList.add("dark");
+                        document.documentElement.style.colorScheme = "dark";
+                    } else {
+                        document.documentElement.classList.remove("dark");
+                        document.documentElement.style.colorScheme = "light";
+                    }
+                } catch (e) {}
+            })();
+        </script>
         <meta
             name="description"
             content="Trang xem phim Online với giao diện mới được bố trí và thiết kế thân thiện với người dùng. Nguồn phim được tổng hợp từ các website lớn với đa dạng các đầu phim và thể loại vô cùng phong phú."

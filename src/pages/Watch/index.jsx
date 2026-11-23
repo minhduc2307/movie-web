@@ -1,114 +1,200 @@
-import Hls from "hls.js";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import "./watch.css";
+import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { X, Clock, ListVideo, Server } from "lucide-react";
+import { movieService } from "@/services/api";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import VideoPlayer from "./VideoPlayer";
+import EpisodeDrawer from "./EpisodeDrawer";
 
 const Watch = () => {
     const { slug } = useParams();
-    const [srcMovie, setSrcMovie] = useState("");
-    const [chapterList, setChapterList] = useState([]);
-    const [movieInfo, setMovieInfo] = useState({});
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+
+    const [servers, setServers] = useState([]);
+    const [currentServer, setCurrentServer] = useState(0);
     const [currentChap, setCurrentChap] = useState(0);
+    const [movieInfo, setMovieInfo] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+    const [showEpisodesPanel, setShowEpisodesPanel] = useState(false);
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_HOST}/phim/${slug}`).then(
-            async (res) => {
-                const data = await res.json();
-                document.title = data?.movie.name;
-                setChapterList(data?.episodes[0]?.server_data);
-                setSrcMovie(
-                    data?.episodes[0]?.server_data[currentChap]?.link_m3u8,
-                );
-                setMovieInfo(data?.movie);
-            },
-        );
-    }, [slug, currentChap]);
+        let isMounted = true;
+        setIsLoading(true);
+        setCurrentServer(0);
+        setCurrentChap(0);
+        setServers([]);
+        setMovieInfo({});
+
+        movieService
+            .getMovieDetail(slug)
+            .then((data) => {
+                if (!isMounted) return;
+                const movie = data?.movie || {};
+                document.title = movie.name || "Watch";
+                setMovieInfo(movie);
+                setServers(data?.episodes || []);
+            })
+            .catch((err) => console.error("Error loading movie:", err))
+            .finally(() => {
+                if (isMounted) setIsLoading(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [slug]);
+
+    const chapterList = servers[currentServer]?.server_data || [];
+    const safeChapIndex = currentChap < chapterList.length ? currentChap : 0;
+    const currentEpisode = chapterList[safeChapIndex];
+    const srcMovie = currentEpisode?.link_m3u8 || "";
+    const currentEmbed = currentEpisode?.link_embed || "";
 
     useEffect(() => {
-        const video = document.getElementById("film-video");
-        if (!video) return;
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") {
+                if (showEpisodesPanel) {
+                    setShowEpisodesPanel(false);
+                } else {
+                    navigate(`/movies/${slug}`);
+                }
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [navigate, slug, showEpisodesPanel]);
 
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(srcMovie);
-            hls.attachMedia(video);
-
-            return () => {
-                hls.destroy();
-            };
-        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-            video.src = srcMovie;
-            const handlePlay = () => {
-                video.play().catch((err) => console.error(err));
-            };
-            video.addEventListener("canplay", handlePlay);
-
-            return () => {
-                video.removeEventListener("canplay", handlePlay);
-            };
+    const handleClose = () => {
+        if (window.history.length > 1) {
+            navigate(-1);
+        } else {
+            navigate(`/movies/${slug}`);
         }
-    }, [srcMovie]);
+    };
+
+    const hasMultipleEpisodes = chapterList.length > 1;
+    const episodeLabel = currentEpisode?.name
+        ? currentEpisode.name.toLowerCase().includes("tập")
+            ? currentEpisode.name
+            : `${t("watch.episodePrefix")} ${currentEpisode.name}`
+        : `${t("watch.episodePrefix")} ${safeChapIndex + 1}`;
+
+    const displayTitle = hasMultipleEpisodes
+        ? `${movieInfo?.name || ""} — ${episodeLabel}`
+        : movieInfo?.name || "";
 
     return (
-        <div className="watch-container">
-            <div className="watch-inner">
-                <h1 className="watch-title">
-                    {movieInfo?.type === "single"
-                        ? movieInfo.name
-                        : `${movieInfo.name} ~ Tập ${currentChap + 1}`}
-                </h1>
-                <div className="watch-content">
-                    <div className="watch-video-wrapper">
-                        <div className="watch-video-container">
-                            <video
-                                className="watch-video"
-                                id="film-video"
-                                controls
-                            ></video>
-                        </div>
-                    </div>
-                    {movieInfo?.type !== "single" && (
-                        <div className="watch-chapters-wrapper">
-                            <div className="watch-chapters-container">
-                                <p className="watch-chapters-title">
-                                    Chọn tập phim
-                                </p>
-                                <ul className="watch-chapters-list">
-                                    {chapterList.map((chap, index) => (
-                                        <li
-                                            key={chap.link_m3u8}
-                                            className={
-                                                currentChap === index
-                                                    ? "watch-chapter-item-active"
-                                                    : "watch-chapter-item"
-                                            }
-                                            onClick={() => {
-                                                setCurrentChap(index);
-                                                setSrcMovie(
-                                                    chapterList[index]
-                                                        .link_m3u8,
-                                                );
-                                            }}
-                                        >
-                                            {index + 1}
-                                        </li>
-                                    ))}
-                                </ul>
+        <div className="relative flex h-screen w-screen flex-col overflow-hidden bg-[#06080f] text-white select-none">
+            <header className="z-20 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-black/75 px-4 backdrop-blur-md sm:px-6">
+                <div className="flex min-w-0 items-center gap-3">
+                    {isLoading ? (
+                        <Skeleton className="h-6 w-52 bg-white/10" />
+                    ) : (
+                        <>
+                            <h1 className="truncate text-sm font-bold tracking-tight text-white sm:text-base lg:text-lg">
+                                {displayTitle}
+                            </h1>
+                            <div className="hidden sm:flex items-center gap-1.5 shrink-0">
+                                {movieInfo?.quality && (
+                                    <Badge className="bg-primary text-white text-[11px] font-bold px-2 py-0">
+                                        {movieInfo.quality}
+                                    </Badge>
+                                )}
+                                {movieInfo?.time && (
+                                    <Badge
+                                        variant="secondary"
+                                        className="bg-white/10 text-slate-200 border-white/10 text-[11px] gap-1"
+                                    >
+                                        <Clock className="h-3 w-3" />
+                                        {movieInfo.time}
+                                    </Badge>
+                                )}
                             </div>
-                        </div>
+                        </>
                     )}
                 </div>
-                <div className="watch-info">
-                    <div className="watch-info-row">
-                        <p className="watch-info-label">Thời gian:</p>
-                        <p>{movieInfo.time}</p>
-                    </div>
-                    <div className="watch-info-row">
-                        <p className="watch-info-label-nowrap">Nội dung:</p>
-                        <p>{movieInfo.content}</p>
-                    </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                    {servers.length > 1 && (
+                        <div className="hidden md:flex items-center gap-1 rounded-full bg-white/10 p-1">
+                            <Server className="h-3.5 w-3.5 text-slate-300 ml-2 mr-1" />
+                            {servers.map((srv, idx) => (
+                                <button
+                                    key={srv.server_name || idx}
+                                    type="button"
+                                    onClick={() => setCurrentServer(idx)}
+                                    className={cn(
+                                        "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                                        currentServer === idx
+                                            ? "bg-primary text-white"
+                                            : "text-slate-300 hover:text-white"
+                                    )}
+                                >
+                                    {srv.server_name || `Server ${idx + 1}`}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {hasMultipleEpisodes && (
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowEpisodesPanel((v) => !v)}
+                            className="h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                        >
+                            <ListVideo className="h-4 w-4" />
+                            <span className="hidden sm:inline">{t("watch.episodes")}</span>
+                            <Badge className="bg-primary/90 text-white px-1.5 py-0 text-[11px]">
+                                {chapterList.length}
+                            </Badge>
+                        </Button>
+                    )}
+
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleClose}
+                        aria-label={t("watch.close")}
+                        title={t("watch.close")}
+                        className="h-9 w-9 rounded-full bg-white/10 text-white hover:bg-primary hover:text-white transition-colors"
+                    >
+                        <X className="h-5 w-5" />
+                    </Button>
                 </div>
-            </div>
+            </header>
+
+            <main className="relative flex flex-1 min-h-0 items-center justify-center p-2 sm:p-4">
+                {isLoading ? (
+                    <Skeleton className="aspect-video max-h-full w-full max-w-6xl rounded-xl bg-white/10" />
+                ) : (
+                    <div className="relative flex h-full w-full max-w-6xl items-center justify-center">
+                        <VideoPlayer
+                            srcMovie={srcMovie}
+                            embedUrl={currentEmbed}
+                            title={displayTitle}
+                        />
+                    </div>
+                )}
+
+                <EpisodeDrawer
+                    open={showEpisodesPanel}
+                    servers={servers}
+                    currentServer={currentServer}
+                    chapterList={chapterList}
+                    currentChap={safeChapIndex}
+                    onSelectServer={setCurrentServer}
+                    onSelectChapter={setCurrentChap}
+                    onClose={() => setShowEpisodesPanel(false)}
+                />
+            </main>
         </div>
     );
 };

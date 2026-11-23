@@ -1,194 +1,126 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { faFilm, faPlay } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Spinner from "@/components/Spinner";
-import CircularProgressBar from "@components/CircularProgressBar";
-import Img from "@components/Img";
-import Toast, { showSuccessToast } from "@components/Toast";
+import { useTranslation } from "react-i18next";
+import { Film } from "lucide-react";
+import { toast } from "sonner";
 import { useUserContext } from "@context/UserProvider";
-import { useModalContext } from "@context/ModalProvider";
-import "./movie-detail.css";
+import { movieService } from "@/services/api";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import MovieHero from "./MovieHero";
+import MovieInfoGrid from "./MovieInfoGrid";
+import TrailerDialog from "./TrailerDialog";
+
+const extractYoutubeId = (url) => {
+    if (!url || typeof url !== "string") return "";
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+    return match?.[1] || "";
+};
 
 const MovieDetail = () => {
     const { slug } = useParams();
-    const [movieInfo, setMovieInfo] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
+    const { t } = useTranslation();
+    const [movieInfo, setMovieInfo] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isTrailerOpen, setIsTrailerOpen] = useState(false);
     const { favoriteList, setFavoriteList, userInfo } = useUserContext();
-    const { openPopup } = useModalContext();
 
     useEffect(() => {
+        let isMounted = true;
         setIsLoading(true);
-        fetch(`${import.meta.env.VITE_API_HOST}/phim/${slug}`)
-            .then(async (res) => {
-                const data = await res.json();
-                document.title = data.movie.name;
-                setMovieInfo(data.movie);
+
+        movieService
+            .getMovieDetail(slug)
+            .then((data) => {
+                if (!isMounted) return;
+                const movie = data?.movie || null;
+                if (movie?.name) document.title = movie.name;
+                setMovieInfo(movie);
             })
-            .catch((err) => console.error(err))
+            .catch((err) => console.error("Error loading movie detail:", err))
             .finally(() => {
-                setIsLoading(false);
+                if (isMounted) setIsLoading(false);
             });
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return () => {
+            isMounted = false;
+        };
     }, [slug]);
 
-    const addFavoriteList = (movieInfo) => {
-        const searchedMovie = (favoriteList || []).find((movie) => {
-            return movie._id === movieInfo._id;
-        });
-        if (searchedMovie) return;
-        showSuccessToast("Thành công", "Đã thêm phim vào danh sách yêu thích");
-        setFavoriteList([movieInfo, ...favoriteList]);
+    const isFavorited = Boolean(
+        movieInfo &&
+            (favoriteList || []).some(
+                (m) => (m._id || m.id) === (movieInfo._id || movieInfo.id)
+            )
+    );
+
+    const handleToggleFavorite = () => {
+        if (!userInfo) {
+            toast.error(t("movie.loginRequiredFavorite"));
+            return;
+        }
+        if (!movieInfo) return;
+
+        const targetId = movieInfo._id || movieInfo.id;
+        if (isFavorited) {
+            setFavoriteList(
+                (favoriteList || []).filter((m) => (m._id || m.id) !== targetId)
+            );
+            toast.success(t("movie.removedFavorite"));
+        } else {
+            setFavoriteList([movieInfo, ...(favoriteList || [])]);
+            toast.success(t("movie.addedFavorite"));
+        }
     };
 
-    const trailerKey = (movieInfo?.trailer_url || "").split("?v=")[1];
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-background text-foreground">
+                <div className="w-full h-[460px] bg-muted/40 animate-pulse" />
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2 space-y-4">
+                        <Skeleton className="h-44 w-full rounded-2xl" />
+                        <Skeleton className="h-32 w-full rounded-2xl" />
+                    </div>
+                    <Skeleton className="h-80 w-full rounded-2xl" />
+                </div>
+            </div>
+        );
+    }
+
+    if (!movieInfo) {
+        return (
+            <div className="flex min-h-[70vh] flex-col items-center justify-center bg-background px-4 text-center text-foreground">
+                <Film className="h-12 w-12 text-muted-foreground mb-4" />
+                <h1 className="text-xl font-bold">{t("detail.notFound")}</h1>
+                <Button asChild className="mt-4">
+                    <Link to="/movies">{t("favorites.exploreNow")}</Link>
+                </Button>
+            </div>
+        );
+    }
+
+    const trailerKey = extractYoutubeId(movieInfo.trailer_url);
 
     return (
-        <div className="movie-detail-container">
-            {isLoading ? (
-                <Spinner />
-            ) : (
-                <div className="movie-detail-inner">
-                    <div className="movie-detail-hero">
-                        <figure className="movie-detail-backdrop">
-                            <Img
-                                src={movieInfo?.thumb_url}
-                                width={1280}
-                                height={450}
-                                className="movie-detail-backdrop-img"
-                            />
-                        </figure>
-                        <figure className="movie-detail-poster">
-                            <Img
-                                src={movieInfo?.poster_url}
-                                width={200}
-                                height={285}
-                                className="movie-detail-poster-img"
-                            />
-                        </figure>
-                        <div className="movie-detail-info-wrapper">
-                            <div className="movie-detail-rating-genres">
-                                {movieInfo?.tmdb?.vote_average ? (
-                                    <div className="movie-detail-rating">
-                                        <CircularProgressBar
-                                            percent={Math.round(
-                                                movieInfo?.tmdb?.vote_average *
-                                                    10,
-                                            )}
-                                        />
-                                        <span className="movie-detail-rating-text">
-                                            Rating
-                                        </span>
-                                    </div>
-                                ) : null}
-                                <ul className="movie-detail-genres">
-                                    {(movieInfo.category || [])
-                                        .slice(0, 3)
-                                        .map((genre) => (
-                                            <li
-                                                key={genre.id}
-                                                className="movie-detail-genre-item"
-                                            >
-                                                {genre.name}
-                                            </li>
-                                        ))}
-                                </ul>
-                            </div>
-                            <div className="movie-detail-actions">
-                                <Link
-                                    to={`/watch/${movieInfo.slug}`}
-                                    className="movie-detail-watch-button"
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faPlay}
-                                        className="text-white"
-                                    />
-                                    Xem ngay
-                                </Link>
-                                {movieInfo?.trailer_url && (
-                                    <button
-                                        className="movie-detail-trailer-button"
-                                        onClick={() => {
-                                            openPopup(
-                                                <iframe
-                                                    src={`https://www.youtube.com/embed/${trailerKey}`}
-                                                    className="aspect-video w-[80vw] sm:w-[70vw]"
-                                                    title="YouTube video player"
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                                    referrerPolicy="strict-origin-when-cross-origin"
-                                                    allowFullScreen
-                                                ></iframe>,
-                                            );
-                                        }}
-                                    >
-                                        <FontAwesomeIcon icon={faFilm} />
-                                        Trailer
-                                    </button>
-                                )}
-                                {userInfo && (
-                                    <button
-                                        className="movie-detail-favorite-button"
-                                        onClick={() =>
-                                            addFavoriteList(movieInfo)
-                                        }
-                                    >
-                                        <img
-                                            src="/heart.svg"
-                                            alt=""
-                                            className="movie-detail-favorite-icon"
-                                        />
-                                        Thêm vào yêu thích
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="movie-detail-description">
-                        <h1 className="movie-detail-title">
-                            {movieInfo?.name}
-                        </h1>
-                        <p>
-                            <span className="movie-detail-info-label">
-                                Thời gian:
-                            </span>{" "}
-                            {movieInfo?.time}
-                        </p>
-                        <p>
-                            <span className="movie-detail-info-label">
-                                Năm phát hành:
-                            </span>{" "}
-                            {movieInfo?.year}
-                        </p>
-                        <p>
-                            <span className="movie-detail-info-label">
-                                Thể loại:
-                            </span>{" "}
-                            {(movieInfo?.category || [])
-                                .map((genre) => genre.name)
-                                .join(", ")}
-                        </p>
-                        <p>
-                            <span className="movie-detail-info-label">
-                                Nội dung:
-                            </span>{" "}
-                            {movieInfo?.content}
-                        </p>
-                        <p>
-                            <span className="movie-detail-info-label">
-                                Đạo diễn:
-                            </span>{" "}
-                            {(movieInfo?.director || []).join(", ")}
-                        </p>
-                        <p>
-                            <span className="movie-detail-info-label">
-                                Diễn viên:
-                            </span>{" "}
-                            {(movieInfo?.actor || []).join(", ")}
-                        </p>
-                    </div>
-                </div>
-            )}
-            <Toast />
+        <div className="min-h-screen bg-background text-foreground pb-16">
+            <MovieHero
+                movieInfo={movieInfo}
+                trailerKey={trailerKey}
+                isFavorited={isFavorited}
+                onToggleFavorite={handleToggleFavorite}
+                onOpenTrailer={() => setIsTrailerOpen(true)}
+            />
+            <MovieInfoGrid movieInfo={movieInfo} />
+            <TrailerDialog
+                open={isTrailerOpen}
+                onOpenChange={setIsTrailerOpen}
+                movieName={movieInfo.name}
+                trailerKey={trailerKey}
+            />
         </div>
     );
 };
+
 export default MovieDetail;

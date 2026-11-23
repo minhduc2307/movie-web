@@ -1,5 +1,5 @@
 .not-found-container {
-    @apply relative min-h-[100vh] bg-[#1E1E1E];
+    @apply relative min-h-[100vh] bg-background text-foreground;
 }
 
 .not-found-moon {
@@ -15,19 +15,19 @@
 }
 
 .not-found-code {
-    @apply text-9xl text-[#D7D5E4];
+    @apply text-9xl font-bold text-foreground;
 }
 
 .not-found-message {
-    @apply mt-8 text-center text-6xl text-[#9E9BB2];
+    @apply mt-8 text-center text-4xl sm:text-6xl text-muted-foreground;
 }
 
 .not-found-home-link {
-    @apply mt-10 flex items-center gap-1 text-3xl text-white;
+    @apply mt-10 flex items-center gap-2 text-2xl sm:text-3xl text-primary hover:underline;
 }
 
 .not-found-home-icon {
-    @apply invert;
+    @apply dark:invert;
 }
 
 .not-found-astronaut {

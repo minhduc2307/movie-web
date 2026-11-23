@@ -1,34 +1,15 @@
 import FeatureMovies from "@components/FeatureMovies";
 import MediaList from "@components/MediaList";
-import { TABS } from "@libs/constants";
-import "./home-page.css";
+import { TABS } from "@/lib/constants";
 
 function HomePage() {
-    const screenWidth = document.documentElement.clientWidth;
-    let sliderItem;
-    if (screenWidth > 1024) {
-        sliderItem = screenWidth / 3;
-    } else if (screenWidth >= 768) {
-        sliderItem = screenWidth / 2;
-    } else {
-        sliderItem = 0;
-    }
-
-    const ratio = 0.5635;
-    const sliderHeight = sliderItem * ratio;
-
     return (
-        <div>
-            {sliderHeight ? (
-                <div style={{ height: `${sliderHeight}px` }}>
-                    <FeatureMovies height={sliderHeight} />
-                </div>
-            ) : null}
-            <div className="homepage-media-section">
-                <MediaList tab={TABS[0]} />
-                <MediaList tab={TABS[1]} />
-                <MediaList tab={TABS[2]} />
-                <MediaList tab={TABS[3]} />
+        <div className="bg-background text-foreground">
+            <FeatureMovies />
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10 sm:space-y-14">
+                {TABS.map((tab) => (
+                    <MediaList key={tab.typeSlug} tab={tab} />
+                ))}
             </div>
         </div>
     );

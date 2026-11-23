@@ -3,24 +3,23 @@ import Header from "@components/Header";
 import Footer from "@components/Footer";
 import { Suspense } from "react";
 import Spinner from "@components/Spinner";
-import HeaderLogined from "@components/HeaderLogined";
-import { useUserContext } from "@context/UserProvider";
-import "./root.css";
+import { Toaster } from "sonner";
+import { useTheme } from "@/context/ThemeProvider";
 
 const Root = () => {
-    const { userInfo, setUserInfo } = useUserContext();
+    const { theme } = useTheme();
     return (
-        <div>
-            {userInfo ? (
-                <HeaderLogined userInfo={userInfo} setUserInfo={setUserInfo} />
-            ) : (
-                <Header />
-            )}
-            <Suspense fallback={<Spinner />}>
-                <Outlet />
-            </Suspense>
+        <div className="min-h-screen bg-background text-foreground flex flex-col justify-between transition-colors duration-200">
+            <Toaster richColors position="top-right" theme={theme} />
+            <Header />
+            <main className="flex-1">
+                <Suspense fallback={<Spinner />}>
+                    <Outlet />
+                </Suspense>
+            </main>
             <Footer />
         </div>
     );
 };
+
 export default Root;

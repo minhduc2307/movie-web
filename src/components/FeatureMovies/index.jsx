@@ -1,34 +1,57 @@
 import { useEffect, useState } from "react";
 import Movie from "./Movie";
-import Spinner from "@components/Spinner";
-import "./feature-movies.css";
+import HeroSkeleton from "./HeroSkeleton";
+import { movieService } from "@/services/api";
 
-const FeatureMovies = ({ height }) => {
+const FeatureMovies = () => {
     const [movies, setMovies] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
         setIsLoading(true);
-        fetch(`${import.meta.env.VITE_API_HOST}/danh-sach/phim-moi-cap-nhat`)
-            .then(async (res) => {
-                const data = await res.json();
-                const popularMovies = data.items;
-                setMovies(popularMovies);
-            })
-            .catch((err) => console.error(err))
-            .finally(() => setIsLoading(false));
+
+        const fetchSpotlight = async () => {
+            try {
+                // Try v1 first for rich metadata (quality, category, etc.)
+                const res = await movieService.getNewUpdatedMovies(1, "v1");
+                if (isMounted && res.items && res.items.length > 0) {
+                    setMovies(res.items.slice(0, 8));
+                    return;
+                }
+            } catch {
+                // Fallback to legacy
+                try {
+                    const legacyRes = await movieService.getNewUpdatedMovies(1, "legacy");
+                    if (isMounted) {
+                        setMovies((legacyRes.items || []).slice(0, 8));
+                    }
+                } catch (legacyErr) {
+                    console.error("Error fetching feature movies:", legacyErr);
+                }
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        fetchSpotlight();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
-    return (
-        <div className="feature-movies-container">
-            {isLoading ? (
-                <Spinner />
-            ) : (
-                <div className="feature-movies-slider">
-                    <Movie movies={movies} height={height} />
-                </div>
-            )}
-        </div>
-    );
+    if (isLoading) {
+        return <HeroSkeleton />;
+    }
+
+    if (!movies || movies.length === 0) {
+        return null;
+    }
+
+    return <Movie movies={movies} />;
 };
+
 export default FeatureMovies;

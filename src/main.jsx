@@ -2,60 +2,57 @@ import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "@pages/Root";
+import "./i18n";
 import "./index.css";
 import UserProvider from "./context/UserProvider";
-import FavoriteList from "@pages/FavoriteList";
-import ModalProvider from "@context/ModalProvider";
+import ThemeProvider from "./context/ThemeProvider";
 import Spinner from "@components/Spinner";
+import ProtectedRoute from "@components/ProtectedRoute";
+import ErrorPage from "@pages/ErrorPage";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
+const CatalogPage = lazy(() => import("@pages/CatalogPage"));
 const MovieDetail = lazy(() => import("@pages/MovieDetail"));
 const Watch = lazy(() => import("@pages/Watch"));
-const SearchPage = lazy(() => import("@pages/SearchPage"));
+const FavoriteList = lazy(() => import("@pages/FavoriteList"));
 const SignIn = lazy(() => import("@pages/SignIn"));
 const SignUp = lazy(() => import("@pages/SignUp"));
-const SingleMovie = lazy(() => import("@pages/SingleMovie"));
-const TV = lazy(() => import("@pages/TV"));
-const CartoonMovie = lazy(() => import("@pages/CartoonMovie"));
 const NotFound = lazy(() => import("@pages/NotFound"));
 
 const router = createBrowserRouter([
     {
         element: <Root />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: "/",
                 element: <HomePage />,
             },
             {
-                path: "/info/:slug",
+                path: "/movies",
+                element: <CatalogPage />,
+            },
+            {
+                path: "/movies/:slug",
                 element: <MovieDetail />,
             },
             {
-                path: "/watch/:slug",
-                element: <Watch />,
-            },
-            {
-                path: "/search",
-                element: <SearchPage />,
-            },
-            {
-                path: "/movie",
-                element: <SingleMovie />,
-            },
-            {
-                path: "/tv",
-                element: <TV />,
-            },
-            {
-                path: "/cartoon",
-                element: <CartoonMovie />,
-            },
-            {
-                path: "/favorite",
-                element: <FavoriteList />,
+                path: "/favorites",
+                element: (
+                    <ProtectedRoute>
+                        <FavoriteList />
+                    </ProtectedRoute>
+                ),
             },
         ],
+    },
+    {
+        path: "/watch/:slug",
+        element: (
+            <Suspense fallback={<Spinner fullScreen />}>
+                <Watch />
+            </Suspense>
+        ),
     },
     {
         path: "/sign-in",
@@ -74,7 +71,7 @@ const router = createBrowserRouter([
         ),
     },
     {
-        path: "/*",
+        path: "*",
         element: (
             <Suspense fallback={<Spinner />}>
                 <NotFound />
@@ -85,10 +82,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
-        <UserProvider>
-            <ModalProvider>
+        <ThemeProvider>
+            <UserProvider>
                 <RouterProvider router={router} />
-            </ModalProvider>
-        </UserProvider>
-    </StrictMode>,
+            </UserProvider>
+        </ThemeProvider>
+    </StrictMode>
 );
