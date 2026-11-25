@@ -12,7 +12,7 @@ const SearchResultsDropdown = ({
     const { t } = useTranslation();
 
     return (
-        <div className="absolute left-0 right-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-[680px] lg:w-[780px] top-12 z-50 overflow-hidden rounded-2xl border border-border bg-card shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute left-0 right-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-[640px] md:w-[680px] lg:w-[780px] top-12 z-50 overflow-hidden rounded-2xl border border-border bg-card shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150">
             <div className="flex items-center justify-between border-b border-border/60 bg-muted/40 px-4 py-2.5 text-xs font-medium text-muted-foreground">
                 <span className="flex items-center gap-2">
                     {isLoading ? (
@@ -29,7 +29,7 @@ const SearchResultsDropdown = ({
                 </span>
             </div>
 
-            <div className="max-h-[480px] overflow-y-auto p-2">
+            <div className="max-h-[65dvh] sm:max-h-[480px] overflow-y-auto p-2">
                 {!isLoading && results.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
                         <Film className="h-9 w-9 text-muted-foreground/50 mb-2" />

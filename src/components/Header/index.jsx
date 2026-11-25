@@ -36,7 +36,7 @@ const Header = () => {
 
     return (
         <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-md transition-colors">
-            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto flex h-16 max-w-7xl 2xl:max-w-[1600px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center gap-3 shrink-0">
                     <Button
                         variant="ghost"

@@ -49,7 +49,7 @@ const MovieHero = ({
             <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/70 to-[#0b0f19]/40" />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0b0f19] via-[#0b0f19]/80 to-transparent" />
 
-            <div className="relative z-10 mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+            <div className="relative z-10 mx-auto max-w-7xl 2xl:max-w-[1600px] px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
                 <div className="flex flex-col md:flex-row gap-8 items-center md:items-end">
                     <div className="w-48 sm:w-56 md:w-64 shrink-0 overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-2xl">
                         <img

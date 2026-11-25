@@ -41,9 +41,9 @@ const SignUp = () => {
     };
 
     return (
-        <div className="relative flex min-h-screen flex-col justify-center bg-background px-4 py-12 text-foreground">
+        <div className="relative flex min-h-[100dvh] flex-col bg-background text-foreground">
             {/* Top Bar Controls */}
-            <div className="absolute inset-x-0 top-0 mx-auto flex max-w-7xl items-center justify-between p-4 sm:px-6 lg:px-8">
+            <div className="relative z-10 mx-auto flex w-full max-w-7xl shrink-0 items-center justify-between px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
                 <Button asChild variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
                     <Link to="/">
                         <ArrowLeft className="h-4 w-4" />
@@ -61,9 +61,10 @@ const SignUp = () => {
                 <div className="absolute left-1/2 top-1/3 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
             </div>
 
-            <div className="relative z-10 mx-auto w-full max-w-md">
-                {/* Brand Logo */}
-                <Link to="/" className="mb-8 flex items-center justify-center gap-2.5 group">
+            <div className="relative z-10 flex flex-1 items-start justify-center px-4 pb-8 pt-1 sm:items-center sm:py-8">
+                <div className="w-full max-w-md">
+                    {/* Brand Logo */}
+                    <Link to="/" className="mb-4 sm:mb-7 flex items-center justify-center gap-2.5 group">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-rose-600 text-primary-foreground shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
                         <Clapperboard className="h-5 w-5" />
                     </div>
@@ -73,8 +74,8 @@ const SignUp = () => {
                 </Link>
 
                 <Card className="border-border/80 shadow-xl dark:shadow-none">
-                    <CardHeader className="space-y-1.5 text-center">
-                        <CardTitle className="text-2xl font-bold">
+                    <CardHeader className="space-y-1 p-5 pb-4 sm:p-6 sm:pb-4 text-center">
+                        <CardTitle className="text-xl sm:text-2xl font-bold">
                             {t("auth.registerTitle")}
                         </CardTitle>
                         <CardDescription>
@@ -82,8 +83,8 @@ const SignUp = () => {
                         </CardDescription>
                     </CardHeader>
 
-                    <CardContent>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <CardContent className="p-5 pt-0 sm:p-6 sm:pt-0">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5 sm:space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="email">{t("auth.emailLabel")}</Label>
                                 <div className="relative">
@@ -187,6 +188,7 @@ const SignUp = () => {
                         </p>
                     </CardFooter>
                 </Card>
+                </div>
             </div>
         </div>
     );

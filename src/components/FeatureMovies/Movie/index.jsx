@@ -122,48 +122,55 @@ const Movie = ({ movies = [] }) => {
     };
 
     return (
-        <section
-            className="group/hero relative w-full h-[540px] sm:h-[620px] lg:h-[72vh] lg:min-h-[580px] lg:max-h-[760px] overflow-hidden bg-[#0b0f19] select-none"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            aria-label="Phim nổi bật"
-        >
-            {/* Backdrop Slides Container */}
-            <div className="absolute inset-0">
-                {movies.map((movie, index) => {
-                    const isCurrent = index === currentIndex;
-                    const backdropUrl = normalizeImageUrl(
-                        movie.thumbUrl || movie.thumb_url || movie.posterUrl || movie.poster_url
-                    );
+        <div className="px-4 pt-3 sm:p-0 bg-background">
+            <section
+                className="group/hero relative w-full aspect-[3/4] max-h-[540px] sm:aspect-auto sm:max-h-none sm:h-[580px] lg:h-[72vh] lg:min-h-[580px] lg:max-h-[760px] 2xl:max-h-[840px] overflow-hidden rounded-2xl sm:rounded-none border border-white/10 sm:border-none shadow-2xl sm:shadow-none bg-[#0b0f19] select-none"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                aria-label="Phim nổi bật"
+            >
+                {/* Backdrop Slides Container */}
+                <div className="absolute inset-0">
+                    {movies.map((movie, index) => {
+                        const isCurrent = index === currentIndex;
+                        const desktopBackdrop = normalizeImageUrl(
+                            movie.thumbUrl || movie.thumb_url || movie.posterUrl || movie.poster_url
+                        );
+                        const mobilePoster = normalizeImageUrl(
+                            movie.posterUrl || movie.poster_url || movie.thumbUrl || movie.thumb_url
+                        );
 
-                    return (
-                        <div
-                            key={movie._id || movie.id || index}
-                            className={cn(
-                                "absolute inset-0 transition-opacity duration-700 ease-in-out",
-                                isCurrent ? "opacity-100 z-0" : "opacity-0 pointer-events-none -z-10"
-                            )}
-                        >
-                            <img
-                                src={backdropUrl}
-                                alt={movie.name || "Backdrop"}
+                        return (
+                            <div
+                                key={movie._id || movie.id || index}
                                 className={cn(
-                                    "h-full w-full object-cover object-center transition-transform duration-1000 ease-out",
-                                    isCurrent ? "scale-105" : "scale-100"
+                                    "absolute inset-0 transition-opacity duration-700 ease-in-out",
+                                    isCurrent ? "opacity-100 z-0" : "opacity-0 pointer-events-none -z-10"
                                 )}
-                                loading={index === 0 ? "eager" : "lazy"}
-                                onError={(e) => {
-                                    if (e.target && !e.target.src.endsWith("/NoImage.svg")) {
-                                        e.target.src = "/NoImage.svg";
-                                    }
-                                }}
-                            />
-                        </div>
-                    );
-                })}
-            </div>
+                            >
+                                <picture className="block h-full w-full">
+                                    <source media="(min-width: 640px)" srcSet={desktopBackdrop} />
+                                    <img
+                                        src={mobilePoster}
+                                        alt={movie.name || "Backdrop"}
+                                        className={cn(
+                                            "h-full w-full object-cover object-top sm:object-center transition-transform duration-1000 ease-out",
+                                            isCurrent ? "scale-105" : "scale-100"
+                                        )}
+                                        loading={index === 0 ? "eager" : "lazy"}
+                                        onError={(e) => {
+                                            if (e.target && !e.target.src.endsWith("/NoImage.svg")) {
+                                                e.target.src = "/NoImage.svg";
+                                            }
+                                        }}
+                                    />
+                                </picture>
+                            </div>
+                        );
+                    })}
+                </div>
 
             {/* Vignette Overlays: Always dark cinematic gradients so white text stays crisp in both Light & Dark Mode */}
             {/* 1. Bottom-to-top gradient */}
@@ -177,7 +184,7 @@ const Movie = ({ movies = [] }) => {
             <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-[#0b0f19]/75 to-transparent pointer-events-none z-10" />
 
             {/* Hero Spotlight Info Content with smooth key transition */}
-            <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col justify-end px-4 pb-14 sm:px-6 sm:pb-16 lg:px-8">
+            <div className="relative z-20 mx-auto flex h-full max-w-7xl 2xl:max-w-[1600px] flex-col justify-end px-4 pb-16 sm:px-6 sm:pb-16 lg:px-8">
                 <HeroSlideContent
                     key={currentIndex}
                     movie={currentMovie}
@@ -208,8 +215,8 @@ const Movie = ({ movies = [] }) => {
                 <ChevronRight className="h-6 w-6" />
             </Button>
 
-            {/* Slider Indicators: Expanding Active Pill with touch-friendly hit areas */}
-            <div className="absolute bottom-5 sm:bottom-6 right-4 sm:right-8 z-30 flex items-center gap-1 sm:gap-1.5">
+            {/* Slider Indicators: Centered on mobile so they never overlap CTA buttons, right-aligned on sm+ */}
+            <div className="absolute bottom-4 inset-x-0 sm:inset-x-auto sm:bottom-6 sm:right-8 z-30 flex items-center justify-center gap-1 sm:gap-1.5">
                 {movies.map((_, idx) => (
                     <button
                         key={idx}
@@ -229,6 +236,7 @@ const Movie = ({ movies = [] }) => {
                 ))}
             </div>
         </section>
+        </div>
     );
 };
 

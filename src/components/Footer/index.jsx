@@ -51,7 +51,7 @@ const Footer = () => {
 
     return (
         <footer className="w-full border-t border-border/40 bg-card/20 text-muted-foreground transition-colors">
-            <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+            <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
                 <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
                     <div className="lg:col-span-5 space-y-4">
                         <Link to="/" className="flex items-center gap-2 group w-fit">

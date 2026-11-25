@@ -54,29 +54,33 @@ const VideoPlayer = ({ srcMovie, embedUrl, title }) => {
 
     if (srcMovie) {
         return (
-            <video
-                ref={videoRef}
-                className="max-h-full w-full aspect-video rounded-xl bg-black shadow-2xl ring-1 ring-white/10"
-                controls
-                autoPlay
-                playsInline
-            />
+            <div className="w-full max-w-6xl 2xl:max-w-[1440px] aspect-video max-h-full overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-white/10">
+                <video
+                    ref={videoRef}
+                    className="h-full w-full object-contain"
+                    controls
+                    autoPlay
+                    playsInline
+                />
+            </div>
         );
     }
 
     if (embedUrl) {
         return (
-            <iframe
-                src={embedUrl}
-                className="max-h-full w-full aspect-video rounded-xl bg-black shadow-2xl ring-1 ring-white/10"
-                title={title}
-                allowFullScreen
-            />
+            <div className="w-full max-w-6xl 2xl:max-w-[1440px] aspect-video max-h-full overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-white/10">
+                <iframe
+                    src={embedUrl}
+                    className="h-full w-full"
+                    title={title}
+                    allowFullScreen
+                />
+            </div>
         );
     }
 
     return (
-        <div className="flex aspect-video max-h-full w-full items-center justify-center rounded-xl bg-black/80 text-slate-400">
+        <div className="flex aspect-video w-full max-w-6xl 2xl:max-w-[1440px] max-h-full items-center justify-center rounded-xl bg-black/80 text-slate-400">
             {t("detail.notFound")}
         </div>
     );

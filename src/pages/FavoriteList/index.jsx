@@ -23,7 +23,7 @@ const FavoriteList = () => {
 
     return (
         <div className="min-h-screen bg-background text-foreground py-8 sm:py-12">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8">
                 <div className="mb-8 flex items-center justify-between border-b border-border/40 pb-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -58,7 +58,7 @@ const FavoriteList = () => {
                         </Button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
                         {(movieList || []).map((movie) => (
                             <div
                                 key={movie._id || movie.id}

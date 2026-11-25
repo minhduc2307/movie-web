@@ -108,7 +108,7 @@ const CatalogPage = () => {
 
     return (
         <div className="min-h-screen bg-background text-foreground py-6 sm:py-8">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8">
                 <nav className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mb-4">
                     <Link to="/" className="flex items-center gap-1 hover:text-primary transition-colors">
                         <Home className="h-3.5 w-3.5" />
@@ -184,7 +184,7 @@ const CatalogPage = () => {
 
                     <div className="flex-1 min-w-0">
                         {isLoading ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                                 {Array.from({ length: 15 }).map((_, idx) => (
                                     <MovieCardSkeleton key={idx} />
                                 ))}
@@ -209,7 +209,7 @@ const CatalogPage = () => {
                             </div>
                         ) : (
                             <>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
+                                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                                     {movies.map((movie) => (
                                         <MovieCard
                                             key={movie.id || movie._id}

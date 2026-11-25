@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,14 +32,14 @@ const MobileDrawer = ({ open, userInfo, onClose, onLogout }) => {
         { name: t("nav.anime"), href: "/movies?type=hoat-hinh", icon: Sparkles },
     ];
 
-    return (
-        <div className="fixed inset-0 z-50 md:hidden">
+    return createPortal(
+        <div className="fixed inset-0 z-[100] md:hidden" role="dialog" aria-modal="true">
             <div
                 className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300"
                 onClick={onClose}
             />
 
-            <div className="fixed inset-y-0 left-0 z-50 w-3/4 max-w-xs border-r border-border bg-card p-6 shadow-2xl flex flex-col justify-between animate-in slide-in-from-left duration-200">
+            <div className="fixed inset-y-0 left-0 z-[101] flex h-[100dvh] w-4/5 max-w-xs flex-col justify-between overflow-y-auto border-r border-border bg-card p-6 shadow-2xl animate-in slide-in-from-left duration-200">
                 <div>
                     <div className="flex items-center justify-between pb-5 border-b border-border/60">
                         <Link to="/" className="flex items-center gap-2" onClick={onClose}>
@@ -163,7 +164,8 @@ const MobileDrawer = ({ open, userInfo, onClose, onLogout }) => {
                     )}
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

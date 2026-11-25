@@ -88,8 +88,12 @@ const Watch = () => {
         ? `${movieInfo?.name || ""} — ${episodeLabel}`
         : movieInfo?.name || "";
 
+    const cleanContent = movieInfo?.content
+        ? movieInfo.content.replace(/<[^>]*>/g, "").trim()
+        : "";
+
     return (
-        <div className="relative flex h-screen w-screen flex-col overflow-hidden bg-[#06080f] text-white select-none">
+        <div className="relative flex min-h-[100dvh] md:h-[100dvh] w-full flex-col md:overflow-hidden bg-[#06080f] text-white select-none">
             <header className="z-20 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-black/75 px-4 backdrop-blur-md sm:px-6">
                 <div className="flex min-w-0 items-center gap-3">
                     {isLoading ? (
@@ -171,16 +175,77 @@ const Watch = () => {
                 </div>
             </header>
 
-            <main className="relative flex flex-1 min-h-0 items-center justify-center p-2 sm:p-4">
+            <main className="relative flex flex-1 flex-col md:min-h-0 md:items-center md:justify-center p-2.5 sm:p-4 gap-5">
                 {isLoading ? (
-                    <Skeleton className="aspect-video max-h-full w-full max-w-6xl rounded-xl bg-white/10" />
+                    <Skeleton className="aspect-video w-full max-w-6xl 2xl:max-w-[1440px] md:max-h-full rounded-xl bg-white/10" />
                 ) : (
-                    <div className="relative flex h-full w-full max-w-6xl items-center justify-center">
-                        <VideoPlayer
-                            srcMovie={srcMovie}
-                            embedUrl={currentEmbed}
-                            title={displayTitle}
-                        />
+                    <VideoPlayer
+                        srcMovie={srcMovie}
+                        embedUrl={currentEmbed}
+                        title={displayTitle}
+                    />
+                )}
+
+                {/* Mobile-only Info & Quick Episode Grid right under the video */}
+                {!isLoading && (
+                    <div className="md:hidden w-full space-y-4 px-1 pb-6">
+                        <div>
+                            <h2 className="text-base font-bold text-white leading-snug">
+                                {displayTitle}
+                            </h2>
+                            <div className="mt-2 flex flex-wrap items-center gap-2">
+                                {movieInfo?.quality && (
+                                    <Badge className="bg-primary text-white text-[11px] font-bold px-2 py-0">
+                                        {movieInfo.quality}
+                                    </Badge>
+                                )}
+                                {movieInfo?.time && (
+                                    <Badge
+                                        variant="secondary"
+                                        className="bg-white/10 text-slate-200 border-white/10 text-[11px] gap-1"
+                                    >
+                                        <Clock className="h-3 w-3" />
+                                        {movieInfo.time}
+                                    </Badge>
+                                )}
+                            </div>
+                        </div>
+
+                        {hasMultipleEpisodes && (
+                            <div className="space-y-2.5 rounded-xl border border-white/10 bg-white/5 p-3.5">
+                                <p className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                                    {t("watch.episodes")} ({chapterList.length})
+                                </p>
+                                <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto">
+                                    {chapterList.map((chap, index) => {
+                                        const isActive = safeChapIndex === index;
+                                        return (
+                                            <Button
+                                                key={chap.link_m3u8 || chap.slug || index}
+                                                type="button"
+                                                size="sm"
+                                                variant={isActive ? "default" : "outline"}
+                                                className={cn(
+                                                    "h-9 text-xs font-medium",
+                                                    isActive
+                                                        ? "bg-primary text-white"
+                                                        : "border-white/15 bg-white/5 text-slate-200 hover:bg-white/15"
+                                                )}
+                                                onClick={() => setCurrentChap(index)}
+                                            >
+                                                <span className="truncate">{chap.name || index + 1}</span>
+                                            </Button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {cleanContent && (
+                            <p className="text-sm leading-relaxed text-slate-300 line-clamp-5">
+                                {cleanContent}
+                            </p>
+                        )}
                     </div>
                 )}
 
