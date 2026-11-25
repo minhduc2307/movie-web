@@ -141,6 +141,28 @@
     "close": "Close player",
     "episodes": "Episodes",
     "server": "Server",
-    "episodePrefix": "Ep"
+    "episodePrefix": "Ep",
+    "player": {
+      "play": "Play (Space)",
+      "pause": "Pause (Space)",
+      "rewind": "Rewind 10s (J / ←)",
+      "forward": "Forward 10s (L / →)",
+      "mute": "Mute (M)",
+      "unmute": "Unmute (M)",
+      "volume": "Volume",
+      "seek": "Seek bar",
+      "settings": "Playback settings",
+      "quality": "Quality",
+      "autoQuality": "Auto",
+      "speed": "Playback speed",
+      "normalSpeed": "Normal",
+      "pip": "Picture in Picture (P)",
+      "fullscreen": "Fullscreen (F)",
+      "exitFullscreen": "Exit fullscreen (F)",
+      "buffering": "Loading stream...",
+      "loadError": "Unable to load this video stream. Please retry or switch server.",
+      "retry": "Retry",
+      "useBackupPlayer": "Use backup player"
+    }
   }
 }

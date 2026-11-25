@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import VideoPlayer from "./VideoPlayer";
+import VideoPlayer from "@/components/VideoPlayer";
 import EpisodeDrawer from "./EpisodeDrawer";
 
 const Watch = () => {
@@ -58,6 +58,7 @@ const Watch = () => {
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === "Escape") {
+                if (document.fullscreenElement) return;
                 if (showEpisodesPanel) {
                     setShowEpisodesPanel(false);
                 } else {

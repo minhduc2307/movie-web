@@ -141,6 +141,28 @@
     "close": "Đóng trình phát",
     "episodes": "Danh sách tập",
     "server": "Máy chủ",
-    "episodePrefix": "Tập"
+    "episodePrefix": "Tập",
+    "player": {
+      "play": "Phát (Space)",
+      "pause": "Tạm dừng (Space)",
+      "rewind": "Tua lùi 10 giây (J / ←)",
+      "forward": "Tua tới 10 giây (L / →)",
+      "mute": "Tắt tiếng (M)",
+      "unmute": "Bật tiếng (M)",
+      "volume": "Âm lượng",
+      "seek": "Thanh tua video",
+      "settings": "Cài đặt phát",
+      "quality": "Chất lượng",
+      "autoQuality": "Tự động",
+      "speed": "Tốc độ phát",
+      "normalSpeed": "Chuẩn",
+      "pip": "Hình trong hình (P)",
+      "fullscreen": "Toàn màn hình (F)",
+      "exitFullscreen": "Thoát toàn màn hình (F)",
+      "buffering": "Đang tải luồng phát...",
+      "loadError": "Không thể tải luồng video này. Vui lòng thử lại hoặc đổi máy chủ khác.",
+      "retry": "Thử lại",
+      "useBackupPlayer": "Dùng trình phát dự phòng"
+    }
   }
 }
