@@ -127,7 +127,7 @@ const PlayerSettingsMenu = ({
                 <div
                     role="menu"
                     onClick={(e) => e.stopPropagation()}
-                    className="absolute bottom-12 right-0 z-30 w-56 overflow-hidden rounded-xl border border-white/15 bg-[#0d111c]/95 p-1.5 text-sm text-white shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150"
+                    className="absolute bottom-12 right-0 z-40 w-56 overflow-hidden rounded-xl border border-white/15 bg-[#0d111c]/95 p-1.5 text-sm text-white shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150"
                 >
                     {panel === "main" && (
                         <div className="space-y-0.5">

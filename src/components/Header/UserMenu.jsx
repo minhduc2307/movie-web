@@ -18,7 +18,7 @@ const UserMenu = ({ user, isAuthReady, onLogout }) => {
     const { t } = useTranslation();
 
     if (!isAuthReady) {
-        return <Skeleton className="ml-1 h-9 w-9 rounded-full" />;
+        return <Skeleton className="ml-1 h-11 w-11 sm:h-9 sm:w-9 rounded-full" />;
     }
 
     if (!user) {
@@ -35,7 +35,7 @@ const UserMenu = ({ user, isAuthReady, onLogout }) => {
                 <Button
                     asChild
                     size="sm"
-                    className="font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/25 rounded-full px-4"
+                    className="h-11 sm:h-9 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/25 rounded-full px-4"
                 >
                     <Link to="/sign-up">{t("nav.register")}</Link>
                 </Button>
@@ -49,7 +49,7 @@ const UserMenu = ({ user, isAuthReady, onLogout }) => {
                 <button
                     type="button"
                     aria-label={user.displayName || user.email || t("nav.account")}
-                    className="ml-1 rounded-full ring-offset-background transition-transform duration-200 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    className="ml-1 flex h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-full ring-offset-background transition-transform duration-200 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                 >
                     <Avatar className="h-9 w-9 border border-border/80 shadow-sm">
                         {user.photoURL && (

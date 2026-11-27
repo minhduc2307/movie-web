@@ -7,7 +7,7 @@ import { useFavorites } from "@context/FavoritesProvider";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-const SKELETON_COUNT = 6;
+const SKELETON_COUNT = 12;
 
 const FavoriteList = () => {
     const { t } = useTranslation();
@@ -17,11 +17,11 @@ const FavoriteList = () => {
 
     return (
         <div className="min-h-screen bg-background text-foreground py-8 sm:py-12">
-            <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8">
+            <div className="app-container">
                 <div className="mb-8 flex items-center justify-between border-b border-border/40 pb-4">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                            <Heart className="h-5 w-5 fill-primary text-primary" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary dark:text-rose-400">
+                            <Heart className="h-5 w-5 fill-current" />
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -37,7 +37,7 @@ const FavoriteList = () => {
                 </div>
 
                 {isLoading ? (
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 xl:grid-cols-6">
                         {Array.from({ length: SKELETON_COUNT }).map((_, idx) => (
                             <MovieCardSkeleton key={idx} />
                         ))}
@@ -58,7 +58,7 @@ const FavoriteList = () => {
                         </Button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 xl:grid-cols-6">
                         {movieList.map((movie) => (
                             <div
                                 key={movie.movieId || movie._id || movie.id}
@@ -78,7 +78,7 @@ const FavoriteList = () => {
                                     type="button"
                                     variant="destructive"
                                     size="icon"
-                                    className="absolute right-2 top-2 z-20 h-8 w-8 rounded-full opacity-90 shadow-lg transition-transform hover:scale-110 group-hover/item:opacity-100"
+                                    className="absolute right-2 bottom-14 sm:bottom-auto sm:top-2 z-20 h-10 w-10 sm:h-8 sm:w-8 rounded-full opacity-95 shadow-lg transition-transform hover:scale-110 group-hover/item:opacity-100"
                                     onClick={() => toggleFavorite(movie)}
                                     title={t("movie.removeFavorite")}
                                     aria-label={t("movie.removeFavorite")}

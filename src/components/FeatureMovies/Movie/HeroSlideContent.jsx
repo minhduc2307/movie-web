@@ -26,7 +26,7 @@ const HeroSlideContent = ({
                 {movie.year && (
                     <span className="font-semibold text-zinc-300">{movie.year}</span>
                 )}
-                <Badge className="bg-primary/90 hover:bg-primary text-white text-[11px] font-bold px-2 py-0.5 shadow-sm">
+                <Badge className="bg-primary text-primary-foreground text-[11px] font-bold px-2 py-0.5 shadow-sm">
                     {movie.quality || "FHD"}
                 </Badge>
                 <div className="flex items-center gap-1 font-bold text-amber-400">

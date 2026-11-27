@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { normalizeImageUrl, movieService } from "@/services/api";
@@ -8,10 +9,12 @@ import HeroSlideContent from "./HeroSlideContent";
 const AUTO_PLAY_INTERVAL = 5500;
 
 const Movie = ({ movies = [] }) => {
+    const { t } = useTranslation();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
     const [resetTimer, setResetTimer] = useState(0);
     const [movieDetails, setMovieDetails] = useState({});
+    const movieDetailsRef = useRef({});
     const touchStartX = useRef(0);
     const touchStartY = useRef(0);
 
@@ -48,21 +51,23 @@ const Movie = ({ movies = [] }) => {
     useEffect(() => {
         const activeMovie = movies[currentIndex];
         if (!activeMovie?.slug) return;
-        if (movieDetails[activeMovie.slug] || activeMovie.content) return;
+        if (movieDetailsRef.current[activeMovie.slug] || activeMovie.content) return;
 
         let isCancelled = false;
         movieService
             .getMovieDetail(activeMovie.slug)
             .then((res) => {
                 if (!isCancelled && res?.movie?.content) {
-                    setMovieDetails((prev) => ({
-                        ...prev,
-                        [activeMovie.slug]: {
-                            content: res.movie.content,
-                            rating: res.movie.rating || activeMovie.rating,
-                            category: res.movie.category || activeMovie.category,
-                        },
-                    }));
+                    const detailEntry = {
+                        content: res.movie.content,
+                        rating: res.movie.rating || activeMovie.rating,
+                        category: res.movie.category || activeMovie.category,
+                    };
+                    movieDetailsRef.current = {
+                        ...movieDetailsRef.current,
+                        [activeMovie.slug]: detailEntry,
+                    };
+                    setMovieDetails(movieDetailsRef.current);
                 }
             })
             .catch(() => {
@@ -72,7 +77,7 @@ const Movie = ({ movies = [] }) => {
         return () => {
             isCancelled = true;
         };
-    }, [currentIndex, movies, movieDetails]);
+    }, [currentIndex, movies]);
 
     if (!movies || count === 0) {
         return null;
@@ -86,10 +91,10 @@ const Movie = ({ movies = [] }) => {
         (Array.isArray(currentMovie.category) && currentMovie.category[0]?.name) ||
         (typeof currentMovie.category === "string" ? currentMovie.category : null) ||
         (currentMovie.type === "series"
-            ? "Phim bộ"
+            ? t("movie.series")
             : currentMovie.type === "hoathinh"
-            ? "Hoạt hình"
-            : "Phim lẻ");
+            ? t("movie.anime")
+            : t("movie.single"));
 
     const rawRating =
         activeDetail?.rating ||
@@ -101,7 +106,12 @@ const Movie = ({ movies = [] }) => {
     const rawContent = activeDetail?.content || currentMovie.content || currentMovie.description;
     const cleanDescription = rawContent
         ? rawContent.replace(/<[^>]*>/g, "").trim()
-        : `${currentMovie.name} (${currentMovie.originName || currentMovie.year || ""}) - Phim thuộc thể loại ${categoryName || "đặc sắc"}, đem lại trải nghiệm giải trí đỉnh cao với chất lượng hình ảnh ${currentMovie.quality || "FHD"} sắc nét.`;
+        : t("hero.fallbackDesc", {
+              name: currentMovie.name,
+              subtitle: currentMovie.originName || currentMovie.year || "",
+              genre: categoryName || t("genres.featured"),
+              quality: currentMovie.quality || "FHD",
+          });
 
     const handleTouchStart = (e) => {
         if (e.touches && e.touches[0]) {
@@ -129,7 +139,7 @@ const Movie = ({ movies = [] }) => {
                 onMouseLeave={() => setIsHovered(false)}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
-                aria-label="Phim nổi bật"
+                aria-label={t("hero.sectionLabel")}
             >
                 {/* Backdrop Slides Container */}
                 <div className="absolute inset-0">
@@ -183,8 +193,8 @@ const Movie = ({ movies = [] }) => {
             {/* 3. Top subtle vignette */}
             <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-[#0b0f19]/75 to-transparent pointer-events-none z-10" />
 
-            {/* Hero Spotlight Info Content with smooth key transition */}
-            <div className="relative z-20 mx-auto flex h-full max-w-7xl 2xl:max-w-[1600px] flex-col justify-end px-4 pb-16 sm:px-6 sm:pb-16 lg:px-8">
+            {/* Hero Spotlight Info Content with safe side clearance for nav chevrons */}
+            <div className="app-container relative z-20 flex h-full flex-col justify-end pb-16 sm:px-20 lg:px-20 2xl:px-24">
                 <HeroSlideContent
                     key={currentIndex}
                     movie={currentMovie}
@@ -199,8 +209,8 @@ const Movie = ({ movies = [] }) => {
                 variant="ghost"
                 size="icon"
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-30 hidden sm:flex h-12 w-12 rounded-full bg-black/40 hover:bg-black/70 text-white border border-white/15 backdrop-blur-md shadow-xl transition-all duration-200 hover:scale-110 active:scale-95 opacity-80 sm:opacity-0 sm:group-hover/hero:opacity-100 focus-visible:opacity-100"
-                aria-label="Phim trước"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-30 hidden sm:flex h-12 w-12 rounded-full bg-black/50 hover:bg-black/75 text-white border border-white/15 backdrop-blur-md shadow-xl transition-all duration-200 hover:scale-110 active:scale-95 opacity-80 sm:opacity-0 sm:group-hover/hero:opacity-100 focus-visible:opacity-100"
+                aria-label={t("hero.prev")}
             >
                 <ChevronLeft className="h-6 w-6" />
             </Button>
@@ -209,20 +219,21 @@ const Movie = ({ movies = [] }) => {
                 variant="ghost"
                 size="icon"
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-30 hidden sm:flex h-12 w-12 rounded-full bg-black/40 hover:bg-black/70 text-white border border-white/15 backdrop-blur-md shadow-xl transition-all duration-200 hover:scale-110 active:scale-95 opacity-80 sm:opacity-0 sm:group-hover/hero:opacity-100 focus-visible:opacity-100"
-                aria-label="Phim kế tiếp"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-30 hidden sm:flex h-12 w-12 rounded-full bg-black/50 hover:bg-black/75 text-white border border-white/15 backdrop-blur-md shadow-xl transition-all duration-200 hover:scale-110 active:scale-95 opacity-80 sm:opacity-0 sm:group-hover/hero:opacity-100 focus-visible:opacity-100"
+                aria-label={t("hero.next")}
             >
                 <ChevronRight className="h-6 w-6" />
             </Button>
 
-            {/* Slider Indicators: Centered on mobile so they never overlap CTA buttons, right-aligned on sm+ */}
-            <div className="absolute bottom-4 inset-x-0 sm:inset-x-auto sm:bottom-6 sm:right-8 z-30 flex items-center justify-center gap-1 sm:gap-1.5">
+            {/* Slider Indicators */}
+            <div className="absolute bottom-2 sm:bottom-5 inset-x-0 sm:inset-x-auto sm:right-8 z-30 flex items-center justify-center gap-0.5 sm:gap-1.5">
                 {movies.map((_, idx) => (
                     <button
                         key={idx}
+                        type="button"
                         onClick={() => goToSlide(idx)}
-                        className="group p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full"
-                        aria-label={`Chuyển đến phim ${idx + 1}`}
+                        className="group flex min-h-[44px] min-w-[32px] sm:min-h-0 sm:min-w-0 items-center justify-center px-1.5 py-2 sm:p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full"
+                        aria-label={t("hero.goToSlide", { number: idx + 1 })}
                     >
                         <span
                             className={cn(

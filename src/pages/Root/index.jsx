@@ -9,7 +9,7 @@ const Root = () => {
         <div className="min-h-screen bg-background text-foreground flex flex-col justify-between transition-colors duration-200">
             <Header />
             <main className="flex-1">
-                <Suspense fallback={<Spinner />}>
+                <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><Spinner /></div>}>
                     <Outlet />
                 </Suspense>
             </main>

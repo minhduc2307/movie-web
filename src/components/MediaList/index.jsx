@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronRight } from "lucide-react";
+import { HOME_SECTION_LIMIT } from "@/lib/constants";
 import MovieCard from "./MovieCard";
 import MovieCardSkeleton from "./MovieCardSkeleton";
 import { movieService } from "@/services/api";
@@ -18,7 +19,7 @@ const MediaList = ({ tab }) => {
 
         setIsLoading(true);
         movieService
-            .getMoviesByType(typeSlug, { limit: 6 })
+            .getMoviesByType(typeSlug, { limit: HOME_SECTION_LIMIT })
             .then((res) => {
                 if (isMounted) {
                     setMediaList(res.items || []);
@@ -46,23 +47,23 @@ const MediaList = ({ tab }) => {
             <div className="flex items-center justify-between mb-4 sm:mb-5">
                 <div className="flex items-center">
                     <span className="w-1.5 h-6 bg-gradient-to-b from-primary to-amber-500 rounded-full mr-3 shrink-0" />
-                    <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                    <h2 className="text-xl sm:text-2xl min-[2000px]:text-3xl font-bold tracking-tight text-foreground">
                         {sectionTitle}
                     </h2>
                 </div>
 
                 <Link
                     to={viewAllLink}
-                    className="group flex items-center gap-1 text-xs sm:text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                    className="group flex items-center gap-1 py-2 text-xs sm:text-sm min-[2000px]:text-base font-medium text-muted-foreground hover:text-primary dark:hover:text-rose-400 transition-colors"
                 >
                     <span>{t("movie.viewAll")}</span>
                     <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 min-[2000px]:gap-5">
                 {isLoading ? (
-                    Array.from({ length: 6 }).map((_, index) => (
+                    Array.from({ length: HOME_SECTION_LIMIT }).map((_, index) => (
                         <MovieCardSkeleton key={index} />
                     ))
                 ) : (

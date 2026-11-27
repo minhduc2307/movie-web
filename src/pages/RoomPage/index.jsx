@@ -290,9 +290,9 @@ const RoomPage = () => {
             <div className="flex flex-1 min-h-0 flex-col lg:grid lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px]">
                 <main className="relative flex shrink-0 items-center justify-center bg-black p-2 sm:p-3 lg:min-h-0 lg:p-5">
                     {isLoadingMovie ? (
-                        <Skeleton className="aspect-video w-full max-w-6xl rounded-xl bg-white/10" />
+                        <Skeleton className="aspect-video w-full max-w-[min(100%,calc((100dvh-6rem)*16/9))] rounded-xl bg-white/10" />
                     ) : (
-                        <div className="relative w-full max-w-6xl">
+                        <div className="relative w-full max-w-[min(100%,calc((100dvh-6rem)*16/9))]">
                             <VideoPlayer
                                 ref={videoRef}
                                 srcMovie={srcMovie}

@@ -27,6 +27,32 @@ export const buildQueryString = (params) => {
 const inFlightRequests = new Map();
 const responseCache = new Map();
 const DEFAULT_CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes
+const MAX_CACHE_SIZE = 100;
+
+const readCachedResponse = (url) => {
+    const cached = responseCache.get(url);
+    if (!cached) return null;
+
+    if (Date.now() - cached.timestamp >= DEFAULT_CACHE_TTL_MS) {
+        responseCache.delete(url);
+        return null;
+    }
+
+    // Refresh insertion order for lightweight LRU eviction
+    responseCache.delete(url);
+    responseCache.set(url, cached);
+    return cached.data;
+};
+
+const writeCachedResponse = (url, data) => {
+    if (responseCache.size >= MAX_CACHE_SIZE) {
+        const oldestKey = responseCache.keys().next().value;
+        if (oldestKey !== undefined) {
+            responseCache.delete(oldestKey);
+        }
+    }
+    responseCache.set(url, { data, timestamp: Date.now() });
+};
 
 /**
  * HttpClient wrapper with timeout, params serializer, request deduplication,
@@ -44,9 +70,9 @@ export const httpClient = {
                 : `${API_BASE_URL}${endpoint.startsWith("/") ? "" : "/"}${endpoint}${queryString}`;
 
         if (cache && !signal) {
-            const cached = responseCache.get(url);
-            if (cached && Date.now() - cached.timestamp < DEFAULT_CACHE_TTL_MS) {
-                return cached.data;
+            const cachedData = readCachedResponse(url);
+            if (cachedData !== null) {
+                return cachedData;
             }
             if (inFlightRequests.has(url)) {
                 return inFlightRequests.get(url);
@@ -92,7 +118,7 @@ export const httpClient = {
 
                 const data = await response.json();
                 if (cache && !signal) {
-                    responseCache.set(url, { data, timestamp: Date.now() });
+                    writeCachedResponse(url, data);
                 }
                 return data;
             } catch (error) {

@@ -15,18 +15,18 @@ const MovieInfoGrid = ({ movieInfo }) => {
     const countries = movieInfo.country || [];
 
     return (
-        <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="app-container mt-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-lg">
-                                <Clapperboard className="h-5 w-5 text-primary" />
+                                <Clapperboard className="h-5 w-5 text-primary dark:text-rose-400" />
                                 <span>{t("detail.synopsis")}</span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-[15px] leading-relaxed text-muted-foreground">
+                            <p className="text-[15px] min-[2000px]:text-base leading-relaxed text-muted-foreground">
                                 {cleanContent || t("detail.noSynopsis")}
                             </p>
                         </CardContent>
@@ -36,7 +36,7 @@ const MovieInfoGrid = ({ movieInfo }) => {
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-lg">
-                                    <Users className="h-5 w-5 text-primary" />
+                                    <Users className="h-5 w-5 text-primary dark:text-rose-400" />
                                     <span>{t("detail.cast")}</span>
                                 </CardTitle>
                             </CardHeader>
@@ -87,7 +87,7 @@ const MovieInfoGrid = ({ movieInfo }) => {
                                             <Link
                                                 key={c.id || c.slug}
                                                 to={`/movies?country=${c.slug}`}
-                                                className="font-medium text-primary hover:underline"
+                                                className="font-medium text-primary dark:text-rose-400 hover:underline"
                                             >
                                                 {c.name}
                                             </Link>
@@ -125,7 +125,8 @@ const MovieInfoGrid = ({ movieInfo }) => {
                                     </span>
                                     <span className="font-medium text-foreground">
                                         {movieInfo.episode_current}
-                                        {movieInfo.episode_total > 1
+                                        {movieInfo.episode_total > 1 &&
+                                        !String(movieInfo.episode_current).includes("/")
                                             ? ` / ${movieInfo.episode_total}`
                                             : ""}
                                     </span>

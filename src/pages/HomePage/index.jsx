@@ -6,7 +6,7 @@ function HomePage() {
     return (
         <div className="bg-background text-foreground">
             <FeatureMovies />
-            <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10 sm:space-y-14">
+            <div className="app-container py-8 sm:py-12 space-y-10 sm:space-y-14">
                 {TABS.map((tab) => (
                     <MediaList key={tab.typeSlug} tab={tab} />
                 ))}

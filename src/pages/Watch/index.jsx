@@ -105,7 +105,7 @@ const Watch = () => {
         : "";
 
     return (
-        <div className="relative flex min-h-[100dvh] md:h-[100dvh] w-full flex-col md:overflow-hidden bg-[#06080f] text-white select-none">
+        <div className="relative flex min-h-[100dvh] lg:h-[100dvh] w-full flex-col lg:overflow-hidden bg-[#06080f] text-white select-none">
             <header className="z-20 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-black/75 px-4 backdrop-blur-md sm:px-6">
                 <div className="flex min-w-0 items-center gap-3">
                     {isLoading ? (
@@ -117,7 +117,7 @@ const Watch = () => {
                             </h1>
                             <div className="hidden sm:flex items-center gap-1.5 shrink-0">
                                 {movieInfo?.quality && (
-                                    <Badge className="bg-primary text-white text-[11px] font-bold px-2 py-0">
+                                    <Badge className="bg-primary text-primary-foreground text-[11px] font-bold px-2 py-0">
                                         {movieInfo.quality}
                                     </Badge>
                                 )}
@@ -147,7 +147,7 @@ const Watch = () => {
                                     className={cn(
                                         "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                                         currentServer === idx
-                                            ? "bg-primary text-white"
+                                            ? "bg-primary text-primary-foreground"
                                             : "text-slate-300 hover:text-white"
                                     )}
                                 >
@@ -163,9 +163,10 @@ const Watch = () => {
                             variant="outline"
                             size="sm"
                             onClick={openWatchParty}
+                            aria-label={t("room.watchWithFriends")}
                             title={!canWatchParty ? t("room.hlsOnlyHint") : undefined}
                             className={cn(
-                                "h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white",
+                                "h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white",
                                 !canWatchParty && "opacity-60"
                             )}
                         >
@@ -180,11 +181,12 @@ const Watch = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => setShowEpisodesPanel((v) => !v)}
-                            className="h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                            aria-label={`${t("watch.episodes")} (${chapterList.length})`}
+                            className="h-10 sm:h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white"
                         >
                             <ListVideo className="h-4 w-4" />
                             <span className="hidden sm:inline">{t("watch.episodes")}</span>
-                            <Badge className="bg-primary/90 text-white px-1.5 py-0 text-[11px]">
+                            <Badge className="bg-primary text-primary-foreground px-1.5 py-0 text-[11px]">
                                 {chapterList.length}
                             </Badge>
                         </Button>
@@ -197,16 +199,16 @@ const Watch = () => {
                         onClick={handleClose}
                         aria-label={t("watch.close")}
                         title={t("watch.close")}
-                        className="h-9 w-9 rounded-full bg-white/10 text-white hover:bg-primary hover:text-white transition-colors"
+                        className="h-10 w-10 sm:h-9 sm:w-9 rounded-full bg-white/10 text-white hover:bg-primary hover:text-white transition-colors"
                     >
                         <X className="h-5 w-5" />
                     </Button>
                 </div>
             </header>
 
-            <main className="relative flex flex-1 flex-col md:min-h-0 md:items-center md:justify-center p-2.5 sm:p-4 gap-5">
+            <main className="relative flex flex-1 flex-col lg:min-h-0 lg:items-center lg:justify-center p-2.5 sm:p-4 gap-5">
                 {isLoading ? (
-                    <Skeleton className="aspect-video w-full max-w-6xl 2xl:max-w-[1440px] md:max-h-full rounded-xl bg-white/10" />
+                    <Skeleton className="aspect-video w-full max-w-[min(100%,calc((100dvh-6rem)*16/9))] lg:max-h-full rounded-xl bg-white/10" />
                 ) : (
                     <VideoPlayer
                         srcMovie={srcMovie}
@@ -216,14 +218,14 @@ const Watch = () => {
                 )}
 
                 {!isLoading && (
-                    <div className="md:hidden w-full space-y-4 px-1 pb-6">
+                    <div className="lg:hidden w-full space-y-4 px-1 pb-6">
                         <div>
-                            <h2 className="text-base font-bold text-white leading-snug">
+                            <h2 className="text-base sm:text-lg font-bold text-white leading-snug">
                                 {displayTitle}
                             </h2>
                             <div className="mt-2 flex flex-wrap items-center gap-2">
                                 {movieInfo?.quality && (
-                                    <Badge className="bg-primary text-white text-[11px] font-bold px-2 py-0">
+                                    <Badge className="bg-primary text-primary-foreground text-[11px] font-bold px-2 py-0">
                                         {movieInfo.quality}
                                     </Badge>
                                 )}
@@ -240,11 +242,11 @@ const Watch = () => {
                         </div>
 
                         {hasMultipleEpisodes && (
-                            <div className="space-y-2.5 rounded-xl border border-white/10 bg-white/5 p-3.5">
+                            <div className="space-y-2.5 rounded-xl border border-white/10 bg-white/5 p-3.5 sm:p-4">
                                 <p className="text-xs font-bold uppercase tracking-wider text-slate-300">
                                     {t("watch.episodes")} ({chapterList.length})
                                 </p>
-                                <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto">
+                                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-56 overflow-y-auto">
                                     {chapterList.map((chap, index) => {
                                         const isActive = safeChapIndex === index;
                                         return (
@@ -254,9 +256,9 @@ const Watch = () => {
                                                 size="sm"
                                                 variant={isActive ? "default" : "outline"}
                                                 className={cn(
-                                                    "h-9 text-xs font-medium",
+                                                    "h-11 sm:h-10 text-xs font-medium",
                                                     isActive
-                                                        ? "bg-primary text-white"
+                                                        ? "bg-primary text-primary-foreground"
                                                         : "border-white/15 bg-white/5 text-slate-200 hover:bg-white/15"
                                                 )}
                                                 onClick={() => setCurrentChap(index)}

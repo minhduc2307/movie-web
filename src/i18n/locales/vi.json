@@ -2,7 +2,7 @@
   "brand": {
     "name": "Mọt phim",
     "tagline": "Xem phim online chất lượng cao",
-    "description": "Trang web xem phim trực tuyến miễn phí chất lượng cao với giao diện trực quan, tốc độ tải trang cực nhanh cùng kho phim hơn 10.000+ bộ phim bom tấn được cập nhật liên tục.",
+    "description": "Trang web xem phim trực tuyến miễn phí chất lượng cao với giao diện trực quan, tốc độ tải trang cực nhanh cùng kho phim hơn 30.000+ bộ phim bom tấn được cập nhật liên tục.",
     "dmcaTitle": "Tuyên bố miễn trừ DMCA:",
     "dmcaContent": "Mọt Phim không lưu trữ bất kỳ tệp đa phương tiện nào trên máy chủ. Tất cả nội dung được cung cấp và nhúng từ các dịch vụ lưu trữ của bên thứ ba."
   },
@@ -10,10 +10,12 @@
     "home": "Trang chủ",
     "categories": "Danh mục",
     "movies": "Kho phim",
-    "singleMovies": "Phim lẻ",
-    "series": "Phim bộ",
-    "anime": "Hoạt hình",
+    "newMovies": "Phim Mới",
+    "singleMovies": "Phim Lẻ",
+    "series": "Phim Bộ",
+    "anime": "Hoạt Hình",
     "tvShows": "TV Shows",
+    "theaterMovies": "Phim Chiếu Rạp",
     "favorites": "Phim yêu thích",
     "account": "Tài khoản",
     "loggedIn": "Đã đăng nhập",
@@ -35,10 +37,21 @@
     "clear": "Xóa tìm kiếm"
   },
   "hero": {
+    "sectionLabel": "Phim nổi bật",
     "watchNow": "Xem ngay",
     "details": "Thông tin chi tiết",
     "prev": "Phim trước",
-    "next": "Phim kế tiếp"
+    "next": "Phim kế tiếp",
+    "goToSlide": "Chuyển đến phim {{number}}",
+    "fallbackDesc": "{{name}} ({{subtitle}}) - Phim thuộc thể loại {{genre}}, đem lại trải nghiệm giải trí đỉnh cao với chất lượng hình ảnh {{quality}} sắc nét."
+  },
+  "genres": {
+    "action": "Hành Động",
+    "romance": "Tình Cảm",
+    "historical": "Cổ Trang",
+    "horror": "Kinh Dị",
+    "sciFi": "Viễn Tưởng",
+    "featured": "đặc sắc"
   },
   "movie": {
     "viewAll": "Xem tất cả",
@@ -95,11 +108,19 @@
     "explore": "Danh mục",
     "genres": "Thể loại nổi bật",
     "support": "Điều khoản & Hỗ trợ",
+    "topicDmca": "Chính sách DMCA",
+    "topicTerms": "Điều khoản dịch vụ",
+    "topicPrivacy": "Chính sách quyền riêng tư",
+    "topicAds": "Liên hệ hợp tác quảng cáo",
+    "topicFeedback": "Báo cáo lỗi & Góp ý",
+    "topicUpdating": "Thông tin \"{{topic}}\" đang được cập nhật.",
     "copyright": "© 2026 Mọt Phim. All rights reserved. Nền tảng xem phim trực tuyến hàng đầu."
   },
   "common": {
     "lightMode": "Chế độ sáng (Light Mode)",
     "darkMode": "Chế độ tối (Dark Mode)",
+    "switchToLight": "Chuyển sang giao diện sáng",
+    "switchToDark": "Chuyển sang giao diện tối",
     "backHome": "Trở về Trang chủ",
     "loading": "Đang tải dữ liệu..."
   },
@@ -235,6 +256,10 @@
       "members": "Thành viên",
       "episodes": "Tập phim"
     }
+  },
+  "notFound": {
+    "title": "Không tìm thấy trang!",
+    "description": "Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển."
   },
   "chat": {
     "empty": "Chưa có tin nhắn nào. Hãy gửi lời chào mọi người!",

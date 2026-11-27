@@ -8,7 +8,7 @@ import PlayerOverlays from "./PlayerOverlays";
 import { useVideoPlayerControls } from "./useVideoPlayerControls";
 
 const FRAME_CLASS =
-    "w-full max-w-6xl 2xl:max-w-[1440px] aspect-video max-h-full overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-white/10";
+    "w-full max-w-[min(100%,calc((100dvh-6rem)*16/9))] aspect-video max-h-full overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-white/10";
 
 const VideoPlayer = forwardRef(
     (
@@ -184,7 +184,10 @@ const VideoPlayer = forwardRef(
                             currentLevel={currentLevel}
                             allowSpeedControl={allowSpeedControl}
                             settingsOpen={state.settingsOpen}
-                            onSettingsOpenChange={(open) => player.patch({ settingsOpen: open })}
+                            onSettingsOpenChange={(open) => {
+                                player.patch({ settingsOpen: open });
+                                if (open) player.revealControls();
+                            }}
                             onTogglePlay={() => player.togglePlay({ showFeedback: false })}
                             onSkipBy={player.skipBy}
                             onSeekCommit={(targetSeconds) => player.seekTo(targetSeconds)}
@@ -220,7 +223,8 @@ const VideoPlayer = forwardRef(
         return (
             <div
                 className={cn(
-                    "flex w-full max-w-6xl 2xl:max-w-[1440px] aspect-video max-h-full items-center justify-center rounded-xl bg-black/80 text-slate-400",
+                    FRAME_CLASS,
+                    "flex items-center justify-center bg-black/80 text-slate-400",
                     className
                 )}
             >

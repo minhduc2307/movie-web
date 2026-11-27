@@ -55,26 +55,25 @@ const MovieCard = ({
                     {/* Subtle bottom vignette on poster */}
                     <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
 
-                    {/* Top-left Genre Badge */}
-                    {genreLabel && (
-                        <div className="absolute left-2.5 top-2.5 z-10">
+                    {/* Top Badges Container (never overlap on narrow screens) */}
+                    <div className="pointer-events-none absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-1.5">
+                        {genreLabel ? (
                             <Badge
                                 variant="secondary"
-                                className="backdrop-blur-md bg-black/65 hover:bg-black/75 text-white border-white/15 px-2.5 py-0.5 text-xs font-medium shadow-md"
+                                className="max-w-[50%] truncate backdrop-blur-md bg-black/75 text-white border-white/15 px-2 py-0.5 text-[11px] font-medium shadow-md"
                             >
                                 {genreLabel}
                             </Badge>
-                        </div>
-                    )}
+                        ) : (
+                            <span />
+                        )}
 
-                    {/* Top-right Quality / Episode Badge */}
-                    {statusBadge && (
-                        <div className="absolute right-2.5 top-2.5 z-10">
-                            <Badge className="bg-primary/90 hover:bg-primary text-white border-none px-2 py-0.5 text-[11px] font-bold shadow-md">
+                        {statusBadge && (
+                            <Badge className="max-w-[48%] truncate bg-primary text-primary-foreground border-none px-2 py-0.5 text-[11px] font-bold shadow-md">
                                 {statusBadge}
                             </Badge>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
                     {/* Dark overlay & glowing play button on hover */}
                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/45 backdrop-blur-[2px] opacity-0 transition-all duration-300 group-hover:opacity-100">
@@ -87,7 +86,7 @@ const MovieCard = ({
                 {/* Movie Info Block */}
                 <div className="flex flex-1 flex-col justify-between gap-2.5 p-3 sm:p-3.5">
                     <h3
-                        className="line-clamp-1 text-[15px] sm:text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-primary"
+                        className="line-clamp-1 text-[15px] sm:text-base min-[2000px]:text-lg font-semibold leading-snug text-foreground transition-colors group-hover:text-primary dark:group-hover:text-rose-400"
                         title={name}
                     >
                         {name}

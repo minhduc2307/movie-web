@@ -1,26 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Clapperboard } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { movieService } from "@/services/api";
 import { Facebook, Youtube, Twitter, Instagram } from "./SocialIcons";
 
-const GENRE_LINKS = [
-    { label: "Phim Hành Động", to: "/movies?category=hanh-dong" },
-    { label: "Phim Cổ Trang", to: "/movies?category=co-trang" },
-    { label: "Phim Tình Cảm", to: "/movies?category=tinh-cam" },
-    { label: "Phim Viễn Tưởng", to: "/movies?category=vien-tuong" },
-    { label: "Phim Kinh Dị", to: "/movies?category=kinh-di" },
+const FEATURED_GENRE_SLUGS = [
+    "chinh-kich",
+    "tam-ly",
+    "hanh-dong",
+    "hai-huoc",
+    "tinh-cam",
+    "vien-tuong",
 ];
 
-const SUPPORT_TOPICS = [
-    "Chính sách DMCA",
-    "Điều khoản dịch vụ",
-    "Chính sách quyền riêng tư",
-    "Liên hệ hợp tác quảng cáo",
-    "Báo cáo lỗi & Góp ý",
+const DEFAULT_FEATURED_GENRES = [
+    { name: "Chính Kịch", slug: "chinh-kich" },
+    { name: "Tâm Lý", slug: "tam-ly" },
+    { name: "Hành Động", slug: "hanh-dong" },
+    { name: "Hài Hước", slug: "hai-huoc" },
+    { name: "Tình Cảm", slug: "tinh-cam" },
+    { name: "Viễn Tưởng", slug: "vien-tuong" },
+];
+
+const GENRE_EN_MAP = {
+    "chinh-kich": "Drama",
+    "tam-ly": "Psychological",
+    "hanh-dong": "Action",
+    "hai-huoc": "Comedy",
+    "tinh-cam": "Romance",
+    "vien-tuong": "Sci-Fi",
+    "kinh-di": "Horror",
+    "co-trang": "Historical",
+    "phieu-luu": "Adventure",
+    "hinh-su": "Crime",
+    "bi-an": "Mystery",
+    "khoa-hoc": "Science",
+    "gia-dinh": "Family",
+    "chien-tranh": "War",
+};
+
+const SUPPORT_TOPIC_KEYS = [
+    "footer.topicDmca",
+    "footer.topicTerms",
+    "footer.topicPrivacy",
+    "footer.topicAds",
+    "footer.topicFeedback",
 ];
 
 const SOCIAL_LINKS = [
@@ -30,16 +58,55 @@ const SOCIAL_LINKS = [
     { name: "Instagram", href: "https://instagram.com", Icon: Instagram },
 ];
 
+const selectFeaturedGenres = (items = []) => {
+    if (!Array.isArray(items) || items.length === 0) return DEFAULT_FEATURED_GENRES;
+
+    const bySlug = new Map(items.map((item) => [item.slug, item]));
+    const picked = [];
+
+    for (const slug of FEATURED_GENRE_SLUGS) {
+        const matched = bySlug.get(slug);
+        if (matched) picked.push({ name: matched.name, slug: matched.slug });
+    }
+
+    for (const item of items) {
+        if (picked.length >= FEATURED_GENRE_SLUGS.length) break;
+        if (!picked.some((g) => g.slug === item.slug)) {
+            picked.push({ name: item.name, slug: item.slug });
+        }
+    }
+
+    return picked.length > 0 ? picked : DEFAULT_FEATURED_GENRES;
+};
+
 const Footer = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [email, setEmail] = useState("");
+    const [featuredGenres, setFeaturedGenres] = useState(DEFAULT_FEATURED_GENRES);
+
+    useEffect(() => {
+        let isMounted = true;
+        movieService
+            .getCategories()
+            .then((res) => {
+                if (!isMounted) return;
+                setFeaturedGenres(selectFeaturedGenres(res?.data?.items));
+            })
+            .catch(() => {
+                // Keep API-aligned fallback genres silently
+            });
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const exploreLinks = [
-        { label: t("catalog.title"), to: "/movies" },
+        { label: t("nav.newMovies"), to: "/movies" },
         { label: t("nav.singleMovies"), to: "/movies?type=phim-le" },
         { label: t("nav.series"), to: "/movies?type=phim-bo" },
         { label: t("nav.anime"), to: "/movies?type=hoat-hinh" },
         { label: t("nav.tvShows"), to: "/movies?type=tv-shows" },
+        { label: t("nav.theaterMovies"), to: "/movies?type=phim-chieu-rap" },
     ];
 
     const handleNewsletterSubmit = (e) => {
@@ -49,30 +116,40 @@ const Footer = () => {
         setEmail("");
     };
 
+    const isEnglish = i18n.language === "en";
+
     return (
-        <footer className="w-full border-t border-border/40 bg-card/20 text-muted-foreground transition-colors">
-            <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <footer className="w-full border-t border-border/60 bg-card/30 text-muted-foreground transition-colors">
+            <div className="app-container py-12 lg:py-16">
                 <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
-                    <div className="lg:col-span-5 space-y-4">
-                        <Link to="/" className="flex items-center gap-2 group w-fit">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-rose-600 text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-200 group-hover:scale-105">
+                    <div className="space-y-4 lg:col-span-4">
+                        <Link
+                            to="/"
+                            className="group flex w-fit items-center gap-2 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        >
+                            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-rose-700 text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-200 group-hover:scale-105">
                                 <Clapperboard className="h-5 w-5" />
                             </div>
-                            <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-red-500 via-rose-500 to-amber-500 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 bg-clip-text text-xl font-extrabold tracking-tight text-transparent dark:from-red-400 dark:via-rose-400 dark:to-amber-400">
                                 {t("brand.name")}
                             </span>
                         </Link>
 
-                        <p className="text-[15px] text-muted-foreground leading-relaxed max-w-md">
+                        <p className="max-w-md text-[15px] leading-relaxed text-muted-foreground">
                             {t("brand.description")}
                         </p>
 
-                        <div className="rounded-lg border border-border/60 bg-muted/30 p-3.5 text-[13px] text-muted-foreground leading-relaxed max-w-md">
-                            <span className="font-semibold text-foreground">{t("brand.dmcaTitle")} </span>
+                        <div className="max-w-md rounded-lg border border-border/70 bg-muted/40 p-3.5 text-[13px] leading-relaxed text-muted-foreground">
+                            <span className="font-semibold text-foreground">
+                                {t("brand.dmcaTitle")}{" "}
+                            </span>
                             {t("brand.dmcaContent")}
                         </div>
 
-                        <form onSubmit={handleNewsletterSubmit} className="space-y-2 pt-1 max-w-md">
+                        <form
+                            onSubmit={handleNewsletterSubmit}
+                            className="max-w-md space-y-2 pt-1"
+                        >
                             <label
                                 htmlFor="newsletter-email"
                                 className="block text-xs font-semibold uppercase tracking-wider text-foreground/80"
@@ -82,16 +159,20 @@ const Footer = () => {
                             <div className="flex gap-2">
                                 <Input
                                     id="newsletter-email"
+                                    name="email"
                                     type="email"
-                                    placeholder={t("footer.newsletterPlaceholder")}
+                                    autoComplete="email"
+                                    placeholder={t(
+                                        "footer.newsletterPlaceholder",
+                                    )}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="h-10 bg-background/60 border-border/60 text-sm"
+                                    className="h-11 border-border bg-background text-sm sm:h-10"
                                 />
                                 <Button
                                     type="submit"
-                                    className="h-10 px-5 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shrink-0 shadow-md shadow-primary/20 rounded-lg"
+                                    className="h-11 shrink-0 rounded-lg bg-primary px-5 font-semibold text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90 sm:h-10"
                                 >
                                     {t("footer.newsletterBtn")}
                                 </Button>
@@ -99,7 +180,7 @@ const Footer = () => {
                         </form>
                     </div>
 
-                    <div className="lg:col-span-2 space-y-4">
+                    <div className="space-y-4 lg:col-span-2">
                         <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
                             {t("footer.explore")}
                         </h3>
@@ -108,7 +189,7 @@ const Footer = () => {
                                 <li key={item.to}>
                                     <Link
                                         to={item.to}
-                                        className="text-muted-foreground hover:text-primary transition-colors inline-block"
+                                        className="inline-block py-0.5 text-muted-foreground transition-colors hover:text-primary dark:hover:text-rose-400"
                                     >
                                         {item.label}
                                     </Link>
@@ -117,46 +198,55 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    <div className="lg:col-span-2 space-y-4">
+                    <div className="space-y-4 lg:col-span-3">
                         <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
                             {t("footer.genres")}
                         </h3>
                         <ul className="space-y-2.5 text-sm">
-                            {GENRE_LINKS.map((item) => (
-                                <li key={item.to}>
+                            {featuredGenres.map((genre) => (
+                                <li key={genre.slug}>
                                     <Link
-                                        to={item.to}
-                                        className="text-muted-foreground hover:text-primary transition-colors inline-block"
+                                        to={`/movies?category=${genre.slug}`}
+                                        className="inline-block py-0.5 text-muted-foreground transition-colors hover:text-primary dark:hover:text-rose-400"
                                     >
-                                        {item.label}
+                                        {isEnglish ? GENRE_EN_MAP[genre.slug] || genre.name : genre.name}
                                     </Link>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
-                    <div className="lg:col-span-3 space-y-4">
+                    <div className="space-y-4 lg:col-span-3">
                         <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
                             {t("footer.support")}
                         </h3>
                         <ul className="space-y-2.5 text-sm">
-                            {SUPPORT_TOPICS.map((topic) => (
-                                <li key={topic}>
-                                    <button
-                                        type="button"
-                                        onClick={() => toast.info(`Thông tin "${topic}" đang được cập nhật.`)}
-                                        className="text-muted-foreground hover:text-primary transition-colors inline-block text-left"
-                                    >
-                                        {topic}
-                                    </button>
-                                </li>
-                            ))}
+                            {SUPPORT_TOPIC_KEYS.map((topicKey) => {
+                                const topicLabel = t(topicKey);
+                                return (
+                                    <li key={topicKey}>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                toast.info(
+                                                    t("footer.topicUpdating", {
+                                                        topic: topicLabel,
+                                                    }),
+                                                )
+                                            }
+                                            className="inline-block py-0.5 text-left text-muted-foreground transition-colors hover:text-primary dark:hover:text-rose-400"
+                                        >
+                                            {topicLabel}
+                                        </button>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p className="text-sm text-muted-foreground text-center sm:text-left">
+                <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-8 sm:flex-row">
+                    <p className="text-center text-sm text-muted-foreground sm:text-left">
                         {t("footer.copyright")}
                     </p>
 
@@ -168,7 +258,7 @@ const Footer = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={name}
-                                className="h-9 w-9 rounded-full border border-border/60 bg-muted/30 flex items-center justify-center text-muted-foreground hover:text-white hover:bg-primary hover:border-primary transition-all duration-300 hover:scale-110 active:scale-95"
+                                className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95 sm:h-9 sm:w-9"
                             >
                                 <Icon className="h-4 w-4" />
                             </a>

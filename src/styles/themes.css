@@ -12,7 +12,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 0 84.2% 55%;                /* #ef4444 - Đỏ thương hiệu sắc nét */
+    --primary: 0 76% 45%;                /* #cb1b1b - Đỏ thương hiệu đạt chuẩn WCAG AA >= 4.5:1 */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;            /* #f1f5f9 - Nền phụ dịu nhẹ (input, pill) */
@@ -24,12 +24,12 @@
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 76% 45%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 214.3 31.8% 91.4%;           /* #e2e8f0 - Viền mảnh thanh thoát */
     --input: 214.3 31.8% 91.4%;
-    --ring: 0 84.2% 55%;
+    --ring: 0 76% 45%;
 
     --radius: 0.5rem;
   }
@@ -47,7 +47,7 @@
     --popover: 224 26% 14%;
     --popover-foreground: 210 40% 96%;
 
-    --primary: 0 84.2% 60.2%;              /* #ef4444 - Đỏ điện ảnh rực rỡ */
+    --primary: 0 74% 48%;              /* #d52020 - Đỏ điện ảnh đạt WCAG AA với chữ trắng */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 223 24% 20%;              /* #272f40 - Bề mặt phụ tối */
@@ -64,6 +64,6 @@
 
     --border: 223 22% 22%;                 /* #2b3346 - Viền slate tinh tế */
     --input: 223 22% 22%;
-    --ring: 0 84.2% 60.2%;
+    --ring: 0 74% 52%;
   }
 }

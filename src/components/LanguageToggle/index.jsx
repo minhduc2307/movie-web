@@ -16,9 +16,9 @@ const LanguageToggle = ({ className = "" }) => {
             variant="ghost"
             size="sm"
             onClick={toggleLanguage}
-            aria-label={t("nav.language")}
+            aria-label={`${currentLang.toUpperCase()} - ${t("nav.language")}`}
             title={currentLang === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
-            className={`h-9 px-2.5 rounded-full text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/80 gap-1.5 ${className}`}
+            className={`h-11 min-w-[44px] sm:h-9 sm:min-w-0 px-2.5 rounded-full text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/80 gap-1.5 ${className}`}
         >
             <Globe className="h-4 w-4" />
             <span className="uppercase">{currentLang}</span>

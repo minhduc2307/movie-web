@@ -9,6 +9,7 @@ import {
     Home,
     Film,
     Tv,
+    MonitorPlay,
     Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ const MobileDrawer = ({ open, user, isAuthReady, onClose, onLogout }) => {
         { name: t("nav.singleMovies"), href: "/movies?type=phim-le", icon: Film },
         { name: t("nav.series"), href: "/movies?type=phim-bo", icon: Tv },
         { name: t("nav.anime"), href: "/movies?type=hoat-hinh", icon: Sparkles },
+        { name: t("nav.tvShows"), href: "/movies?type=tv-shows", icon: MonitorPlay },
     ];
 
     return createPortal(
@@ -55,7 +57,7 @@ const MobileDrawer = ({ open, user, isAuthReady, onClose, onLogout }) => {
                             variant="ghost"
                             size="icon"
                             onClick={onClose}
-                            className="h-8 w-8 rounded-full"
+                            className="h-11 w-11 rounded-full"
                             aria-label={t("nav.closeMenu")}
                         >
                             <X className="h-4 w-4" />

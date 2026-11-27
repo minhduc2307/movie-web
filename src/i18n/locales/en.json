@@ -2,7 +2,7 @@
   "brand": {
     "name": "Mot Phim",
     "tagline": "Watch HD movies online free",
-    "description": "Free high-quality online movie streaming platform with an intuitive interface, fast loading speed, and 10,000+ blockbuster movies updated continuously.",
+    "description": "Free high-quality online movie streaming platform with an intuitive interface, fast loading speed, and 30,000+ blockbuster titles updated continuously.",
     "dmcaTitle": "DMCA Disclaimer:",
     "dmcaContent": "Mot Phim does not host any media files on its own servers. All content is provided and embedded from third-party storage services."
   },
@@ -10,10 +10,12 @@
     "home": "Home",
     "categories": "Categories",
     "movies": "Browse",
+    "newMovies": "New Releases",
     "singleMovies": "Movies",
     "series": "TV Series",
     "anime": "Anime",
     "tvShows": "TV Shows",
+    "theaterMovies": "In Theaters",
     "favorites": "Favorites",
     "account": "Account",
     "loggedIn": "Signed in",
@@ -35,10 +37,21 @@
     "clear": "Clear search"
   },
   "hero": {
+    "sectionLabel": "Featured movies",
     "watchNow": "Watch Now",
     "details": "More Info",
     "prev": "Previous movie",
-    "next": "Next movie"
+    "next": "Next movie",
+    "goToSlide": "Go to movie {{number}}",
+    "fallbackDesc": "{{name}} ({{subtitle}}) - {{genre}} title delivering a crisp {{quality}} streaming experience."
+  },
+  "genres": {
+    "action": "Action",
+    "romance": "Romance",
+    "historical": "Historical",
+    "horror": "Horror",
+    "sciFi": "Sci-Fi",
+    "featured": "featured"
   },
   "movie": {
     "viewAll": "View All",
@@ -95,11 +108,19 @@
     "explore": "Explore",
     "genres": "Top Genres",
     "support": "Terms & Support",
+    "topicDmca": "DMCA Policy",
+    "topicTerms": "Terms of Service",
+    "topicPrivacy": "Privacy Policy",
+    "topicAds": "Advertising & Partnerships",
+    "topicFeedback": "Report Bug & Feedback",
+    "topicUpdating": "Information for \"{{topic}}\" is being updated.",
     "copyright": "© 2026 Mot Phim. All rights reserved. Leading online movie streaming platform."
   },
   "common": {
     "lightMode": "Light Mode",
     "darkMode": "Dark Mode",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode",
     "backHome": "Back to Home",
     "loading": "Loading..."
   },
@@ -235,6 +256,10 @@
       "members": "Members",
       "episodes": "Episodes"
     }
+  },
+  "notFound": {
+    "title": "Page not found!",
+    "description": "The page you are looking for does not exist or has been moved."
   },
   "chat": {
     "empty": "No messages yet. Say hello to your friends!",

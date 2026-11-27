@@ -76,15 +76,6 @@ export default {
                 "accordion-up": "accordion-up 0.2s ease-out",
                 shimmer: "shimmer 2s infinite linear",
             },
-            height: {
-                custom: "calc(100vh - 88px)",
-            },
-            width: {
-                "content-inner": "min(400px, 100%)",
-            },
-            gridTemplateColumns: {
-                footer: "2fr 1fr 1fr 1fr",
-            },
         },
     },
     plugins: [tailwindcssAnimate],

@@ -63,16 +63,16 @@ const SignIn = () => {
             toast.success(t("auth.loginSuccess"), { id: "auth-login-success" });
             navigate(redirectTarget, { replace: true });
         } catch (err) {
-            const message = t(mapAuthErrorToKey(err));
-            setError("root", { type: "manual", message });
-            toast.error(message, { id: "auth-login-error" });
+            const errorKey = mapAuthErrorToKey(err);
+            setError("root", { type: "manual", message: errorKey });
+            toast.error(t(errorKey), { id: "auth-login-error" });
         }
     };
 
     return (
         <div className="relative flex min-h-[100dvh] flex-col bg-background text-foreground">
-            <div className="relative z-10 mx-auto flex w-full max-w-7xl shrink-0 items-center justify-between px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
-                <Button asChild variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+            <header className="app-container relative z-10 flex shrink-0 items-center justify-between py-3 sm:py-4">
+                <Button asChild variant="ghost" size="sm" className="min-h-[44px] sm:min-h-0 gap-2 text-muted-foreground hover:text-foreground">
                     <Link to="/">
                         <ArrowLeft className="h-4 w-4" />
                         <span>{t("common.backHome")}</span>
@@ -82,19 +82,19 @@ const SignIn = () => {
                     <LanguageToggle />
                     <ThemeToggle />
                 </div>
-            </div>
+            </header>
 
             <div className="pointer-events-none fixed inset-0 overflow-hidden">
                 <div className="absolute left-1/2 top-1/3 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
             </div>
 
-            <div className="relative z-10 flex flex-1 items-start justify-center px-4 pb-8 pt-2 sm:items-center sm:py-8">
+            <main className="relative z-10 flex flex-1 items-start justify-center px-4 pb-8 pt-2 sm:items-center sm:py-8">
                 <div className="w-full max-w-md">
-                    <Link to="/" className="mb-4 sm:mb-7 flex items-center justify-center gap-2.5 group">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-rose-600 text-primary-foreground shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
+                    <Link to="/" className="mb-4 sm:mb-7 flex items-center justify-center gap-2.5 group rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-rose-700 text-primary-foreground shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
                             <Clapperboard className="h-5 w-5" />
                         </div>
-                        <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-red-500 via-rose-500 to-amber-500 bg-clip-text text-transparent">
+                        <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 dark:from-red-400 dark:via-rose-400 dark:to-amber-400 bg-clip-text text-transparent">
                             {t("brand.name")}
                         </span>
                     </Link>
@@ -114,10 +114,10 @@ const SignIn = () => {
                                 {errors.root?.message && (
                                     <div
                                         role="alert"
-                                        className="flex items-center gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-xs font-medium text-destructive"
+                                        className="flex items-center gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-xs font-medium text-destructive dark:text-rose-400"
                                     >
                                         <AlertCircle className="h-4 w-4 shrink-0" />
-                                        <span>{errors.root.message}</span>
+                                        <span>{t(errors.root.message)}</span>
                                     </div>
                                 )}
 
@@ -136,17 +136,17 @@ const SignIn = () => {
                                                 errors.email ? "border-destructive focus-visible:ring-destructive" : ""
                                             }`}
                                             {...register("email", {
-                                                required: t("auth.errors.emailRequired"),
+                                                required: "auth.errors.emailRequired",
                                                 pattern: {
                                                     value: EMAIL_PATTERN,
-                                                    message: t("auth.errors.invalidEmail"),
+                                                    message: "auth.errors.invalidEmail",
                                                 },
                                             })}
                                         />
                                     </div>
                                     {errors.email?.message && (
-                                        <p className="text-xs font-medium text-destructive">
-                                            {errors.email.message}
+                                        <p className="text-xs font-medium text-destructive dark:text-rose-400">
+                                            {t(errors.email.message)}
                                         </p>
                                     )}
                                 </div>
@@ -161,21 +161,21 @@ const SignIn = () => {
                                             autoComplete="current-password"
                                             placeholder={t("auth.passwordPlaceholder")}
                                             aria-invalid={Boolean(errors.password)}
-                                            className={`h-11 pl-10 pr-10 ${
+                                            className={`h-11 pl-10 pr-12 ${
                                                 errors.password ? "border-destructive focus-visible:ring-destructive" : ""
                                             }`}
                                             {...register("password", {
-                                                required: t("auth.errors.passwordRequired"),
+                                                required: "auth.errors.passwordRequired",
                                                 minLength: {
                                                     value: 6,
-                                                    message: t("auth.errors.weakPassword"),
+                                                    message: "auth.errors.weakPassword",
                                                 },
                                             })}
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword((prev) => !prev)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                            className="absolute right-1 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:text-foreground transition-colors"
                                             aria-label={t("auth.togglePasswordVisibility")}
                                         >
                                             {showPassword ? (
@@ -186,8 +186,8 @@ const SignIn = () => {
                                         </button>
                                     </div>
                                     {errors.password?.message && (
-                                        <p className="text-xs font-medium text-destructive">
-                                            {errors.password.message}
+                                        <p className="text-xs font-medium text-destructive dark:text-rose-400">
+                                            {t(errors.password.message)}
                                         </p>
                                     )}
                                 </div>
@@ -209,7 +209,7 @@ const SignIn = () => {
                                 <Link
                                     to="/sign-up"
                                     state={location.state}
-                                    className="font-semibold text-primary hover:underline"
+                                    className="font-semibold text-primary dark:text-rose-400 hover:underline"
                                 >
                                     {t("auth.registerNow")}
                                 </Link>
@@ -217,7 +217,7 @@ const SignIn = () => {
                         </CardFooter>
                     </Card>
                 </div>
-            </div>
+            </main>
         </div>
     );
 };

@@ -38,7 +38,7 @@ const RoomHeader = ({
         <>
             <header className="z-20 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-white/10 bg-black/80 px-3 backdrop-blur-md sm:px-5">
                 <div className="flex min-w-0 items-center gap-2.5">
-                    <Badge className="shrink-0 gap-1 bg-primary/90 text-white text-[11px] font-bold px-2 py-0.5">
+                    <Badge className="shrink-0 gap-1 bg-primary text-primary-foreground text-[11px] font-bold px-2 py-0.5">
                         <Users className="h-3 w-3" />
                         <span>
                             {memberCount}/{MAX_ROOM_MEMBERS}
@@ -81,7 +81,8 @@ const RoomHeader = ({
                         variant="outline"
                         size="sm"
                         onClick={onOpenInvite}
-                        className="h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                        aria-label={t("room.inviteBtn")}
+                        className="h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white"
                     >
                         <Share2 className="h-4 w-4" />
                         <span className="hidden sm:inline">{t("room.inviteBtn")}</span>
@@ -94,7 +95,7 @@ const RoomHeader = ({
                             size="sm"
                             onClick={() => setConfirmCloseOpen(true)}
                             aria-label={t("room.closeRoom")}
-                            className="h-9 gap-1.5 rounded-full"
+                            className="h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full"
                         >
                             <Power className="h-4 w-4" />
                             <span className="hidden md:inline">{t("room.closeRoom")}</span>
@@ -107,7 +108,7 @@ const RoomHeader = ({
                         size="sm"
                         onClick={onLeaveRoom}
                         aria-label={t("room.leaveRoom")}
-                        className="h-9 gap-1.5 rounded-full bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                        className="h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full bg-white/10 text-white hover:bg-white/20 hover:text-white"
                     >
                         <LogOut className="h-4 w-4" />
                         <span className="hidden sm:inline">{t("room.leaveRoom")}</span>

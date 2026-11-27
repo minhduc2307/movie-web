@@ -41,24 +41,24 @@ const Header = () => {
 
     return (
         <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-md transition-colors">
-            <div className="mx-auto flex h-16 max-w-7xl 2xl:max-w-[1600px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center gap-3 shrink-0">
+            <div className="app-container flex h-16 items-center justify-between gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="md:hidden text-foreground hover:bg-muted"
+                        className="md:hidden h-11 w-11 text-foreground hover:bg-muted"
                         onClick={() => setShowMenuDrawer(true)}
                         aria-label={t("nav.openMenu")}
                     >
                         <Menu className="h-5 w-5" />
                     </Button>
 
-                    <Link to="/" className="flex items-center gap-2.5 group">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-rose-600 text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-200 group-hover:scale-105">
+                    <Link to="/" className="flex items-center gap-2.5 group rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-rose-700 text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-200 group-hover:scale-105">
                             <Clapperboard className="h-5 w-5" />
                         </div>
                         <div className="flex items-center gap-3">
-                            <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-red-500 via-rose-500 to-amber-500 bg-clip-text text-transparent">
+                            <span className="text-xl min-[2000px]:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 dark:from-red-400 dark:via-rose-400 dark:to-amber-400 bg-clip-text text-transparent">
                                 {t("brand.name")}
                             </span>
                             <span className="hidden xl:inline-block border-l border-border pl-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -68,7 +68,7 @@ const Header = () => {
                     </Link>
                 </div>
 
-                <div className="hidden md:flex flex-1 justify-center px-4">
+                <div className="hidden lg:flex flex-1 justify-center px-4">
                     <HeaderSearch />
                 </div>
 
@@ -79,7 +79,7 @@ const Header = () => {
                 </div>
             </div>
 
-            <div className="border-t border-border/40 px-4 py-2 md:hidden">
+            <div className="border-t border-border/40 px-4 py-2 lg:hidden">
                 <HeaderSearch className="max-w-full" />
             </div>
 
