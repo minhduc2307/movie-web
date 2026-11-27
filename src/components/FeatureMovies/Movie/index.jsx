@@ -8,12 +8,14 @@ import { cn } from "@/lib/utils";
 import HeroSlideContent from "./HeroSlideContent";
 
 const AUTO_PLAY_INTERVAL = 5500;
+const ADJACENT_PRELOAD_DELAY_MS = 4000;
 
 const Movie = ({ movies = [] }) => {
     const { t, i18n } = useTranslation();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
     const [resetTimer, setResetTimer] = useState(0);
+    const [preloadAdjacent, setPreloadAdjacent] = useState(false);
     const [movieDetails, setMovieDetails] = useState({});
     const movieDetailsRef = useRef({});
     const touchStartX = useRef(0);
@@ -21,22 +23,39 @@ const Movie = ({ movies = [] }) => {
 
     const count = movies.length;
 
+    const enableAdjacentPreload = useCallback(() => {
+        setPreloadAdjacent(true);
+    }, []);
+
     const nextSlide = useCallback(() => {
         if (count === 0) return;
+        setPreloadAdjacent(true);
         setCurrentIndex((prev) => (prev + 1) % count);
         setResetTimer((t) => t + 1);
     }, [count]);
 
     const prevSlide = useCallback(() => {
         if (count === 0) return;
+        setPreloadAdjacent(true);
         setCurrentIndex((prev) => (prev - 1 + count) % count);
         setResetTimer((t) => t + 1);
     }, [count]);
 
     const goToSlide = (index) => {
+        setPreloadAdjacent(true);
         setCurrentIndex(index);
         setResetTimer((t) => t + 1);
     };
+
+    // Defer mounting off-screen adjacent slides until right before auto-advance
+    // so hidden slides never compete with the primary LCP image on Slow 4G.
+    useEffect(() => {
+        if (count <= 1 || preloadAdjacent) return;
+        const timer = setTimeout(() => {
+            setPreloadAdjacent(true);
+        }, ADJACENT_PRELOAD_DELAY_MS);
+        return () => clearTimeout(timer);
+    }, [count, preloadAdjacent]);
 
     // Autoplay timer with clean reset on manual slide change
     useEffect(() => {
@@ -137,21 +156,28 @@ const Movie = ({ movies = [] }) => {
         <div className="px-4 pt-3 sm:p-0 bg-background">
             <section
                 className="group/hero relative w-full aspect-[3/4] max-h-[540px] sm:aspect-auto sm:max-h-none sm:h-[580px] lg:h-[72vh] lg:min-h-[580px] lg:max-h-[760px] 2xl:max-h-[840px] overflow-hidden rounded-2xl sm:rounded-none border border-white/10 sm:border-none shadow-2xl sm:shadow-none bg-[#0b0f19] select-none"
-                onMouseEnter={() => setIsHovered(true)}
+                onMouseEnter={() => {
+                    setIsHovered(true);
+                    enableAdjacentPreload();
+                }}
                 onMouseLeave={() => setIsHovered(false)}
-                onTouchStart={handleTouchStart}
+                onTouchStart={(e) => {
+                    enableAdjacentPreload();
+                    handleTouchStart(e);
+                }}
                 onTouchEnd={handleTouchEnd}
                 aria-label={t("hero.sectionLabel")}
             >
-                {/* Backdrop Slides Container (only mount active + adjacent slides to avoid fetching hidden slides) */}
+                {/* Backdrop Slides Container: mount only current slide first to protect LCP bandwidth */}
                 <div className="absolute inset-0">
                     {movies.map((movie, index) => {
                         const isCurrent = index === currentIndex;
                         const isAdjacent =
-                            Math.abs(index - currentIndex) <= 1 ||
-                            (currentIndex === 0 && index === count - 1) ||
-                            (currentIndex === count - 1 && index === 0);
-                        if (!isAdjacent) return null;
+                            preloadAdjacent &&
+                            (Math.abs(index - currentIndex) <= 1 ||
+                                (currentIndex === 0 && index === count - 1) ||
+                                (currentIndex === count - 1 && index === 0));
+                        if (!isCurrent && !isAdjacent) return null;
 
                         const rawDesktopBackdrop = normalizeImageUrl(
                             movie.thumbUrl || movie.thumb_url || movie.posterUrl || movie.poster_url

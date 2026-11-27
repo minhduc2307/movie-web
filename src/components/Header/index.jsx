@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Menu, Clapperboard } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@context/AuthProvider";
-import { signOutUser } from "@/services/firebase/authService";
 import { Button } from "@/components/ui/button";
 import { AppTooltip } from "@/components/common";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -22,6 +21,7 @@ const Header = () => {
 
     const handleLogout = useCallback(async () => {
         try {
+            const { signOutUser } = await import("@/services/firebase/authService");
             await signOutUser();
             toast.info(t("nav.loggedOutToast"), { id: "auth-logout" });
         } catch {

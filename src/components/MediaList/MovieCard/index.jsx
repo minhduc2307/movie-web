@@ -32,6 +32,7 @@ const MovieCard = ({
     quality,
     episodeCurrent,
     reserveTopRight = false,
+    fetchPriority = "low",
 }) => {
     const { t, i18n } = useTranslation();
     const rawGenre =
@@ -56,6 +57,7 @@ const MovieCard = ({
                         fallbackSrc={normalizeImageUrl(posterUrl)}
                         width={200}
                         height={300}
+                        fetchPriority={fetchPriority}
                         alt={name || "Poster phim"}
                         className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                     />
