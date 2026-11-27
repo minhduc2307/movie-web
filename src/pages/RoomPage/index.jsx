@@ -7,7 +7,12 @@ import i18n from "@/i18n";
 import { useAuth } from "@context/AuthProvider";
 import { movieService } from "@/services/api";
 import { formatWatchDisplayTitle } from "@lib/movieUtils";
-import { closeRoom, switchRoomMedia } from "@/services/firebase/roomService";
+import {
+    cleanupStaleHostRooms,
+    closeRoom,
+    leaveOrCleanupRoom,
+    switchRoomMedia,
+} from "@/services/firebase/roomService";
 import VideoPlayer from "@/components/VideoPlayer";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
@@ -170,7 +175,15 @@ const RoomPage = () => {
         user,
         isMember,
         isActiveTab: activeTab === "chat",
+        enabled: roomStatus === "active" && slotStatus !== "full",
     });
+
+    const isHost = Boolean(user?.uid && meta?.hostUid === user.uid);
+
+    useEffect(() => {
+        if (!isHost || roomStatus !== "active" || !user?.uid) return;
+        void cleanupStaleHostRooms(user.uid, { excludeRoomId: roomId });
+    }, [isHost, roomStatus, user?.uid, roomId]);
 
     const displayTitle = formatWatchDisplayTitle({
         movieName: meta?.movieName || movieInfo?.name || "",
@@ -206,14 +219,20 @@ const RoomPage = () => {
     );
 
     const handleLeaveRoom = useCallback(async () => {
-        await releaseSlot();
+        await leaveOrCleanupRoom({
+            roomId,
+            user,
+            slots,
+            releaseSlot,
+            cancelDisconnectOnly,
+        });
         navigate(movieSlug ? `/movies/${movieSlug}` : "/", { replace: true });
-    }, [releaseSlot, navigate, movieSlug]);
+    }, [roomId, user, slots, releaseSlot, cancelDisconnectOnly, navigate, movieSlug]);
 
     const handleCloseRoom = useCallback(async () => {
         try {
-            await cancelDisconnectOnly();
             await closeRoom(roomId);
+            await cancelDisconnectOnly();
             toast.info(t("room.roomClosedToast"), { id: "room-closed" });
             navigate(movieSlug ? `/movies/${movieSlug}` : "/", { replace: true });
         } catch {
@@ -271,8 +290,6 @@ const RoomPage = () => {
             />
         );
     }
-
-    const isHost = Boolean(user?.uid && meta?.hostUid === user.uid);
 
     return (
         <div className="flex h-[100dvh] w-full flex-col overflow-hidden bg-[#06080f] text-white">

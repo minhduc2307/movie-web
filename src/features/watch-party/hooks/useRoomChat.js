@@ -9,7 +9,13 @@ import {
     subscribeRoomMessages,
 } from "@/services/firebase/chatService";
 
-export const useRoomChat = ({ roomId, user, isMember, isActiveTab }) => {
+export const useRoomChat = ({
+    roomId,
+    user,
+    isMember,
+    isActiveTab,
+    enabled = true,
+}) => {
     const [messages, setMessages] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [isSending, setIsSending] = useState(false);
@@ -27,10 +33,11 @@ export const useRoomChat = ({ roomId, user, isMember, isActiveTab }) => {
     }, [isActiveTab]);
 
     useEffect(() => {
-        if (!roomId || !user?.uid) {
+        if (!enabled || !roomId || !user?.uid) {
             setMessages([]);
             setUnreadCount(0);
             seenIdsRef.current.clear();
+            initialLoadDoneRef.current = false;
             return;
         }
 
@@ -87,7 +94,7 @@ export const useRoomChat = ({ roomId, user, isMember, isActiveTab }) => {
             cancelled = true;
             unsubscribe?.();
         };
-    }, [roomId, user?.uid]);
+    }, [enabled, roomId, user?.uid]);
 
     const sendMessage = useCallback(
         async (rawText) => {

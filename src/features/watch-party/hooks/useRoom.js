@@ -23,6 +23,14 @@ export const useRoom = (roomId) => {
         let cancelled = false;
         let unsubscribe = null;
 
+        const stopChannel = () => {
+            cancelled = true;
+            if (unsubscribe) {
+                unsubscribe();
+                unsubscribe = null;
+            }
+        };
+
         hadMetaRef.current = false;
         hasConnectedOnceRef.current = false;
         setRoomStatus("loading");
@@ -40,7 +48,11 @@ export const useRoom = (roomId) => {
                     setRoomStatus("active");
                 } else {
                     setMeta(null);
+                    setMedia(null);
+                    setPlayback(null);
+                    setSlots({});
                     setRoomStatus(hadMetaRef.current ? "closed" : "not_found");
+                    stopChannel();
                 }
             },
             onMedia: (nextMedia) => {
@@ -68,7 +80,10 @@ export const useRoom = (roomId) => {
                 if (import.meta.env.DEV) {
                     console.error("[useRoom] Channel error:", err);
                 }
-                if (!cancelled) setRoomStatus("error");
+                if (!cancelled) {
+                    setRoomStatus("error");
+                    stopChannel();
+                }
             },
         })
             .then((unsub) => {
@@ -83,8 +98,7 @@ export const useRoom = (roomId) => {
             });
 
         return () => {
-            cancelled = true;
-            unsubscribe?.();
+            stopChannel();
         };
     }, [roomId]);
 

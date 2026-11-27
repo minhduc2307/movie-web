@@ -18,6 +18,7 @@ export const useRoomSlot = ({ roomId, user, roomStatus, slots, isConnected }) =>
     const uid = user?.uid || null;
     const handleRef = useRef(null);
     const claimingRef = useRef(false);
+    const isMountedRef = useRef(true);
     const slotStatusRef = useRef(slotStatus);
     slotStatusRef.current = slotStatus;
 
@@ -61,12 +62,18 @@ export const useRoomSlot = ({ roomId, user, roomStatus, slots, isConnected }) =>
     }, [roomStatus, slotStatus, occupiedCount]);
 
     useEffect(() => {
-        if (roomStatus === "closed" || roomStatus === "not_found") {
+        if (
+            roomStatus === "closed" ||
+            roomStatus === "not_found" ||
+            roomStatus === "error"
+        ) {
             const handle = handleRef.current;
             handleRef.current = null;
             handle?.cancelDisconnectOnly?.();
             setMySlotIndex(null);
-            setSlotStatus("idle");
+            if (roomStatus !== "error") {
+                setSlotStatus("idle");
+            }
             return;
         }
 
@@ -95,7 +102,7 @@ export const useRoomSlot = ({ roomId, user, roomStatus, slots, isConnected }) =>
                     activeTargetRef.current.roomId === targetRoomId &&
                     activeTargetRef.current.uid === targetUid;
 
-                if (!isSameTarget) {
+                if (!isMountedRef.current || !isSameTarget) {
                     if (result.status === "claimed") {
                         result.release?.();
                     }
@@ -146,7 +153,9 @@ export const useRoomSlot = ({ roomId, user, roomStatus, slots, isConnected }) =>
     ]);
 
     useEffect(() => {
+        isMountedRef.current = true;
         return () => {
+            isMountedRef.current = false;
             const handle = handleRef.current;
             handleRef.current = null;
             handle?.release?.();

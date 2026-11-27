@@ -1,9 +1,11 @@
 {
   "rules": {
     "rooms": {
+      ".read": "auth != null && query.orderByChild == 'meta/hostUid' && query.equalTo == auth.uid",
+      ".indexOn": ["meta/hostUid"],
       "$roomId": {
         ".read": "auth != null",
-        ".write": "auth != null && (!data.exists() || (!newData.exists() && data.child('meta/hostUid').val() === auth.uid))",
+        ".write": "auth != null && (!data.exists() || (!newData.exists() && (data.child('meta/hostUid').val() === auth.uid || ((data.child('slots/0/uid').val() === auth.uid || data.child('slots/1/uid').val() === auth.uid || data.child('slots/2/uid').val() === auth.uid || data.child('slots/3/uid').val() === auth.uid) && (!data.child('slots/0').exists() || data.child('slots/0/uid').val() === auth.uid) && (!data.child('slots/1').exists() || data.child('slots/1/uid').val() === auth.uid) && (!data.child('slots/2').exists() || data.child('slots/2/uid').val() === auth.uid) && (!data.child('slots/3').exists() || data.child('slots/3/uid').val() === auth.uid)))))",
 
         "meta": {
           ".validate": "newData.hasChildren(['hostUid', 'movieSlug', 'movieName', 'createdAt']) && !data.exists()",
