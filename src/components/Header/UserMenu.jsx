@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Heart, LogOut } from "lucide-react";
+import { getUserInitial } from "@lib/userUtils";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -12,13 +14,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const DEFAULT_AVATAR =
-    "https://img.freepik.com/free-psd/3d-rendering-avatar_23-2150833560.jpg?w=740&t=st=1728638508~exp=1728639108~hmac=59fcbd89a8d344fb2797ab35306b6b539a477e5dd919d73e04bd449290c3a5f4";
-
-const UserMenu = ({ userInfo, onLogout }) => {
+const UserMenu = ({ user, isAuthReady, onLogout }) => {
     const { t } = useTranslation();
 
-    if (!userInfo) {
+    if (!isAuthReady) {
+        return <Skeleton className="ml-1 h-9 w-9 rounded-full" />;
+    }
+
+    if (!user) {
         return (
             <div className="flex items-center gap-1.5 ml-1">
                 <Button
@@ -43,26 +46,35 @@ const UserMenu = ({ userInfo, onLogout }) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button className="ml-1 rounded-full ring-offset-background transition-transform duration-200 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+                <button
+                    type="button"
+                    aria-label={user.displayName || user.email || t("nav.account")}
+                    className="ml-1 rounded-full ring-offset-background transition-transform duration-200 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
                     <Avatar className="h-9 w-9 border border-border/80 shadow-sm">
-                        <AvatarImage src={DEFAULT_AVATAR} alt={userInfo?.email || "Avatar"} />
-                        <AvatarFallback>
-                            {userInfo?.email?.[0]?.toUpperCase() || "U"}
+                        {user.photoURL && (
+                            <AvatarImage
+                                src={user.photoURL}
+                                alt={user.displayName || user.email || "Avatar"}
+                            />
+                        )}
+                        <AvatarFallback className="bg-primary/15 text-primary font-bold">
+                            {getUserInitial(user)}
                         </AvatarFallback>
                     </Avatar>
                 </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 align="end"
-                className="w-56 mt-2 border-border bg-card/95 backdrop-blur-md"
+                className="w-60 mt-2 border-border bg-card/95 backdrop-blur-md"
             >
                 <DropdownMenuLabel>
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-semibold leading-none text-foreground">
-                            {t("nav.account")}
+                        <p className="text-sm font-semibold leading-none text-foreground truncate">
+                            {user.displayName || t("nav.account")}
                         </p>
                         <p className="text-xs leading-none text-muted-foreground truncate">
-                            {userInfo?.email}
+                            {user.email}
                         </p>
                     </div>
                 </DropdownMenuLabel>

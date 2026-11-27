@@ -1,14 +1,20 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { X, Clock, ListVideo, Server } from "lucide-react";
+import { X, Clock, ListVideo, Server, Users } from "lucide-react";
 import { movieService } from "@/services/api";
+import { useWatchPartyTrigger } from "@/hooks/useWatchPartyTrigger";
+import { formatWatchDisplayTitle } from "@lib/movieUtils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import VideoPlayer from "@/components/VideoPlayer";
-import EpisodeDrawer from "./EpisodeDrawer";
+import EpisodeDrawer from "@/components/EpisodeDrawer";
+
+const CreateRoomDialog = lazy(
+    () => import("@features/watch-party/components/CreateRoomDialog")
+);
 
 const Watch = () => {
     const { slug } = useParams();
@@ -21,6 +27,13 @@ const Watch = () => {
     const [movieInfo, setMovieInfo] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [showEpisodesPanel, setShowEpisodesPanel] = useState(false);
+
+    const {
+        canWatchParty,
+        createRoomOpen,
+        setCreateRoomOpen,
+        openWatchParty,
+    } = useWatchPartyTrigger(servers);
 
     useEffect(() => {
         let isMounted = true;
@@ -79,15 +92,13 @@ const Watch = () => {
     };
 
     const hasMultipleEpisodes = chapterList.length > 1;
-    const episodeLabel = currentEpisode?.name
-        ? currentEpisode.name.toLowerCase().includes("tập")
-            ? currentEpisode.name
-            : `${t("watch.episodePrefix")} ${currentEpisode.name}`
-        : `${t("watch.episodePrefix")} ${safeChapIndex + 1}`;
-
-    const displayTitle = hasMultipleEpisodes
-        ? `${movieInfo?.name || ""} — ${episodeLabel}`
-        : movieInfo?.name || "";
+    const displayTitle = formatWatchDisplayTitle({
+        movieName: movieInfo?.name || "",
+        currentEpisode,
+        episodeIndex: safeChapIndex,
+        totalChapters: chapterList.length,
+        episodePrefix: t("watch.episodePrefix"),
+    });
 
     const cleanContent = movieInfo?.content
         ? movieInfo.content.replace(/<[^>]*>/g, "").trim()
@@ -146,6 +157,23 @@ const Watch = () => {
                         </div>
                     )}
 
+                    {!isLoading && (
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={openWatchParty}
+                            title={!canWatchParty ? t("room.hlsOnlyHint") : undefined}
+                            className={cn(
+                                "h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white",
+                                !canWatchParty && "opacity-60"
+                            )}
+                        >
+                            <Users className="h-4 w-4" />
+                            <span className="hidden sm:inline">{t("room.watchWithFriends")}</span>
+                        </Button>
+                    )}
+
                     {hasMultipleEpisodes && (
                         <Button
                             type="button"
@@ -187,7 +215,6 @@ const Watch = () => {
                     />
                 )}
 
-                {/* Mobile-only Info & Quick Episode Grid right under the video */}
                 {!isLoading && (
                     <div className="md:hidden w-full space-y-4 px-1 pb-6">
                         <div>
@@ -261,6 +288,19 @@ const Watch = () => {
                     onClose={() => setShowEpisodesPanel(false)}
                 />
             </main>
+
+            {createRoomOpen && (
+                <Suspense fallback={null}>
+                    <CreateRoomDialog
+                        open={createRoomOpen}
+                        onOpenChange={setCreateRoomOpen}
+                        movie={movieInfo}
+                        episodes={servers}
+                        initialServer={currentServer}
+                        initialChapter={safeChapIndex}
+                    />
+                </Suspense>
+            )}
         </div>
     );
 };

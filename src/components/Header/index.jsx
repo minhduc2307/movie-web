@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Menu, Clapperboard } from "lucide-react";
 import { toast } from "sonner";
-import { useUserContext } from "@context/UserProvider";
+import { useAuth } from "@context/AuthProvider";
+import { signOutUser } from "@/services/firebase/authService";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -14,7 +15,7 @@ import MobileDrawer from "./MobileDrawer";
 const Header = () => {
     const { t } = useTranslation();
     const [showMenuDrawer, setShowMenuDrawer] = useState(false);
-    const { userInfo, setUserInfo } = useUserContext();
+    const { user, isAuthReady } = useAuth();
 
     useEffect(() => {
         if (!showMenuDrawer) return;
@@ -29,10 +30,14 @@ const Header = () => {
         };
     }, [showMenuDrawer]);
 
-    const handleLogout = () => {
-        setUserInfo(null);
-        toast.info(t("nav.loggedOutToast"));
-    };
+    const handleLogout = useCallback(async () => {
+        try {
+            await signOutUser();
+            toast.info(t("nav.loggedOutToast"), { id: "auth-logout" });
+        } catch {
+            toast.error(t("auth.errors.unknown"), { id: "auth-logout-err" });
+        }
+    }, [t]);
 
     return (
         <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-md transition-colors">
@@ -70,7 +75,7 @@ const Header = () => {
                 <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                     <LanguageToggle className="hidden sm:inline-flex" />
                     <ThemeToggle />
-                    <UserMenu userInfo={userInfo} onLogout={handleLogout} />
+                    <UserMenu user={user} isAuthReady={isAuthReady} onLogout={handleLogout} />
                 </div>
             </div>
 
@@ -80,7 +85,8 @@ const Header = () => {
 
             <MobileDrawer
                 open={showMenuDrawer}
-                userInfo={userInfo}
+                user={user}
+                isAuthReady={isAuthReady}
                 onClose={() => setShowMenuDrawer(false)}
                 onLogout={handleLogout}
             />

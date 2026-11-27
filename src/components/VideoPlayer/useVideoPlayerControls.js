@@ -61,8 +61,12 @@ const playerReducer = (state, action) => {
                 feedbackBadge: null,
                 useEmbedFallback: false,
             };
-        case "PATCH":
-            return { ...state, ...action.payload };
+        case "PATCH": {
+            const hasChange = Object.keys(action.payload).some(
+                (key) => !Object.is(state[key], action.payload[key])
+            );
+            return hasChange ? { ...state, ...action.payload } : state;
+        }
         default:
             return state;
     }
@@ -560,6 +564,20 @@ export const useVideoPlayerControls = ({
         [scheduleHideControls]
     );
 
+    const handleControlsBlur = useCallback(
+        (e) => {
+            if (e?.currentTarget && e?.relatedTarget && e.currentTarget.contains(e.relatedTarget)) {
+                return;
+            }
+            if (e?.currentTarget?.matches?.(":hover")) {
+                return;
+            }
+            isHoveringControlsRef.current = false;
+            scheduleHideControls();
+        },
+        [scheduleHideControls]
+    );
+
     const handleMouseLeave = useCallback(() => {
         isHoveringControlsRef.current = false;
         if (
@@ -591,6 +609,7 @@ export const useVideoPlayerControls = ({
         handleVideoSeeked,
         handleDragStateChange,
         handleControlsEnter,
+        handleControlsBlur,
         handleControlsLeave,
         handleMouseLeave,
     };

@@ -2,32 +2,28 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Film } from "lucide-react";
-import { toast } from "sonner";
-import { useUserContext } from "@context/UserProvider";
+import { useFavorites } from "@context/FavoritesProvider";
 import { movieService } from "@/services/api";
+import { extractYoutubeId } from "@lib/movieUtils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import MovieHero from "./MovieHero";
 import MovieInfoGrid from "./MovieInfoGrid";
 import TrailerDialog from "./TrailerDialog";
 
-const extractYoutubeId = (url) => {
-    if (!url || typeof url !== "string") return "";
-    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
-    return match?.[1] || "";
-};
-
 const MovieDetail = () => {
     const { slug } = useParams();
     const { t } = useTranslation();
     const [movieInfo, setMovieInfo] = useState(null);
+    const [episodes, setEpisodes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isTrailerOpen, setIsTrailerOpen] = useState(false);
-    const { favoriteList, setFavoriteList, userInfo } = useUserContext();
+    const { isFavorite, toggleFavorite } = useFavorites();
 
     useEffect(() => {
         let isMounted = true;
         setIsLoading(true);
+        setEpisodes([]);
 
         movieService
             .getMovieDetail(slug)
@@ -36,6 +32,7 @@ const MovieDetail = () => {
                 const movie = data?.movie || null;
                 if (movie?.name) document.title = movie.name;
                 setMovieInfo(movie);
+                setEpisodes(data?.episodes || []);
             })
             .catch((err) => console.error("Error loading movie detail:", err))
             .finally(() => {
@@ -48,30 +45,11 @@ const MovieDetail = () => {
         };
     }, [slug]);
 
-    const isFavorited = Boolean(
-        movieInfo &&
-            (favoriteList || []).some(
-                (m) => (m._id || m.id) === (movieInfo._id || movieInfo.id)
-            )
-    );
+    const isFavorited = isFavorite(movieInfo);
 
     const handleToggleFavorite = () => {
-        if (!userInfo) {
-            toast.error(t("movie.loginRequiredFavorite"));
-            return;
-        }
         if (!movieInfo) return;
-
-        const targetId = movieInfo._id || movieInfo.id;
-        if (isFavorited) {
-            setFavoriteList(
-                (favoriteList || []).filter((m) => (m._id || m.id) !== targetId)
-            );
-            toast.success(t("movie.removedFavorite"));
-        } else {
-            setFavoriteList([movieInfo, ...(favoriteList || [])]);
-            toast.success(t("movie.addedFavorite"));
-        }
+        toggleFavorite(movieInfo);
     };
 
     if (isLoading) {
@@ -107,6 +85,7 @@ const MovieDetail = () => {
         <div className="min-h-screen bg-background text-foreground pb-16">
             <MovieHero
                 movieInfo={movieInfo}
+                episodes={episodes}
                 trailerKey={trailerKey}
                 isFavorited={isFavorited}
                 onToggleFavorite={handleToggleFavorite}

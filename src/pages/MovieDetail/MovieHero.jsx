@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -9,19 +10,32 @@ import {
     Calendar,
     Eye,
     Sparkles,
+    Users,
 } from "lucide-react";
 import { normalizeImageUrl } from "@/services/api";
+import { useWatchPartyTrigger } from "@/hooks/useWatchPartyTrigger";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+const CreateRoomDialog = lazy(
+    () => import("@features/watch-party/components/CreateRoomDialog")
+);
+
 const MovieHero = ({
     movieInfo,
+    episodes = [],
     trailerKey,
     isFavorited,
     onToggleFavorite,
     onOpenTrailer,
 }) => {
     const { t } = useTranslation();
+    const {
+        canWatchParty,
+        createRoomOpen,
+        setCreateRoomOpen,
+        openWatchParty,
+    } = useWatchPartyTrigger(episodes);
 
     const voteAverage = movieInfo.tmdb?.vote_average
         ? Number(movieInfo.tmdb.vote_average).toFixed(1)
@@ -169,6 +183,22 @@ const MovieHero = ({
                                 </Link>
                             </Button>
 
+                            <Button
+                                type="button"
+                                size="lg"
+                                variant="outline"
+                                onClick={openWatchParty}
+                                title={!canWatchParty ? t("room.hlsOnlyHint") : undefined}
+                                className={`backdrop-blur-md border-white/25 text-white rounded-xl gap-2 ${
+                                    canWatchParty
+                                        ? "bg-white/10 hover:bg-white/20"
+                                        : "bg-white/5 opacity-60 cursor-not-allowed"
+                                }`}
+                            >
+                                <Users className="h-5 w-5" />
+                                <span>{t("room.watchWithFriends")}</span>
+                            </Button>
+
                             {trailerKey && (
                                 <Button
                                     type="button"
@@ -208,6 +238,17 @@ const MovieHero = ({
                     </div>
                 </div>
             </div>
+
+            {createRoomOpen && (
+                <Suspense fallback={null}>
+                    <CreateRoomDialog
+                        open={createRoomOpen}
+                        onOpenChange={setCreateRoomOpen}
+                        movie={movieInfo}
+                        episodes={episodes}
+                    />
+                </Suspense>
+            )}
         </section>
     );
 };

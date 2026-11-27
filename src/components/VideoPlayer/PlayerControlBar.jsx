@@ -51,6 +51,7 @@ const PlayerControlBar = ({
     onToggleFullscreen,
     onDragStateChange,
     onControlsEnter,
+    onControlsBlur,
     onControlsLeave,
 }) => {
     const { t } = useTranslation();
@@ -113,59 +114,62 @@ const PlayerControlBar = ({
 
     return (
         <div
-            onClick={(e) => e.stopPropagation()}
-            onMouseEnter={onControlsEnter}
-            onMouseLeave={onControlsLeave}
-            onFocusCapture={onControlsEnter}
-            onBlurCapture={onControlsLeave}
             className={cn(
-                "absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent px-3 pt-10 pb-2.5 transition-opacity duration-300 sm:px-4 sm:pb-3",
-                showControls ? "opacity-100" : "pointer-events-none opacity-0"
+                "pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent px-3 pt-5 pb-2 transition-opacity duration-300 sm:px-4 sm:pt-10 sm:pb-3",
+                showControls ? "opacity-100" : "opacity-0"
             )}
         >
-            <PlayerSeekBar
-                currentTime={displayedTime}
-                duration={progress.duration}
-                bufferedPercent={progress.bufferedPercent}
-                onDragChange={(dragging) => {
-                    isDraggingRef.current = dragging;
-                    if (!dragging) setPreviewTime(null);
-                    onDragStateChange(dragging);
-                }}
-                onSeekPreview={setPreviewTime}
-                onSeekCommit={(targetSeconds) => {
-                    setPreviewTime(null);
-                    onSeekCommit(targetSeconds);
-                }}
-            />
+            <div
+                onClick={(e) => e.stopPropagation()}
+                onMouseEnter={onControlsEnter}
+                onMouseLeave={onControlsLeave}
+                onFocusCapture={onControlsEnter}
+                onBlurCapture={onControlsBlur || onControlsLeave}
+                className={cn(showControls ? "pointer-events-auto" : "pointer-events-none")}
+            >
+                <PlayerSeekBar
+                    currentTime={displayedTime}
+                    duration={progress.duration}
+                    bufferedPercent={progress.bufferedPercent}
+                    onDragChange={(dragging) => {
+                        isDraggingRef.current = dragging;
+                        if (!dragging) setPreviewTime(null);
+                        onDragStateChange(dragging);
+                    }}
+                    onSeekPreview={setPreviewTime}
+                    onSeekCommit={(targetSeconds) => {
+                        setPreviewTime(null);
+                        onSeekCommit(targetSeconds);
+                    }}
+                />
 
-            <div className="mt-1 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-0.5 sm:gap-1.5">
-                    <PlayerIconButton
-                        label={isPlaying ? t("watch.player.pause") : t("watch.player.play")}
-                        onClick={onTogglePlay}
-                        className="text-white hover:text-primary"
-                    >
-                        {isPlaying ? (
-                            <Pause className="h-5 w-5 fill-current" />
-                        ) : (
-                            <Play className="ml-0.5 h-5 w-5 fill-current" />
-                        )}
-                    </PlayerIconButton>
+                <div className="mt-1 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-0.5 sm:gap-1.5">
+                        <PlayerIconButton
+                            label={isPlaying ? t("watch.player.pause") : t("watch.player.play")}
+                            onClick={onTogglePlay}
+                            className="text-white hover:text-primary"
+                        >
+                            {isPlaying ? (
+                                <Pause className="h-5 w-5 fill-current" />
+                            ) : (
+                                <Play className="ml-0.5 h-5 w-5 fill-current" />
+                            )}
+                        </PlayerIconButton>
 
-                    <PlayerIconButton
-                        label={t("watch.player.rewind")}
-                        onClick={() => onSkipBy(-SEEK_STEP_SECONDS)}
-                    >
-                        <RotateCcw className="h-[18px] w-[18px]" />
-                    </PlayerIconButton>
+                        <PlayerIconButton
+                            label={t("watch.player.rewind")}
+                            onClick={() => onSkipBy(-SEEK_STEP_SECONDS)}
+                        >
+                            <RotateCcw className="h-[18px] w-[18px]" />
+                        </PlayerIconButton>
 
-                    <PlayerIconButton
-                        label={t("watch.player.forward")}
-                        onClick={() => onSkipBy(SEEK_STEP_SECONDS)}
-                    >
-                        <RotateCw className="h-[18px] w-[18px]" />
-                    </PlayerIconButton>
+                        <PlayerIconButton
+                            label={t("watch.player.forward")}
+                            onClick={() => onSkipBy(SEEK_STEP_SECONDS)}
+                        >
+                            <RotateCw className="h-[18px] w-[18px]" />
+                        </PlayerIconButton>
 
                     <div className="group/vol flex items-center">
                         <PlayerIconButton
@@ -236,6 +240,7 @@ const PlayerControlBar = ({
                         )}
                     </PlayerIconButton>
                 </div>
+            </div>
             </div>
         </div>
     );

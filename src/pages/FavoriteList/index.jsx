@@ -1,25 +1,19 @@
-import MovieCard from "@components/MediaList/MovieCard";
-import { useUserContext } from "@context/UserProvider";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
+import { Heart, Trash2, Film } from "lucide-react";
+import MovieCard from "@components/MediaList/MovieCard";
+import MovieCardSkeleton from "@components/MediaList/MovieCardSkeleton";
+import { useFavorites } from "@context/FavoritesProvider";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Trash2, Film } from "lucide-react";
-import { Link } from "react-router-dom";
+
+const SKELETON_COUNT = 6;
 
 const FavoriteList = () => {
     const { t } = useTranslation();
-    const { favoriteList: movieList, setFavoriteList } = useUserContext();
+    const { favorites: movieList, isLoading, toggleFavorite } = useFavorites();
 
-    const deleteFavoriteMovie = (id) => {
-        const updatedMediaList = (movieList || []).filter((movie) => {
-            return (movie._id || movie.id) !== id;
-        });
-        setFavoriteList(updatedMediaList);
-        toast.success(t("movie.removedFavorite"));
-    };
-
-    const count = (movieList || []).length;
+    const count = movieList.length;
 
     return (
         <div className="min-h-screen bg-background text-foreground py-8 sm:py-12">
@@ -35,14 +29,20 @@ const FavoriteList = () => {
                             </h1>
                         </div>
                     </div>
-                    {count > 0 && (
+                    {!isLoading && count > 0 && (
                         <Badge variant="secondary" className="px-3 py-1 text-sm font-semibold">
                             {t("catalog.totalResults", { count })}
                         </Badge>
                     )}
                 </div>
 
-                {count === 0 ? (
+                {isLoading ? (
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
+                        {Array.from({ length: SKELETON_COUNT }).map((_, idx) => (
+                            <MovieCardSkeleton key={idx} />
+                        ))}
+                    </div>
+                ) : count === 0 ? (
                     <div className="flex flex-col items-center justify-center py-24 text-center">
                         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/60 text-muted-foreground mb-4">
                             <Film className="h-8 w-8" />
@@ -59,9 +59,9 @@ const FavoriteList = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
-                        {(movieList || []).map((movie) => (
+                        {movieList.map((movie) => (
                             <div
-                                key={movie._id || movie.id}
+                                key={movie.movieId || movie._id || movie.id}
                                 className="group/item relative"
                             >
                                 <MovieCard
@@ -72,16 +72,16 @@ const FavoriteList = () => {
                                     type={movie.type}
                                     slug={movie.slug}
                                     category={movie.category}
+                                    quality={movie.quality}
                                 />
                                 <Button
+                                    type="button"
                                     variant="destructive"
                                     size="icon"
                                     className="absolute right-2 top-2 z-20 h-8 w-8 rounded-full opacity-90 shadow-lg transition-transform hover:scale-110 group-hover/item:opacity-100"
-                                    onClick={() => {
-                                        deleteFavoriteMovie(movie._id || movie.id);
-                                    }}
-                                    title="Xóa khỏi danh sách yêu thích"
-                                    aria-label="Xóa khỏi danh sách yêu thích"
+                                    onClick={() => toggleFavorite(movie)}
+                                    title={t("movie.removeFavorite")}
+                                    aria-label={t("movie.removeFavorite")}
                                 >
                                     <Trash2 className="h-4 w-4" />
                                 </Button>

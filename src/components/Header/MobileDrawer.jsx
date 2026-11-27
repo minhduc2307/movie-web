@@ -12,12 +12,13 @@ import {
     Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
+import { getUserInitial } from "@lib/userUtils";
 import { cn } from "@/lib/utils";
 
-const MobileDrawer = ({ open, userInfo, onClose, onLogout }) => {
+const MobileDrawer = ({ open, user, isAuthReady, onClose, onLogout }) => {
     const { t } = useTranslation();
     const location = useLocation();
 
@@ -83,7 +84,7 @@ const MobileDrawer = ({ open, userInfo, onClose, onLogout }) => {
                             );
                         })}
 
-                        {userInfo && (
+                        {user && (
                             <Link
                                 to="/favorites"
                                 onClick={onClose}
@@ -115,20 +116,26 @@ const MobileDrawer = ({ open, userInfo, onClose, onLogout }) => {
                         <ThemeToggle />
                     </div>
 
-                    {userInfo ? (
+                    {isAuthReady && user && (
                         <div className="space-y-3 pt-2">
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-9 w-9 border border-border">
-                                    <AvatarFallback>
-                                        {userInfo?.email?.[0]?.toUpperCase() || "U"}
+                                    {user.photoURL && (
+                                        <AvatarImage
+                                            src={user.photoURL}
+                                            alt={user.displayName || user.email || "Avatar"}
+                                        />
+                                    )}
+                                    <AvatarFallback className="bg-primary/15 text-primary font-bold">
+                                        {getUserInitial(user)}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="overflow-hidden">
-                                    <p className="text-xs text-muted-foreground">
-                                        {t("nav.loggedIn")}
+                                    <p className="text-sm font-semibold truncate text-foreground">
+                                        {user.displayName || t("nav.loggedIn")}
                                     </p>
-                                    <p className="text-sm font-medium truncate text-foreground">
-                                        {userInfo?.email}
+                                    <p className="text-xs truncate text-muted-foreground">
+                                        {user.email}
                                     </p>
                                 </div>
                             </div>
@@ -145,7 +152,9 @@ const MobileDrawer = ({ open, userInfo, onClose, onLogout }) => {
                                 <span>{t("nav.logout")}</span>
                             </Button>
                         </div>
-                    ) : (
+                    )}
+
+                    {isAuthReady && !user && (
                         <div className="flex flex-col gap-2 pt-2">
                             <Button asChild variant="outline" className="w-full justify-center">
                                 <Link to="/sign-in" onClick={onClose}>

@@ -29,6 +29,7 @@ const EpisodeDrawer = ({
                     variant="ghost"
                     size="icon"
                     onClick={onClose}
+                    aria-label={t("nav.closeMenu")}
                     className="h-8 w-8 rounded-full text-slate-300 hover:bg-white/10 hover:text-white"
                 >
                     <X className="h-4 w-4" />

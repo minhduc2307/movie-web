@@ -1,19 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useUserContext } from "@context/UserProvider";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useAuth } from "@context/AuthProvider";
+import Spinner from "@components/Spinner";
 
 const ProtectedRoute = ({ children }) => {
-    const { userInfo } = useUserContext();
+    const { t } = useTranslation();
+    const { user, isAuthReady } = useAuth();
     const location = useLocation();
+    const wasAuthenticatedRef = useRef(Boolean(user));
+
+    if (user) {
+        wasAuthenticatedRef.current = true;
+    }
 
     useEffect(() => {
-        if (!userInfo) {
-            toast.error("Vui lòng đăng nhập để truy cập danh sách yêu thích");
+        // Avoid showing an error toast when the user intentionally signs out while on a protected route
+        if (isAuthReady && !user && !wasAuthenticatedRef.current) {
+            toast.error(t("auth.loginRequired"), { id: "auth-required" });
         }
-    }, [userInfo]);
+    }, [isAuthReady, user, t]);
 
-    if (!userInfo) {
+    if (!isAuthReady) {
+        return <Spinner fullScreen />;
+    }
+
+    if (!user) {
         return <Navigate to="/sign-in" replace state={{ from: location }} />;
     }
 

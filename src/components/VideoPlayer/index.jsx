@@ -1,6 +1,7 @@
 import { forwardRef, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useHlsPlayer } from "@/hooks/useHlsPlayer";
+import { isSafeHttpUrl } from "@lib/movieUtils";
 import { cn } from "@/lib/utils";
 import PlayerControlBar from "./PlayerControlBar";
 import PlayerOverlays from "./PlayerOverlays";
@@ -17,8 +18,11 @@ const VideoPlayer = forwardRef(
             title,
             autoPlay = true,
             controls = true,
+            startWithControls = false,
             allowSpeedControl = true,
             className,
+            onStreamReady,
+            onStreamError,
             onUserPlay,
             onUserPause,
             onUserSeek,
@@ -61,6 +65,7 @@ const VideoPlayer = forwardRef(
         });
 
         const { state } = player;
+        const safeEmbedUrl = isSafeHttpUrl(embedUrl) ? embedUrl : "";
         const activeHlsSrc = state.useEmbedFallback ? "" : srcMovie;
 
         const {
@@ -71,7 +76,11 @@ const VideoPlayer = forwardRef(
             errorType,
             errorDetail,
             retryLoad,
-        } = useHlsPlayer(videoRef, activeHlsSrc, { autoPlay });
+        } = useHlsPlayer(videoRef, activeHlsSrc, {
+            autoPlay,
+            onReady: onStreamReady,
+            onFatalError: onStreamError,
+        });
 
         if (srcMovie && !state.useEmbedFallback) {
             const shouldHideCursor =
@@ -152,14 +161,14 @@ const VideoPlayer = forwardRef(
                         isBusy={isLoadingStream || state.isBuffering}
                         errorType={errorType}
                         errorDetail={errorDetail}
-                        hasEmbedFallback={Boolean(embedUrl)}
+                        hasEmbedFallback={Boolean(safeEmbedUrl)}
                         feedbackBadge={state.feedbackBadge}
                         onInitialPlay={() => player.togglePlay()}
                         onRetry={retryLoad}
                         onUseBackupPlayer={() => player.patch({ useEmbedFallback: true })}
                     />
 
-                    {controls && state.hasStarted && !errorType && (
+                    {controls && (state.hasStarted || startWithControls) && !errorType && (
                         <PlayerControlBar
                             videoRef={videoRef}
                             srcMovie={srcMovie}
@@ -187,6 +196,7 @@ const VideoPlayer = forwardRef(
                             onToggleFullscreen={player.toggleFullscreen}
                             onDragStateChange={player.handleDragStateChange}
                             onControlsEnter={player.handleControlsEnter}
+                            onControlsBlur={player.handleControlsBlur}
                             onControlsLeave={player.handleControlsLeave}
                         />
                     )}
@@ -194,11 +204,11 @@ const VideoPlayer = forwardRef(
             );
         }
 
-        if (embedUrl) {
+        if (safeEmbedUrl) {
             return (
                 <div className={cn(FRAME_CLASS, className)}>
                     <iframe
-                        src={embedUrl}
+                        src={safeEmbedUrl}
                         className="h-full w-full"
                         title={title}
                         allowFullScreen
