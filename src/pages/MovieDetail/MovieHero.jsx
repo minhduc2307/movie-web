@@ -12,7 +12,7 @@ import {
     Sparkles,
     Users,
 } from "lucide-react";
-import { normalizeImageUrl } from "@/services/api";
+import { normalizeImageUrl, optimizeImageUrl } from "@/services/api";
 import { localizeMovieMetaText } from "@lib/movieUtils";
 import { useWatchPartyTrigger } from "@/hooks/useWatchPartyTrigger";
 import { Button } from "@/components/ui/button";
@@ -41,12 +41,14 @@ const MovieHero = ({
     const voteAverage = movieInfo.tmdb?.vote_average
         ? Number(movieInfo.tmdb.vote_average).toFixed(1)
         : null;
-    const posterUrl = normalizeImageUrl(
+    const rawPosterUrl = normalizeImageUrl(
         movieInfo.posterUrl || movieInfo.poster_url
     );
-    const thumbUrl = normalizeImageUrl(
-        movieInfo.thumbUrl || movieInfo.thumb_url || posterUrl
+    const rawThumbUrl = normalizeImageUrl(
+        movieInfo.thumbUrl || movieInfo.thumb_url || rawPosterUrl
     );
+    const posterUrl = optimizeImageUrl(rawPosterUrl, { width: 520 });
+    const thumbUrl = optimizeImageUrl(rawThumbUrl, { width: 1280 });
     const categories = movieInfo.category || [];
 
     return (
@@ -54,10 +56,18 @@ const MovieHero = ({
             <img
                 src={thumbUrl}
                 alt={movieInfo.name}
+                fetchPriority="high"
+                decoding="sync"
                 className="absolute inset-0 h-full w-full object-cover object-center opacity-50 scale-105"
                 onError={(e) => {
-                    if (!e.target.src.endsWith("/NoImage.svg")) {
-                        e.target.src = "/NoImage.svg";
+                    const img = e.target;
+                    if (!img.dataset.triedFallback && img.src !== rawThumbUrl) {
+                        img.dataset.triedFallback = "1";
+                        img.src = rawThumbUrl;
+                        return;
+                    }
+                    if (!img.src.endsWith("/NoImage.svg")) {
+                        img.src = "/NoImage.svg";
                     }
                 }}
             />
@@ -70,10 +80,19 @@ const MovieHero = ({
                         <img
                             src={posterUrl}
                             alt={movieInfo.name}
+                            width={256}
+                            height={384}
+                            fetchPriority="high"
                             className="aspect-[2/3] w-full object-cover"
                             onError={(e) => {
-                                if (!e.target.src.endsWith("/NoImage.svg")) {
-                                    e.target.src = "/NoImage.svg";
+                                const img = e.target;
+                                if (!img.dataset.triedFallback && img.src !== rawPosterUrl) {
+                                    img.dataset.triedFallback = "1";
+                                    img.src = rawPosterUrl;
+                                    return;
+                                }
+                                if (!img.src.endsWith("/NoImage.svg")) {
+                                    img.src = "/NoImage.svg";
                                 }
                             }}
                         />

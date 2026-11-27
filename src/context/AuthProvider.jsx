@@ -16,11 +16,35 @@ const AuthProvider = ({ children }) => {
     const [isAuthReady, setIsAuthReady] = useState(false);
 
     useEffect(() => {
-        const unsubscribe = subscribeToAuthState((normalizedUser) => {
-            setUser(normalizedUser);
-            setIsAuthReady(true);
-        });
-        return unsubscribe;
+        let active = true;
+        let unsubscribe = null;
+        let timerId = null;
+
+        const startSubscription = () => {
+            if (!active) return;
+            unsubscribe = subscribeToAuthState((normalizedUser) => {
+                if (active) {
+                    setUser(normalizedUser);
+                    setIsAuthReady(true);
+                }
+            });
+        };
+
+        if (typeof window !== "undefined" && typeof window.requestIdleCallback === "function") {
+            timerId = window.requestIdleCallback(startSubscription, { timeout: 300 });
+            return () => {
+                active = false;
+                window.cancelIdleCallback(timerId);
+                unsubscribe?.();
+            };
+        }
+
+        timerId = setTimeout(startSubscription, 0);
+        return () => {
+            active = false;
+            clearTimeout(timerId);
+            unsubscribe?.();
+        };
     }, []);
 
     const value = useMemo(

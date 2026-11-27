@@ -1,9 +1,29 @@
-const Img = ({ src, width, height, alt = "", className, onError }) => {
+const Img = ({
+    src,
+    fallbackSrc,
+    width,
+    height,
+    alt = "",
+    className,
+    loading = "lazy",
+    decoding = "async",
+    fetchPriority,
+    onError,
+}) => {
     const handleError = (e) => {
+        const img = e?.target;
+        if (!img) return;
+
+        if (fallbackSrc && img.dataset.triedFallback !== src && img.src !== fallbackSrc) {
+            img.dataset.triedFallback = src;
+            img.src = fallbackSrc;
+            return;
+        }
+
         if (onError) {
             onError(e);
-        } else if (e?.target && !e.target.src.endsWith("/NoImage.svg")) {
-            e.target.src = "/NoImage.svg";
+        } else if (!img.src.endsWith("/NoImage.svg")) {
+            img.src = "/NoImage.svg";
         }
     };
 
@@ -13,8 +33,9 @@ const Img = ({ src, width, height, alt = "", className, onError }) => {
             width={width}
             height={height}
             alt={alt}
-            loading="lazy"
-            decoding="async"
+            loading={loading}
+            decoding={decoding}
+            fetchPriority={fetchPriority}
             className={className}
             onError={handleError}
         />

@@ -18,7 +18,11 @@ export default defineConfig({
             "@services": path.resolve(__dirname, "src/services"),
         },
     },
+    esbuild: {
+        legalComments: "none",
+    },
     build: {
+        minify: "esbuild",
         rollupOptions: {
             output: {
                 manualChunks(id) {

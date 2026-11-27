@@ -52,6 +52,11 @@ input:-webkit-autofill:hover {
   .app-container {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 2xl:max-w-[1600px] min-[2000px]:max-w-[2000px] min-[3200px]:max-w-[2400px];
   }
+
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 420px;
+  }
 }
 
 /* Custom sleek scrollbar for all scrollable containers (Light & Dark aware) */

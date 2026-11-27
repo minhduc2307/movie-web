@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { lazy, Suspense, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Menu, Clapperboard } from "lucide-react";
@@ -11,11 +11,13 @@ import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
 import HeaderSearch from "./HeaderSearch";
 import UserMenu from "./UserMenu";
-import MobileDrawer from "./MobileDrawer";
+
+const MobileDrawer = lazy(() => import("./MobileDrawer"));
 
 const Header = () => {
     const { t } = useTranslation();
     const [showMenuDrawer, setShowMenuDrawer] = useState(false);
+    const [hasOpenedDrawer, setHasOpenedDrawer] = useState(false);
     const { user, isAuthReady } = useAuth();
 
     const handleLogout = useCallback(async () => {
@@ -36,7 +38,10 @@ const Header = () => {
                             variant="ghost"
                             size="icon"
                             className="md:hidden h-11 w-11 text-foreground hover:bg-muted"
-                            onClick={() => setShowMenuDrawer(true)}
+                            onClick={() => {
+                                setHasOpenedDrawer(true);
+                                setShowMenuDrawer(true);
+                            }}
                             aria-label={t("nav.openMenu")}
                         >
                             <Menu className="h-5 w-5" />
@@ -73,13 +78,17 @@ const Header = () => {
                 <HeaderSearch className="max-w-full" />
             </div>
 
-            <MobileDrawer
-                open={showMenuDrawer}
-                onOpenChange={setShowMenuDrawer}
-                user={user}
-                isAuthReady={isAuthReady}
-                onLogout={handleLogout}
-            />
+            {hasOpenedDrawer && (
+                <Suspense fallback={null}>
+                    <MobileDrawer
+                        open={showMenuDrawer}
+                        onOpenChange={setShowMenuDrawer}
+                        user={user}
+                        isAuthReady={isAuthReady}
+                        onLogout={handleLogout}
+                    />
+                </Suspense>
+            )}
         </header>
     );
 };

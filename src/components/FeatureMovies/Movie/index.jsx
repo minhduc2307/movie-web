@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { normalizeImageUrl, movieService } from "@/services/api";
+import { normalizeImageUrl, optimizeImageUrl, movieService } from "@/services/api";
 import { localizeMovieMetaText } from "@lib/movieUtils";
 import { cn } from "@/lib/utils";
 import HeroSlideContent from "./HeroSlideContent";
@@ -143,16 +143,24 @@ const Movie = ({ movies = [] }) => {
                 onTouchEnd={handleTouchEnd}
                 aria-label={t("hero.sectionLabel")}
             >
-                {/* Backdrop Slides Container */}
+                {/* Backdrop Slides Container (only mount active + adjacent slides to avoid fetching hidden slides) */}
                 <div className="absolute inset-0">
                     {movies.map((movie, index) => {
                         const isCurrent = index === currentIndex;
-                        const desktopBackdrop = normalizeImageUrl(
+                        const isAdjacent =
+                            Math.abs(index - currentIndex) <= 1 ||
+                            (currentIndex === 0 && index === count - 1) ||
+                            (currentIndex === count - 1 && index === 0);
+                        if (!isAdjacent) return null;
+
+                        const rawDesktopBackdrop = normalizeImageUrl(
                             movie.thumbUrl || movie.thumb_url || movie.posterUrl || movie.poster_url
                         );
-                        const mobilePoster = normalizeImageUrl(
+                        const rawMobilePoster = normalizeImageUrl(
                             movie.posterUrl || movie.poster_url || movie.thumbUrl || movie.thumb_url
                         );
+                        const desktopBackdrop = optimizeImageUrl(rawDesktopBackdrop, { width: 1280 });
+                        const mobilePoster = optimizeImageUrl(rawMobilePoster, { width: 720 });
 
                         return (
                             <div
@@ -172,9 +180,24 @@ const Movie = ({ movies = [] }) => {
                                             isCurrent ? "scale-105" : "scale-100"
                                         )}
                                         loading={index === 0 ? "eager" : "lazy"}
+                                        decoding={index === 0 ? "sync" : "async"}
+                                        fetchPriority={index === 0 ? "high" : "auto"}
                                         onError={(e) => {
-                                            if (e.target && !e.target.src.endsWith("/NoImage.svg")) {
-                                                e.target.src = "/NoImage.svg";
+                                            const img = e.target;
+                                            if (!img) return;
+                                            if (!img.dataset.triedFallback) {
+                                                img.dataset.triedFallback = "1";
+                                                const sources = img.parentElement?.querySelectorAll("source");
+                                                sources?.forEach((s) => {
+                                                    s.srcset = rawDesktopBackdrop;
+                                                });
+                                                img.src = rawMobilePoster;
+                                                return;
+                                            }
+                                            if (!img.src.endsWith("/NoImage.svg")) {
+                                                const sources = img.parentElement?.querySelectorAll("source");
+                                                sources?.forEach((s) => s.removeAttribute("srcset"));
+                                                img.src = "/NoImage.svg";
                                             }
                                         }}
                                     />

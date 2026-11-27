@@ -15,8 +15,8 @@ function HomePage() {
         <div className="bg-background text-foreground">
             <FeatureMovies />
             <div className="app-container py-8 sm:py-12 space-y-10 sm:space-y-14">
-                {TABS.map((tab) => (
-                    <MediaList key={tab.typeSlug} tab={tab} />
+                {TABS.map((tab, index) => (
+                    <MediaList key={tab.typeSlug} tab={tab} deferLoad={index > 0} />
                 ))}
             </div>
         </div>

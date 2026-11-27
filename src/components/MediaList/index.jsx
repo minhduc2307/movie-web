@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronRight } from "lucide-react";
@@ -7,12 +7,37 @@ import MovieCard from "./MovieCard";
 import MovieCardSkeleton from "./MovieCardSkeleton";
 import { movieService } from "@/services/api";
 
-const MediaList = ({ tab }) => {
+const MediaList = ({ tab, deferLoad = false }) => {
     const { t } = useTranslation();
+    const sectionRef = useRef(null);
+    const [shouldFetch, setShouldFetch] = useState(!deferLoad);
     const [mediaList, setMediaList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        if (!deferLoad || shouldFetch) return;
+        const el = sectionRef.current;
+        if (!el || typeof IntersectionObserver === "undefined") {
+            setShouldFetch(true);
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    setShouldFetch(true);
+                    observer.disconnect();
+                }
+            },
+            { rootMargin: "350px 0px" }
+        );
+
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [deferLoad, shouldFetch]);
+
+    useEffect(() => {
+        if (!shouldFetch) return;
         let isMounted = true;
         const typeSlug = tab?.typeSlug;
         if (!typeSlug) return;
@@ -37,13 +62,13 @@ const MediaList = ({ tab }) => {
         return () => {
             isMounted = false;
         };
-    }, [tab?.typeSlug]);
+    }, [tab?.typeSlug, shouldFetch]);
 
     const sectionTitle = tab?.titleKey ? t(tab.titleKey) : tab?.title;
     const viewAllLink = tab?.typeSlug ? `/movies?type=${tab.typeSlug}` : "/movies";
 
     return (
-        <section className="w-full">
+        <section ref={sectionRef} className="w-full cv-auto">
             <div className="flex items-center justify-between mb-4 sm:mb-5">
                 <div className="flex items-center">
                     <span className="w-1.5 h-6 bg-gradient-to-b from-primary to-amber-500 rounded-full mr-3 shrink-0" />

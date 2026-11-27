@@ -35,6 +35,23 @@ export const normalizeImageUrl = (rawUrl, cdnDomain = DEFAULT_CDN_IMAGE) => {
 };
 
 /**
+ * Normalizes image URLs for responsive rendering.
+ * Note: wsrv.nl blocks phimimg.com by policy (HTTP 400 "Domain or TLD blocked by policy"),
+ * so external URLs are returned directly to avoid an extra failed round-trip before fallback.
+ *
+ * @param {string} rawUrl - Relative or absolute image path
+ * @param {object} [options]
+ * @param {number} [options.width] - Target display width in pixels (reserved for future CDN support)
+ * @param {number} [options.quality=80] - Output compression quality (reserved for future CDN support)
+ * @param {string} [options.cdnDomain=DEFAULT_CDN_IMAGE] - CDN domain prefix for relative paths
+ * @returns {string} Normalized image URL or fallback
+ */
+export const optimizeImageUrl = (
+    rawUrl,
+    { cdnDomain = DEFAULT_CDN_IMAGE } = {}
+) => normalizeImageUrl(rawUrl, cdnDomain);
+
+/**
  * Normalizes pagination information from either legacy or v1 format.
  *
  * @param {object} rawPagination

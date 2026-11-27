@@ -1,15 +1,28 @@
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import {
+    browserLocalPersistence,
+    connectAuthEmulator,
+    getAuth,
+    initializeAuth,
+} from "firebase/auth";
 import { firebaseApp } from "./app";
 
 let authInstance = null;
 
 /**
- * Returns the singleton Firebase Auth instance, lazily attaching the local emulator in emulator mode.
+ * Returns the singleton Firebase Auth instance without popup/redirect resolvers
+ * (email/password only), avoiding eager __/auth/iframe.js and gapi loads.
  */
 export const getFirebaseAuth = () => {
     if (authInstance) return authInstance;
 
-    authInstance = getAuth(firebaseApp);
+    try {
+        authInstance = initializeAuth(firebaseApp, {
+            persistence: browserLocalPersistence,
+        });
+    } catch {
+        // Fallback if already initialized during Vite HMR
+        authInstance = getAuth(firebaseApp);
+    }
 
     if (
         import.meta.env.DEV &&

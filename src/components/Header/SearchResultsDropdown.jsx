@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { normalizeImageUrl } from "@/services/api";
+import { normalizeImageUrl, optimizeImageUrl } from "@/services/api";
 
 const SearchResultsDropdown = ({
     query,
@@ -67,14 +67,23 @@ const SearchResultsDropdown = ({
                                     className="group flex h-auto w-full items-center justify-start gap-3.5 rounded-xl p-2.5 text-left font-normal whitespace-normal hover:bg-muted/70"
                                 >
                                     <img
-                                        src={normalizeImageUrl(movie.posterUrl || movie.poster_url)}
+                                        src={optimizeImageUrl(movie.posterUrl || movie.poster_url, { width: 160 })}
                                         alt={movie.name}
+                                        width={64}
+                                        height={96}
                                         loading="lazy"
                                         decoding="async"
                                         className="h-24 w-16 rounded-lg object-cover bg-muted shrink-0 border border-border/50 shadow-sm transition-transform duration-200 group-hover:scale-105"
                                         onError={(e) => {
-                                            if (!e.target.src.endsWith("/NoImage.svg")) {
-                                                e.target.src = "/NoImage.svg";
+                                            const img = e.target;
+                                            const fallback = normalizeImageUrl(movie.posterUrl || movie.poster_url);
+                                            if (!img.dataset.triedFallback && img.src !== fallback) {
+                                                img.dataset.triedFallback = "1";
+                                                img.src = fallback;
+                                                return;
+                                            }
+                                            if (!img.src.endsWith("/NoImage.svg")) {
+                                                img.src = "/NoImage.svg";
                                             }
                                         }}
                                     />

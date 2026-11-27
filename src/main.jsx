@@ -12,6 +12,12 @@ import Spinner from "@components/Spinner";
 import ProtectedRoute from "@components/ProtectedRoute";
 import ErrorPage from "@pages/ErrorPage";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { movieService } from "@/services/api";
+
+// Kick off Hero spotlight fetch in parallel with React route hydration on "/"
+if (typeof window !== "undefined" && window.location.pathname === "/") {
+    movieService.getNewUpdatedMovies(1, "v1").catch(() => {});
+}
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 const CatalogPage = lazy(() => import("@pages/CatalogPage"));

@@ -1,7 +1,7 @@
 import Img from "@components/Img";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { normalizeImageUrl } from "@/services/api";
+import { normalizeImageUrl, optimizeImageUrl } from "@/services/api";
 import { localizeMovieMetaText } from "@lib/movieUtils";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -52,7 +52,10 @@ const MovieCard = ({
                 {/* Full-bleed Edge-to-Edge Poster Container (2:3) */}
                 <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
                     <Img
-                        src={normalizeImageUrl(posterUrl)}
+                        src={optimizeImageUrl(posterUrl, { width: 400 })}
+                        fallbackSrc={normalizeImageUrl(posterUrl)}
+                        width={200}
+                        height={300}
                         alt={name || "Poster phim"}
                         className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                     />
