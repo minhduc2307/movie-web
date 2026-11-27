@@ -4,8 +4,20 @@ import { useTranslation } from "react-i18next";
 import { Clapperboard } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { AppTooltip } from "@/components/common";
 import { toast } from "sonner";
 import { movieService } from "@/services/api";
+import { EMAIL_PATTERN } from "@lib/userUtils";
 import { Facebook, Youtube, Twitter, Instagram } from "./SocialIcons";
 
 const FEATURED_GENRE_SLUGS = [
@@ -43,12 +55,12 @@ const GENRE_EN_MAP = {
     "chien-tranh": "War",
 };
 
-const SUPPORT_TOPIC_KEYS = [
-    "footer.topicDmca",
-    "footer.topicTerms",
-    "footer.topicPrivacy",
-    "footer.topicAds",
-    "footer.topicFeedback",
+const SUPPORT_TOPICS = [
+    { key: "topicDmca", labelKey: "footer.topicDmca", bodyKey: "footer.topics.dmca" },
+    { key: "topicTerms", labelKey: "footer.topicTerms", bodyKey: "footer.topics.terms" },
+    { key: "topicPrivacy", labelKey: "footer.topicPrivacy", bodyKey: "footer.topics.privacy" },
+    { key: "topicAds", labelKey: "footer.topicAds", bodyKey: "footer.topics.ads" },
+    { key: "topicFeedback", labelKey: "footer.topicFeedback", bodyKey: "footer.topics.feedback" },
 ];
 
 const SOCIAL_LINKS = [
@@ -82,6 +94,8 @@ const selectFeaturedGenres = (items = []) => {
 const Footer = () => {
     const { t, i18n } = useTranslation();
     const [email, setEmail] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [activeTopic, setActiveTopic] = useState(null);
     const [featuredGenres, setFeaturedGenres] = useState(DEFAULT_FEATURED_GENRES);
 
     useEffect(() => {
@@ -111,8 +125,19 @@ const Footer = () => {
 
     const handleNewsletterSubmit = (e) => {
         e.preventDefault();
-        if (!email.trim()) return;
-        toast.success(t("footer.newsletterSuccess"));
+        const trimmed = email.trim();
+        if (!trimmed) {
+            setEmailError("auth.errors.emailRequired");
+            toast.error(t("auth.errors.emailRequired"), { id: "newsletter-err" });
+            return;
+        }
+        if (!EMAIL_PATTERN.test(trimmed)) {
+            setEmailError("auth.errors.invalidEmail");
+            toast.error(t("auth.errors.invalidEmail"), { id: "newsletter-err" });
+            return;
+        }
+        setEmailError("");
+        toast.success(t("footer.newsletterSuccess"), { id: "newsletter-ok" });
         setEmail("");
     };
 
@@ -130,7 +155,7 @@ const Footer = () => {
                             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-rose-700 text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-200 group-hover:scale-105">
                                 <Clapperboard className="h-5 w-5" />
                             </div>
-                            <span className="bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 bg-clip-text text-xl font-extrabold tracking-tight text-transparent dark:from-red-400 dark:via-rose-400 dark:to-amber-400">
+                            <span className="bg-gradient-to-r from-red-700 via-rose-600 to-amber-700 bg-clip-text text-xl font-extrabold tracking-tight text-transparent dark:from-red-400 dark:via-rose-400 dark:to-amber-400">
                                 {t("brand.name")}
                             </span>
                         </Link>
@@ -148,14 +173,15 @@ const Footer = () => {
 
                         <form
                             onSubmit={handleNewsletterSubmit}
+                            noValidate
                             className="max-w-md space-y-2 pt-1"
                         >
-                            <label
+                            <Label
                                 htmlFor="newsletter-email"
                                 className="block text-xs font-semibold uppercase tracking-wider text-foreground/80"
                             >
                                 {t("footer.newsletterLabel")}
-                            </label>
+                            </Label>
                             <div className="flex gap-2">
                                 <Input
                                     id="newsletter-email"
@@ -166,9 +192,16 @@ const Footer = () => {
                                         "footer.newsletterPlaceholder",
                                     )}
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                    className="h-11 border-border bg-background text-sm sm:h-10"
+                                    onChange={(e) => {
+                                        setEmail(e.target.value);
+                                        if (emailError) setEmailError("");
+                                    }}
+                                    aria-invalid={Boolean(emailError)}
+                                    className={`h-11 border-border bg-background text-sm sm:h-10 ${
+                                        emailError
+                                            ? "border-destructive focus-visible:ring-destructive"
+                                            : ""
+                                    }`}
                                 />
                                 <Button
                                     type="submit"
@@ -177,6 +210,11 @@ const Footer = () => {
                                     {t("footer.newsletterBtn")}
                                 </Button>
                             </div>
+                            {emailError && (
+                                <p className="text-xs font-medium text-destructive dark:text-rose-400">
+                                    {t(emailError)}
+                                </p>
+                            )}
                         </form>
                     </div>
 
@@ -221,51 +259,70 @@ const Footer = () => {
                             {t("footer.support")}
                         </h3>
                         <ul className="space-y-2.5 text-sm">
-                            {SUPPORT_TOPIC_KEYS.map((topicKey) => {
-                                const topicLabel = t(topicKey);
-                                return (
-                                    <li key={topicKey}>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                toast.info(
-                                                    t("footer.topicUpdating", {
-                                                        topic: topicLabel,
-                                                    }),
-                                                )
-                                            }
-                                            className="inline-block py-0.5 text-left text-muted-foreground transition-colors hover:text-primary dark:hover:text-rose-400"
-                                        >
-                                            {topicLabel}
-                                        </button>
-                                    </li>
-                                );
-                            })}
+                            {SUPPORT_TOPICS.map((topic) => (
+                                <li key={topic.key}>
+                                    <Button
+                                        type="button"
+                                        variant="link"
+                                        onClick={() => setActiveTopic(topic)}
+                                        className="h-auto py-0.5 px-0 text-sm font-normal text-muted-foreground hover:text-primary dark:hover:text-rose-400"
+                                    >
+                                        {t(topic.labelKey)}
+                                    </Button>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
 
-                <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-8 sm:flex-row">
+                <Separator className="mt-12 mb-8" />
+
+                <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
                     <p className="text-center text-sm text-muted-foreground sm:text-left">
                         {t("footer.copyright")}
                     </p>
 
                     <div className="flex items-center gap-3">
                         {SOCIAL_LINKS.map(({ name, href, Icon }) => (
-                            <a
-                                key={name}
-                                href={href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={name}
-                                className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95 sm:h-9 sm:w-9"
-                            >
-                                <Icon className="h-4 w-4" />
-                            </a>
+                            <AppTooltip key={name} label={name} side="top">
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    size="icon"
+                                    className="h-11 w-11 rounded-full bg-muted/40 text-muted-foreground transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95 sm:h-9 sm:w-9"
+                                >
+                                    <a
+                                        href={href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={name}
+                                    >
+                                        <Icon className="h-4 w-4" />
+                                    </a>
+                                </Button>
+                            </AppTooltip>
                         ))}
                     </div>
                 </div>
             </div>
+
+            <Dialog open={Boolean(activeTopic)} onOpenChange={(open) => !open && setActiveTopic(null)}>
+                <DialogContent className="max-w-md border-border bg-card text-foreground">
+                    <DialogHeader>
+                        <DialogTitle>
+                            {activeTopic ? t(activeTopic.labelKey) : ""}
+                        </DialogTitle>
+                        <DialogDescription className="pt-2 leading-relaxed text-muted-foreground">
+                            {activeTopic ? t(activeTopic.bodyKey) : ""}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button type="button" onClick={() => setActiveTopic(null)}>
+                            {t("footer.closeTopic")}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </footer>
     );
 };

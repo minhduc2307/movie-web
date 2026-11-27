@@ -7,6 +7,9 @@ import MovieCard from "@components/MediaList/MovieCard";
 import MovieCardSkeleton from "@components/MediaList/MovieCardSkeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { FilterSelect } from "@/components/common";
 import FilterSidebar, { TYPE_OPTIONS } from "./FilterSidebar";
 import CatalogPagination from "./CatalogPagination";
 
@@ -125,6 +128,15 @@ const CatalogPage = () => {
         ? t(activeTypeObj.labelKey)
         : t("catalog.title");
 
+    useEffect(() => {
+        document.title = `${pageHeading} — ${t("brand.name")}`;
+    }, [pageHeading, t]);
+
+    const sortOptions = SORT_OPTIONS.map((opt) => ({
+        value: opt.value,
+        label: t(opt.labelKey),
+    }));
+
     return (
         <div className="min-h-screen bg-background text-foreground py-6 sm:py-8">
             <div className="app-container">
@@ -139,7 +151,7 @@ const CatalogPage = () => {
                     </span>
                 </nav>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6">
                     <div className="flex flex-wrap items-center gap-3 min-w-0">
                         <span className="w-1.5 h-7 bg-gradient-to-b from-primary to-amber-500 rounded-full shrink-0" />
                         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight truncate">
@@ -157,8 +169,10 @@ const CatalogPage = () => {
                             type="button"
                             variant="outline"
                             size="sm"
+                            aria-expanded={showMobileFilters}
+                            aria-controls="catalog-filter-sidebar"
                             onClick={() => setShowMobileFilters((v) => !v)}
-                            className="lg:hidden h-10 gap-2"
+                            className="lg:hidden h-11 gap-2"
                         >
                             <SlidersHorizontal className="h-4 w-4" />
                             <span>{t("catalog.filters")}</span>
@@ -166,27 +180,23 @@ const CatalogPage = () => {
 
                         {!activeKeyword.trim() && (
                             <div className="flex items-center gap-2">
-                                <label htmlFor="catalog-sort" className="text-sm text-muted-foreground hidden sm:inline">
+                                <Label htmlFor="catalog-sort" className="text-sm font-normal text-muted-foreground hidden sm:inline shrink-0">
                                     {t("catalog.sortLabel")}:
-                                </label>
-                                <select
+                                </Label>
+                                <FilterSelect
                                     id="catalog-sort"
-                                    name="sort"
                                     value={activeSort}
-                                    onChange={(e) => updateFilter("sort", e.target.value)}
-                                    className="h-10 sm:h-9 rounded-lg border border-input bg-card px-3 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                                    aria-label={t("catalog.sortLabel")}
-                                >
-                                    {SORT_OPTIONS.map((opt) => (
-                                        <option key={opt.value} value={opt.value}>
-                                            {t(opt.labelKey)}
-                                        </option>
-                                    ))}
-                                </select>
+                                    onValueChange={(val) => updateFilter("sort", val)}
+                                    options={sortOptions}
+                                    ariaLabel={t("catalog.sortLabel")}
+                                    triggerClassName="h-10 sm:h-9 w-[175px] bg-card font-medium"
+                                />
                             </div>
                         )}
                     </div>
                 </div>
+
+                <Separator />
 
                 <div className="mt-6 flex flex-col lg:flex-row gap-8">
                     <FilterSidebar

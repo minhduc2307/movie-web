@@ -34,6 +34,7 @@ const PlayerControlBar = ({
     isMuted,
     playbackRate,
     isFullscreen,
+    portalContainer,
     canUsePip,
     levels,
     currentLevel,
@@ -121,6 +122,7 @@ const PlayerControlBar = ({
         >
             <div
                 onClick={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
                 onMouseEnter={onControlsEnter}
                 onMouseLeave={onControlsLeave}
                 onFocusCapture={onControlsEnter}
@@ -147,6 +149,7 @@ const PlayerControlBar = ({
                     <div className="flex items-center gap-0.5 sm:gap-1.5">
                         <PlayerIconButton
                             label={isPlaying ? t("watch.player.pause") : t("watch.player.play")}
+                            portalContainer={portalContainer}
                             onClick={onTogglePlay}
                             className="text-white hover:text-primary"
                         >
@@ -159,6 +162,7 @@ const PlayerControlBar = ({
 
                         <PlayerIconButton
                             label={t("watch.player.rewind")}
+                            portalContainer={portalContainer}
                             onClick={() => onSkipBy(-SEEK_STEP_SECONDS)}
                         >
                             <RotateCcw className="h-[18px] w-[18px]" />
@@ -166,6 +170,7 @@ const PlayerControlBar = ({
 
                         <PlayerIconButton
                             label={t("watch.player.forward")}
+                            portalContainer={portalContainer}
                             onClick={() => onSkipBy(SEEK_STEP_SECONDS)}
                         >
                             <RotateCw className="h-[18px] w-[18px]" />
@@ -178,6 +183,7 @@ const PlayerControlBar = ({
                                     ? t("watch.player.unmute")
                                     : t("watch.player.mute")
                             }
+                            portalContainer={portalContainer}
                             onClick={onToggleMute}
                         >
                             <VolumeIcon className="h-[18px] w-[18px]" />
@@ -213,11 +219,13 @@ const PlayerControlBar = ({
                         allowSpeedControl={allowSpeedControl}
                         isOpen={settingsOpen}
                         onOpenChange={onSettingsOpenChange}
+                        portalContainer={portalContainer}
                     />
 
                     {canUsePip && (
                         <PlayerIconButton
                             label={t("watch.player.pip")}
+                            portalContainer={portalContainer}
                             onClick={onTogglePip}
                             className="hidden sm:flex"
                         >
@@ -231,6 +239,7 @@ const PlayerControlBar = ({
                                 ? t("watch.player.exitFullscreen")
                                 : t("watch.player.fullscreen")
                         }
+                        portalContainer={portalContainer}
                         onClick={onToggleFullscreen}
                     >
                         {isFullscreen ? (

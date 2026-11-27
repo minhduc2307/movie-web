@@ -13,6 +13,7 @@ import {
     Users,
 } from "lucide-react";
 import { normalizeImageUrl } from "@/services/api";
+import { localizeMovieMetaText } from "@lib/movieUtils";
 import { useWatchPartyTrigger } from "@/hooks/useWatchPartyTrigger";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +30,7 @@ const MovieHero = ({
     onToggleFavorite,
     onOpenTrailer,
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const {
         canWatchParty,
         createRoomOpen,
@@ -98,7 +99,7 @@ const MovieHero = ({
                                     variant="outline"
                                     className="border-amber-400/50 text-amber-300 bg-amber-400/10"
                                 >
-                                    {movieInfo.episode_current}
+                                    {localizeMovieMetaText(movieInfo.episode_current, i18n.language)}
                                 </Badge>
                             )}
                             {movieInfo.chieurap && (
@@ -142,7 +143,7 @@ const MovieHero = ({
                             {movieInfo.time && (
                                 <span className="flex items-center gap-1.5">
                                     <Clock className="h-4 w-4 text-slate-400" />
-                                    {movieInfo.time}
+                                    {localizeMovieMetaText(movieInfo.time, i18n.language)}
                                 </span>
                             )}
                             {typeof movieInfo.view === "number" && (
@@ -164,18 +165,18 @@ const MovieHero = ({
                                             variant="outline"
                                             className="border-white/20 bg-white/5 text-slate-200 hover:bg-white/15 hover:text-white transition-colors cursor-pointer"
                                         >
-                                            {cat.name}
+                                            {localizeMovieMetaText(cat.name, i18n.language)}
                                         </Badge>
                                     </Link>
                                 ))}
                             </div>
                         )}
 
-                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+                        <div className="grid w-full grid-cols-1 gap-2.5 pt-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-center md:justify-start sm:gap-3">
                             <Button
                                 asChild
                                 size="lg"
-                                className="bg-primary hover:bg-primary/90 text-white font-semibold px-7 rounded-xl shadow-lg shadow-primary/30 gap-2"
+                                className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-semibold px-7 rounded-xl shadow-lg shadow-primary/30 gap-2"
                             >
                                 <Link to={`/watch/${movieInfo.slug}`}>
                                     <Play className="h-5 w-5 fill-current" />
@@ -189,7 +190,7 @@ const MovieHero = ({
                                 variant="outline"
                                 onClick={openWatchParty}
                                 title={!canWatchParty ? t("room.hlsOnlyHint") : undefined}
-                                className={`backdrop-blur-md border-white/25 text-white rounded-xl gap-2 ${
+                                className={`w-full sm:w-auto backdrop-blur-md border-white/25 text-white rounded-xl gap-2 ${
                                     canWatchParty
                                         ? "bg-white/10 hover:bg-white/20"
                                         : "bg-white/5 opacity-60 cursor-not-allowed"
@@ -205,7 +206,7 @@ const MovieHero = ({
                                     size="lg"
                                     variant="outline"
                                     onClick={onOpenTrailer}
-                                    className="backdrop-blur-md bg-white/10 hover:bg-white/20 border-white/25 text-white rounded-xl gap-2"
+                                    className="w-full sm:w-auto backdrop-blur-md bg-white/10 hover:bg-white/20 border-white/25 text-white rounded-xl gap-2"
                                 >
                                     <Film className="h-5 w-5" />
                                     <span>{t("detail.trailer")}</span>
@@ -217,7 +218,7 @@ const MovieHero = ({
                                 size="lg"
                                 variant="outline"
                                 onClick={onToggleFavorite}
-                                className={`backdrop-blur-md rounded-xl gap-2 transition-colors ${
+                                className={`w-full sm:w-auto backdrop-blur-md rounded-xl gap-2 transition-colors ${
                                     isFavorited
                                         ? "bg-rose-500/20 border-rose-500/60 text-rose-300 hover:bg-rose-500/30"
                                         : "bg-white/10 hover:bg-white/20 border-white/25 text-white"

@@ -1,30 +1,34 @@
 import { useRouteError, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const ErrorPage = () => {
+    const { t } = useTranslation();
     const error = useRouteError();
     console.error("Route error:", error);
 
     const errorMessage =
-        error?.statusText || error?.message || "Đã xảy ra sự cố ngoài ý muốn.";
+        error?.statusText || error?.message || t("errorPage.descriptionFallback");
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 text-foreground">
+        <main className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 text-foreground">
             <div className="max-w-md text-center">
-                <h1 className="mb-4 text-6xl font-extrabold text-primary">
-                    {error?.status || "Lỗi"}
+                <h1 className="mb-4 text-6xl font-extrabold text-primary dark:text-rose-400">
+                    {error?.status || t("errorPage.codeFallback")}
                 </h1>
                 <h2 className="mb-2 text-2xl font-bold">
-                    Có lỗi xảy ra trong quá trình tải trang
+                    {t("errorPage.title")}
                 </h2>
                 <p className="mb-6 text-muted-foreground">{errorMessage}</p>
-                <Link
-                    to="/"
-                    className="inline-block rounded-xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90"
-                >
-                    Trở về Trang chủ
-                </Link>
+                <Button asChild size="lg" className="h-12 gap-2 rounded-xl px-6 font-semibold">
+                    <Link to="/">
+                        <ArrowLeft className="h-4 w-4" />
+                        <span>{t("common.backHome")}</span>
+                    </Link>
+                </Button>
             </div>
-        </div>
+        </main>
     );
 };
 

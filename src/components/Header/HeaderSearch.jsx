@@ -19,6 +19,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { AppTooltip } from "@/components/common";
 import { movieService } from "@/services/api";
 import useDebounce from "@hooks/useDebounce";
 import { cn } from "@/lib/utils";
@@ -43,20 +48,6 @@ const HeaderSearch = ({ className = "" }) => {
     const inputRef = useRef(null);
 
     const debouncedQuery = useDebounce(query, 350);
-
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (
-                containerRef.current &&
-                !containerRef.current.contains(e.target)
-            ) {
-                setIsFocused(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () =>
-            document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
 
     useEffect(() => {
         const trimmed = debouncedQuery.trim();
@@ -118,149 +109,159 @@ const HeaderSearch = ({ className = "" }) => {
         }
     };
 
+    const handleSearchBlur = (e) => {
+        const nextTarget = e.relatedTarget;
+        if (
+            nextTarget instanceof Node &&
+            (containerRef.current?.contains(nextTarget) ||
+                nextTarget.closest?.("[data-radix-popper-content-wrapper]"))
+        ) {
+            return;
+        }
+        setIsFocused(false);
+    };
+
     const showDropdown = isFocused && query.trim().length > 0;
 
     return (
-        <div
-            ref={containerRef}
-            className={cn("relative w-full max-w-xl", className)}
-        >
-            <div
-                className={cn(
-                    "flex h-11 items-center rounded-full border bg-secondary/70 transition-all duration-200 sm:h-10",
-                    isFocused
-                        ? "border-primary/70 bg-background shadow-sm ring-2 ring-primary/15"
-                        : "border-border hover:border-border/90",
-                )}
-            >
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <button
-                            type="button"
-                            aria-label={t("nav.categories")}
-                            className="flex h-full min-w-[44px] shrink-0 items-center justify-center gap-1.5 rounded-l-full bg-muted/90 px-3.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:min-w-0"
-                        >
-                            <LayoutGrid className="h-4 w-4 text-primary dark:text-rose-400" />
-                            <span className="hidden sm:inline">
-                                {t("nav.categories")}
-                            </span>
-                        </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                        align="start"
-                        className="mt-2 w-60 border-border bg-card/95 p-1.5 backdrop-blur-md"
+        <Popover open={showDropdown} onOpenChange={setIsFocused}>
+            <div ref={containerRef} className={cn("relative w-full max-w-xl", className)}>
+                <PopoverAnchor asChild>
+                    <div
+                        className={cn(
+                            "flex h-11 sm:h-10 items-center rounded-full border border-border bg-secondary/70 transition-all duration-200 hover:border-border/90 focus-within:border-primary/70 focus-within:bg-background focus-within:ring-2 focus-within:ring-primary/15 focus-within:shadow-sm",
+                            showDropdown && "border-primary/70 bg-background ring-2 ring-primary/15 shadow-sm"
+                        )}
                     >
-                        <DropdownMenuLabel className="px-2.5 py-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                            {t("catalog.typeLabel")}
-                        </DropdownMenuLabel>
-                        <DropdownMenuItem asChild>
-                            <Link
-                                to="/movies"
-                                className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 font-medium"
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    aria-label={t("nav.categories")}
+                                    className="flex h-full min-w-[44px] sm:min-w-0 items-center justify-center gap-1.5 rounded-none rounded-l-full bg-muted/90 px-3.5 text-sm font-semibold text-foreground hover:bg-muted shrink-0"
+                                >
+                                    <LayoutGrid className="h-4 w-4 text-primary dark:text-rose-400" />
+                                    <span className="hidden sm:inline">{t("nav.categories")}</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                align="start"
+                                className="w-60 mt-2 border-border bg-card/95 backdrop-blur-md p-1.5"
                             >
-                                <Clapperboard className="h-4 w-4 text-primary dark:text-rose-400" />
-                                <span>{t("catalog.title")}</span>
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link
-                                to="/movies?type=phim-le"
-                                className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2"
-                            >
-                                <Film className="h-4 w-4 text-muted-foreground" />
-                                <span>{t("nav.singleMovies")}</span>
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link
-                                to="/movies?type=phim-bo"
-                                className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2"
-                            >
-                                <Tv className="h-4 w-4 text-muted-foreground" />
-                                <span>{t("nav.series")}</span>
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link
-                                to="/movies?type=hoat-hinh"
-                                className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2"
-                            >
-                                <Sparkles className="h-4 w-4 text-muted-foreground" />
-                                <span>{t("nav.anime")}</span>
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link
-                                to="/movies?type=tv-shows"
-                                className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2"
-                            >
-                                <MonitorPlay className="h-4 w-4 text-muted-foreground" />
-                                <span>{t("nav.tvShows")}</span>
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuLabel className="px-2.5 py-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                            {t("footer.genres")}
-                        </DropdownMenuLabel>
-                        <div className="grid grid-cols-2 gap-1 px-1 pb-1">
-                            {QUICK_GENRES.map((genre) => (
-                                <DropdownMenuItem key={genre.slug} asChild>
-                                    <Link
-                                        to={`/movies?category=${genre.slug}`}
-                                        className="cursor-pointer rounded-md px-2 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
-                                    >
-                                        {t(genre.labelKey)}
+                                <DropdownMenuLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-2.5 py-1.5">
+                                    {t("catalog.typeLabel")}
+                                </DropdownMenuLabel>
+                                <DropdownMenuItem asChild>
+                                    <Link to="/movies" className="flex items-center gap-2.5 cursor-pointer rounded-md px-2.5 py-2 font-medium">
+                                        <Clapperboard className="h-4 w-4 text-primary dark:text-rose-400" />
+                                        <span>{t("catalog.title")}</span>
                                     </Link>
                                 </DropdownMenuItem>
-                            ))}
+                                <DropdownMenuItem asChild>
+                                    <Link to="/movies?type=phim-le" className="flex items-center gap-2.5 cursor-pointer rounded-md px-2.5 py-2">
+                                        <Film className="h-4 w-4 text-muted-foreground" />
+                                        <span>{t("nav.singleMovies")}</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link to="/movies?type=phim-bo" className="flex items-center gap-2.5 cursor-pointer rounded-md px-2.5 py-2">
+                                        <Tv className="h-4 w-4 text-muted-foreground" />
+                                        <span>{t("nav.series")}</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link to="/movies?type=hoat-hinh" className="flex items-center gap-2.5 cursor-pointer rounded-md px-2.5 py-2">
+                                        <Sparkles className="h-4 w-4 text-muted-foreground" />
+                                        <span>{t("nav.anime")}</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link to="/movies?type=tv-shows" className="flex items-center gap-2.5 cursor-pointer rounded-md px-2.5 py-2">
+                                        <MonitorPlay className="h-4 w-4 text-muted-foreground" />
+                                        <span>{t("nav.tvShows")}</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-2.5 py-1.5">
+                                    {t("footer.genres")}
+                                </DropdownMenuLabel>
+                                <div className="grid grid-cols-2 gap-1 px-1 pb-1">
+                                    {QUICK_GENRES.map((genre) => (
+                                        <DropdownMenuItem key={genre.slug} asChild>
+                                            <Link
+                                                to={`/movies?category=${genre.slug}`}
+                                                className="cursor-pointer rounded-md px-2 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+                                            >
+                                                {t(genre.labelKey)}
+                                            </Link>
+                                        </DropdownMenuItem>
+                                    ))}
+                                </div>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        <Separator orientation="vertical" className="h-5" />
+
+                        <div className="relative flex flex-1 items-center pl-3 pr-1">
+                            <Search className="h-4 w-4 text-muted-foreground shrink-0 mr-2" />
+                            <Input
+                                id={searchInputId}
+                                name="q"
+                                ref={inputRef}
+                                type="text"
+                                autoComplete="off"
+                                value={query}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={handleSearchBlur}
+                                onKeyDown={handleKeyDown}
+                                onChange={(e) => {
+                                    setQuery(e.target.value);
+                                    setIsFocused(true);
+                                }}
+                                placeholder={t("search.placeholder")}
+                                className="h-auto w-full border-0 bg-transparent px-0 py-0 text-sm shadow-none focus-visible:border-0 focus-visible:ring-0"
+                                aria-label={t("search.placeholder")}
+                            />
+                            {query && (
+                                <AppTooltip label={t("search.clear")}>
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={handleClear}
+                                        aria-label={t("search.clear")}
+                                        className="h-10 w-10 sm:h-8 sm:w-8 shrink-0 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </Button>
+                                </AppTooltip>
+                            )}
                         </div>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                    </div>
+                </PopoverAnchor>
 
-                <span className="h-5 w-px shrink-0 bg-border" />
-
-                <div className="relative flex flex-1 items-center pl-3 pr-1">
-                    <Search className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
-                    <input
-                        id={searchInputId}
-                        name="q"
-                        ref={inputRef}
-                        type="text"
-                        autoComplete="off"
-                        value={query}
-                        onFocus={() => setIsFocused(true)}
-                        onKeyDown={handleKeyDown}
-                        onChange={(e) => {
-                            setQuery(e.target.value);
-                            setIsFocused(true);
-                        }}
-                        placeholder={t("search.placeholder")}
-                        className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                        aria-label={t("search.placeholder")}
+                <PopoverContent
+                    align="center"
+                    sideOffset={8}
+                    onOpenAutoFocus={(e) => e.preventDefault()}
+                    onPointerDownOutside={(e) => {
+                        if (containerRef.current?.contains(e.target)) {
+                            e.preventDefault();
+                        }
+                    }}
+                    className="w-[min(92vw,760px)] overflow-hidden rounded-2xl border-border bg-card p-0 shadow-2xl"
+                >
+                    <SearchResultsDropdown
+                        query={query}
+                        results={results}
+                        isLoading={isLoading}
+                        onSelectMovie={handleSelectMovie}
+                        onViewAll={handleSubmitSearch}
                     />
-                    {query && (
-                        <button
-                            type="button"
-                            onClick={handleClear}
-                            aria-label={t("search.clear")}
-                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:h-8 sm:w-8"
-                        >
-                            <X className="h-4 w-4" />
-                        </button>
-                    )}
-                </div>
+                </PopoverContent>
             </div>
-
-            {showDropdown && (
-                <SearchResultsDropdown
-                    query={query}
-                    results={results}
-                    isLoading={isLoading}
-                    onSelectMovie={handleSelectMovie}
-                    onViewAll={handleSubmitSearch}
-                />
-            )}
-        </div>
+        </Popover>
     );
 };
 

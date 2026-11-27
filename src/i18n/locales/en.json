@@ -114,6 +114,14 @@
     "topicAds": "Advertising & Partnerships",
     "topicFeedback": "Report Bug & Feedback",
     "topicUpdating": "Information for \"{{topic}}\" is being updated.",
+    "closeTopic": "Close",
+    "topics": {
+      "dmca": "Mot Phim aggregates public third-party embed links and does not store or host any video files on its servers. Please contact copyright@motphim.local with takedown notices including direct source URLs.",
+      "terms": "By browsing Mot Phim, you agree to use the service strictly for lawful personal streaming and respect watch party community etiquette.",
+      "privacy": "Account data (email, favorites sync, and watch party sessions) is stored securely in Firebase strictly to power authentication and cross-device playback features.",
+      "ads": "Interested in banner placements or content collaborations? Reach our partnerships team at ads@motphim.local.",
+      "feedback": "Found a broken stream, subtitle sync issue, or UI bug? Share the movie title and episode details with support@motphim.local so we can investigate promptly."
+    },
     "copyright": "© 2026 Mot Phim. All rights reserved. Leading online movie streaming platform."
   },
   "common": {
@@ -166,6 +174,7 @@
   },
   "detail": {
     "trailer": "Watch Trailer",
+    "loadingTrailer": "Loading trailer...",
     "inTheaters": "In Theaters",
     "synopsis": "Synopsis",
     "noSynopsis": "No detailed synopsis available for this title.",
@@ -260,6 +269,11 @@
   "notFound": {
     "title": "Page not found!",
     "description": "The page you are looking for does not exist or has been moved."
+  },
+  "errorPage": {
+    "codeFallback": "Error",
+    "title": "Something went wrong while loading this page",
+    "descriptionFallback": "An unexpected error occurred."
   },
   "chat": {
     "empty": "No messages yet. Say hello to your friends!",

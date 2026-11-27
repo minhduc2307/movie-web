@@ -1,4 +1,3 @@
-import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -14,17 +13,25 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
 import { getUserInitial } from "@lib/userUtils";
-import { cn } from "@/lib/utils";
 
-const MobileDrawer = ({ open, user, isAuthReady, onClose, onLogout }) => {
+const MobileDrawer = ({ open, onOpenChange, user, isAuthReady, onLogout }) => {
     const { t } = useTranslation();
     const location = useLocation();
 
-    if (!open) return null;
-
+    const closeDrawer = () => onOpenChange(false);
     const currentFullUrl = `${location.pathname}${location.search}`;
     const mobileNavItems = [
         { name: t("nav.home"), href: "/", icon: Home },
@@ -35,76 +42,79 @@ const MobileDrawer = ({ open, user, isAuthReady, onClose, onLogout }) => {
         { name: t("nav.tvShows"), href: "/movies?type=tv-shows", icon: MonitorPlay },
     ];
 
-    return createPortal(
-        <div className="fixed inset-0 z-[100] md:hidden" role="dialog" aria-modal="true">
-            <div
-                className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300"
-                onClick={onClose}
-            />
-
-            <div className="fixed inset-y-0 left-0 z-[101] flex h-[100dvh] w-4/5 max-w-xs flex-col justify-between overflow-y-auto border-r border-border bg-card p-6 shadow-2xl animate-in slide-in-from-left duration-200">
-                <div>
-                    <div className="flex items-center justify-between pb-5 border-b border-border/60">
-                        <Link to="/" className="flex items-center gap-2" onClick={onClose}>
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-rose-600 text-primary-foreground shadow-sm">
+    return (
+        <Sheet open={open} onOpenChange={onOpenChange}>
+            <SheetContent
+                side="left"
+                hideCloseButton
+                className="flex w-4/5 max-w-xs flex-col justify-between border-r border-border bg-card p-0 md:hidden"
+            >
+                <SheetHeader className="flex-row items-center justify-between space-y-0 px-6 pb-4 pt-5 text-left">
+                    <SheetTitle asChild>
+                        <Link to="/" className="flex items-center gap-2" onClick={closeDrawer}>
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-rose-700 text-primary-foreground shadow-sm">
                                 <Clapperboard className="h-4 w-4" />
                             </div>
-                            <span className="text-lg font-bold bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">
+                            <span className="text-lg font-bold bg-gradient-to-r from-red-700 to-amber-700 dark:from-red-400 dark:to-amber-400 bg-clip-text text-transparent">
                                 {t("brand.name")}
                             </span>
                         </Link>
+                    </SheetTitle>
+                    <SheetDescription className="sr-only">
+                        {t("nav.categories")}
+                    </SheetDescription>
+                    <SheetClose asChild>
                         <Button
                             variant="ghost"
                             size="icon"
-                            onClick={onClose}
                             className="h-11 w-11 rounded-full"
                             aria-label={t("nav.closeMenu")}
                         >
                             <X className="h-4 w-4" />
                         </Button>
-                    </div>
+                    </SheetClose>
+                </SheetHeader>
 
-                    <nav className="mt-5 flex flex-col space-y-1.5">
+                <Separator />
+
+                <ScrollArea className="flex-1 px-4 py-4">
+                    <nav className="flex flex-col space-y-1">
                         {mobileNavItems.map((item) => {
                             const isActive = currentFullUrl === item.href;
                             const Icon = item.icon;
                             return (
-                                <Link
+                                <Button
                                     key={item.href}
-                                    to={item.href}
-                                    onClick={onClose}
-                                    className={cn(
-                                        "flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors",
-                                        isActive
-                                            ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                    )}
+                                    asChild
+                                    variant={isActive ? "default" : "ghost"}
+                                    className="h-11 w-full justify-start gap-3 px-3.5 text-sm font-medium"
                                 >
-                                    <Icon className="h-4 w-4" />
-                                    <span>{item.name}</span>
-                                </Link>
+                                    <Link to={item.href} onClick={closeDrawer}>
+                                        <Icon className="h-4 w-4" />
+                                        <span>{item.name}</span>
+                                    </Link>
+                                </Button>
                             );
                         })}
 
                         {user && (
-                            <Link
-                                to="/favorites"
-                                onClick={onClose}
-                                className={cn(
-                                    "flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors",
-                                    location.pathname === "/favorites"
-                                        ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                )}
+                            <Button
+                                asChild
+                                variant={location.pathname === "/favorites" ? "default" : "ghost"}
+                                className="h-11 w-full justify-start gap-3 px-3.5 text-sm font-medium"
                             >
-                                <Heart className="h-4 w-4 text-rose-500 fill-rose-500/20" />
-                                <span>{t("nav.favorites")}</span>
-                            </Link>
+                                <Link to="/favorites" onClick={closeDrawer}>
+                                    <Heart className="h-4 w-4 text-rose-500 fill-rose-500/20" />
+                                    <span>{t("nav.favorites")}</span>
+                                </Link>
+                            </Button>
                         )}
                     </nav>
-                </div>
+                </ScrollArea>
 
-                <div className="pt-5 border-t border-border/60 space-y-4">
+                <Separator />
+
+                <div className="space-y-4 p-6 pt-4">
                     <div className="flex items-center justify-between px-1">
                         <span className="text-sm font-medium text-muted-foreground">
                             {t("nav.language")}
@@ -128,7 +138,7 @@ const MobileDrawer = ({ open, user, isAuthReady, onClose, onLogout }) => {
                                             alt={user.displayName || user.email || "Avatar"}
                                         />
                                     )}
-                                    <AvatarFallback className="bg-primary/15 text-primary font-bold">
+                                    <AvatarFallback className="bg-primary/15 text-primary dark:text-rose-400 font-bold">
                                         {getUserInitial(user)}
                                     </AvatarFallback>
                                 </Avatar>
@@ -144,10 +154,10 @@ const MobileDrawer = ({ open, user, isAuthReady, onClose, onLogout }) => {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="w-full text-destructive hover:text-destructive flex items-center justify-center gap-2"
+                                className="w-full h-10 text-destructive dark:text-rose-400 hover:text-destructive flex items-center justify-center gap-2"
                                 onClick={() => {
                                     onLogout();
-                                    onClose();
+                                    closeDrawer();
                                 }}
                             >
                                 <LogOut className="h-4 w-4" />
@@ -158,25 +168,24 @@ const MobileDrawer = ({ open, user, isAuthReady, onClose, onLogout }) => {
 
                     {isAuthReady && !user && (
                         <div className="flex flex-col gap-2 pt-2">
-                            <Button asChild variant="outline" className="w-full justify-center">
-                                <Link to="/sign-in" onClick={onClose}>
+                            <Button asChild variant="outline" className="w-full h-11 justify-center">
+                                <Link to="/sign-in" onClick={closeDrawer}>
                                     {t("nav.login")}
                                 </Link>
                             </Button>
                             <Button
                                 asChild
-                                className="w-full justify-center font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
+                                className="w-full h-11 justify-center font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
                             >
-                                <Link to="/sign-up" onClick={onClose}>
+                                <Link to="/sign-up" onClick={closeDrawer}>
                                     {t("nav.register")}
                                 </Link>
                             </Button>
                         </div>
                     )}
                 </div>
-            </div>
-        </div>,
-        document.body
+            </SheetContent>
+        </Sheet>
     );
 };
 

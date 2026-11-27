@@ -3,13 +3,14 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { normalizeImageUrl, movieService } from "@/services/api";
+import { localizeMovieMetaText } from "@lib/movieUtils";
 import { cn } from "@/lib/utils";
 import HeroSlideContent from "./HeroSlideContent";
 
 const AUTO_PLAY_INTERVAL = 5500;
 
 const Movie = ({ movies = [] }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
     const [resetTimer, setResetTimer] = useState(0);
@@ -86,7 +87,7 @@ const Movie = ({ movies = [] }) => {
     const currentMovie = movies[currentIndex] || movies[0];
     const activeDetail = movieDetails[currentMovie.slug];
 
-    const categoryName =
+    const rawCategoryName =
         (Array.isArray(activeDetail?.category) && activeDetail.category[0]?.name) ||
         (Array.isArray(currentMovie.category) && currentMovie.category[0]?.name) ||
         (typeof currentMovie.category === "string" ? currentMovie.category : null) ||
@@ -95,6 +96,7 @@ const Movie = ({ movies = [] }) => {
             : currentMovie.type === "hoathinh"
             ? t("movie.anime")
             : t("movie.single"));
+    const categoryName = localizeMovieMetaText(rawCategoryName, i18n.language);
 
     const rawRating =
         activeDetail?.rating ||
@@ -166,7 +168,7 @@ const Movie = ({ movies = [] }) => {
                                         src={mobilePoster}
                                         alt={movie.name || "Backdrop"}
                                         className={cn(
-                                            "h-full w-full object-cover object-top sm:object-center transition-transform duration-1000 ease-out",
+                                            "h-full w-full object-cover object-top sm:object-[center_25%] transition-transform duration-1000 ease-out",
                                             isCurrent ? "scale-105" : "scale-100"
                                         )}
                                         loading={index === 0 ? "eager" : "lazy"}
@@ -225,26 +227,32 @@ const Movie = ({ movies = [] }) => {
                 <ChevronRight className="h-6 w-6" />
             </Button>
 
-            {/* Slider Indicators */}
-            <div className="absolute bottom-2 sm:bottom-5 inset-x-0 sm:inset-x-auto sm:right-8 z-30 flex items-center justify-center gap-0.5 sm:gap-1.5">
-                {movies.map((_, idx) => (
-                    <button
-                        key={idx}
-                        type="button"
-                        onClick={() => goToSlide(idx)}
-                        className="group flex min-h-[44px] min-w-[32px] sm:min-h-0 sm:min-w-0 items-center justify-center px-1.5 py-2 sm:p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full"
-                        aria-label={t("hero.goToSlide", { number: idx + 1 })}
-                    >
-                        <span
-                            className={cn(
-                                "block h-1.5 rounded-full transition-all duration-300",
-                                currentIndex === idx
-                                    ? "w-7 sm:w-8 bg-primary shadow-sm shadow-primary/60"
-                                    : "w-2 bg-white/35 group-hover:bg-white/70"
-                            )}
-                        />
-                    </button>
-                ))}
+            {/* Slider Indicators aligned cleanly with container */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-2 sm:bottom-5 z-30">
+                <div className="app-container flex justify-center sm:justify-end">
+                    <div className="pointer-events-auto flex items-center gap-0.5 sm:gap-1.5">
+                        {movies.map((_, idx) => (
+                            <Button
+                                key={idx}
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => goToSlide(idx)}
+                                className="group h-auto w-auto min-h-[44px] min-w-[32px] sm:min-h-0 sm:min-w-0 px-1.5 py-2 sm:p-1.5 rounded-full hover:bg-transparent"
+                                aria-label={t("hero.goToSlide", { number: idx + 1 })}
+                            >
+                                <span
+                                    className={cn(
+                                        "block h-1.5 rounded-full transition-all duration-300",
+                                        currentIndex === idx
+                                            ? "w-7 sm:w-8 bg-primary shadow-sm shadow-primary/60"
+                                            : "w-2 bg-white/35 group-hover:bg-white/70"
+                                    )}
+                                />
+                            </Button>
+                        ))}
+                    </div>
+                </div>
             </div>
         </section>
         </div>

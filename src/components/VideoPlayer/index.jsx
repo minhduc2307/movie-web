@@ -179,6 +179,7 @@ const VideoPlayer = forwardRef(
                             isMuted={state.isMuted}
                             playbackRate={state.playbackRate}
                             isFullscreen={state.isFullscreen}
+                            portalContainer={state.isFullscreen ? containerRef.current : undefined}
                             canUsePip={player.canUsePip}
                             levels={levels}
                             currentLevel={currentLevel}

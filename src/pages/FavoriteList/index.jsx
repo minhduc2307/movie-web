@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Heart, Trash2, Film } from "lucide-react";
@@ -12,6 +13,10 @@ const SKELETON_COUNT = 12;
 const FavoriteList = () => {
     const { t } = useTranslation();
     const { favorites: movieList, isLoading, toggleFavorite } = useFavorites();
+
+    useEffect(() => {
+        document.title = `${t("favorites.title")} — ${t("brand.name")}`;
+    }, [t]);
 
     const count = movieList.length;
 
@@ -73,12 +78,13 @@ const FavoriteList = () => {
                                     slug={movie.slug}
                                     category={movie.category}
                                     quality={movie.quality}
+                                    reserveTopRight
                                 />
                                 <Button
                                     type="button"
                                     variant="destructive"
                                     size="icon"
-                                    className="absolute right-2 bottom-14 sm:bottom-auto sm:top-2 z-20 h-10 w-10 sm:h-8 sm:w-8 rounded-full opacity-95 shadow-lg transition-transform hover:scale-110 group-hover/item:opacity-100"
+                                    className="absolute right-2 top-2 z-20 h-11 w-11 sm:h-8 sm:w-8 rounded-full opacity-95 shadow-lg transition-transform hover:scale-110 group-hover/item:opacity-100"
                                     onClick={() => toggleFavorite(movie)}
                                     title={t("movie.removeFavorite")}
                                     aria-label={t("movie.removeFavorite")}

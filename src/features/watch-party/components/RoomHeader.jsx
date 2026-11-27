@@ -12,6 +12,7 @@ import {
 import { MAX_ROOM_MEMBERS } from "@/features/watch-party/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AppTooltip } from "@/components/common";
 import {
     Dialog,
     DialogContent,
@@ -76,43 +77,49 @@ const RoomHeader = ({
                         </Badge>
                     )}
 
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={onOpenInvite}
-                        aria-label={t("room.inviteBtn")}
-                        className="h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white"
-                    >
-                        <Share2 className="h-4 w-4" />
-                        <span className="hidden sm:inline">{t("room.inviteBtn")}</span>
-                    </Button>
-
-                    {isHost && (
+                    <AppTooltip label={t("room.inviteBtn")}>
                         <Button
                             type="button"
-                            variant="destructive"
+                            variant="outline"
                             size="sm"
-                            onClick={() => setConfirmCloseOpen(true)}
-                            aria-label={t("room.closeRoom")}
-                            className="h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full"
+                            onClick={onOpenInvite}
+                            aria-label={t("room.inviteBtn")}
+                            className="h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full border-white/15 bg-white/10 text-white hover:bg-white/20 hover:text-white"
                         >
-                            <Power className="h-4 w-4" />
-                            <span className="hidden md:inline">{t("room.closeRoom")}</span>
+                            <Share2 className="h-4 w-4" />
+                            <span className="hidden sm:inline">{t("room.inviteBtn")}</span>
                         </Button>
+                    </AppTooltip>
+
+                    {isHost && (
+                        <AppTooltip label={t("room.closeRoom")}>
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => setConfirmCloseOpen(true)}
+                                aria-label={t("room.closeRoom")}
+                                className="h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full"
+                            >
+                                <Power className="h-4 w-4" />
+                                <span className="hidden md:inline">{t("room.closeRoom")}</span>
+                            </Button>
+                        </AppTooltip>
                     )}
 
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={onLeaveRoom}
-                        aria-label={t("room.leaveRoom")}
-                        className="h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full bg-white/10 text-white hover:bg-white/20 hover:text-white"
-                    >
-                        <LogOut className="h-4 w-4" />
-                        <span className="hidden sm:inline">{t("room.leaveRoom")}</span>
-                    </Button>
+                    <AppTooltip label={t("room.leaveRoom")}>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={onLeaveRoom}
+                            aria-label={t("room.leaveRoom")}
+                            className="h-10 min-w-[40px] sm:h-9 gap-1.5 rounded-full bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                        >
+                            <LogOut className="h-4 w-4" />
+                            <span className="hidden sm:inline">{t("room.leaveRoom")}</span>
+                        </Button>
+                    </AppTooltip>
                 </div>
             </header>
 

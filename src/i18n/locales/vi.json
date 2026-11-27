@@ -114,6 +114,14 @@
     "topicAds": "Liên hệ hợp tác quảng cáo",
     "topicFeedback": "Báo cáo lỗi & Góp ý",
     "topicUpdating": "Thông tin \"{{topic}}\" đang được cập nhật.",
+    "closeTopic": "Đóng",
+    "topics": {
+      "dmca": "Mọt Phim chỉ tổng hợp và nhúng liên kết từ các dịch vụ lưu trữ bên thứ ba, không lưu trữ tệp video trên máy chủ riêng. Mọi yêu cầu gỡ nội dung bản quyền vui lòng gửi tới copyright@motphim.local.",
+      "terms": "Khi sử dụng Mọt Phim, bạn đồng ý chỉ sử dụng nền tảng cho nhu cầu giải trí cá nhân hợp pháp và tuân thủ quy tắc ứng xử chung trong phòng Xem cùng bạn bè.",
+      "privacy": "Thông tin tài khoản (email, danh sách yêu thích, phiên phòng xem chung) được bảo mật trên Firebase chỉ nhằm đồng bộ dữ liệu và nâng cao trải nghiệm của bạn.",
+      "ads": "Quý đối tác có nhu cầu đặt quảng cáo hoặc hợp tác truyền thông vui lòng liên hệ đội ngũ kinh doanh qua ads@motphim.local.",
+      "feedback": "Gặp lỗi phát video, phụ đề hoặc hiển thị giao diện? Hãy gửi tên phim, tập phim và mô tả cho support@motphim.local để chúng tôi khắc phục sớm nhất."
+    },
     "copyright": "© 2026 Mọt Phim. All rights reserved. Nền tảng xem phim trực tuyến hàng đầu."
   },
   "common": {
@@ -166,6 +174,7 @@
   },
   "detail": {
     "trailer": "Xem Trailer",
+    "loadingTrailer": "Đang tải trailer...",
     "inTheaters": "Chiếu rạp",
     "synopsis": "Nội dung phim",
     "noSynopsis": "Chưa có mô tả chi tiết cho bộ phim này.",
@@ -260,6 +269,11 @@
   "notFound": {
     "title": "Không tìm thấy trang!",
     "description": "Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển."
+  },
+  "errorPage": {
+    "codeFallback": "Lỗi",
+    "title": "Có lỗi xảy ra trong quá trình tải trang",
+    "descriptionFallback": "Đã xảy ra sự cố ngoài ý muốn."
   },
   "chat": {
     "empty": "Chưa có tin nhắn nào. Hãy gửi lời chào mọi người!",

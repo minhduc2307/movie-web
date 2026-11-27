@@ -555,7 +555,11 @@ export const useVideoPlayerControls = ({
     const handleControlsLeave = useCallback(
         (e) => {
             // Keep locked if focus/pointer moves between child controls inside the bar
-            if (e?.currentTarget && e?.relatedTarget && e.currentTarget.contains(e.relatedTarget)) {
+            if (
+                e?.currentTarget &&
+                e?.relatedTarget instanceof Node &&
+                e.currentTarget.contains(e.relatedTarget)
+            ) {
                 return;
             }
             isHoveringControlsRef.current = false;
@@ -566,7 +570,11 @@ export const useVideoPlayerControls = ({
 
     const handleControlsBlur = useCallback(
         (e) => {
-            if (e?.currentTarget && e?.relatedTarget && e.currentTarget.contains(e.relatedTarget)) {
+            if (
+                e?.currentTarget &&
+                e?.relatedTarget instanceof Node &&
+                e.currentTarget.contains(e.relatedTarget)
+            ) {
                 return;
             }
             if (e?.currentTarget?.matches?.(":hover")) {

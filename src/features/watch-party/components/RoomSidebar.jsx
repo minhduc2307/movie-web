@@ -3,6 +3,7 @@ import { MessageSquare, Users, ListVideo, Play } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import ChatPanel from "./ChatPanel";
 import MemberList from "./MemberList";
@@ -77,15 +78,19 @@ const RoomSidebar = ({
                     />
                 </TabsContent>
 
-                <TabsContent value="members" className="mt-2 flex-1 min-h-0 overflow-y-auto">
-                    <MemberList
-                        memberSlots={memberSlots}
-                        hostUid={hostUid}
-                        currentUid={currentUid}
-                    />
+                <TabsContent value="members" className="mt-2 flex-1 min-h-0 overflow-hidden">
+                    <ScrollArea className="h-full">
+                        <MemberList
+                            memberSlots={memberSlots}
+                            hostUid={hostUid}
+                            currentUid={currentUid}
+                        />
+                    </ScrollArea>
                 </TabsContent>
 
-                <TabsContent value="episodes" className="mt-2 flex-1 min-h-0 overflow-y-auto p-3 space-y-3">
+                <TabsContent value="episodes" className="mt-2 flex-1 min-h-0 overflow-hidden">
+                    <ScrollArea className="h-full">
+                        <div className="p-3 space-y-3">
                     {servers.length > 1 && (
                         <div className="flex flex-wrap gap-1.5">
                             {servers.map((srv, sIdx) => {
@@ -145,6 +150,8 @@ const RoomSidebar = ({
                             );
                         })}
                     </div>
+                        </div>
+                    </ScrollArea>
                 </TabsContent>
             </Tabs>
         </aside>

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
@@ -7,6 +8,10 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 const NotFound = () => {
     const { t } = useTranslation();
+
+    useEffect(() => {
+        document.title = `404 — ${t("brand.name")}`;
+    }, [t]);
 
     return (
         <div className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-background text-foreground">

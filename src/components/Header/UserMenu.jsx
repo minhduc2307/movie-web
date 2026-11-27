@@ -46,10 +46,12 @@ const UserMenu = ({ user, isAuthReady, onLogout }) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button
+                <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     aria-label={user.displayName || user.email || t("nav.account")}
-                    className="ml-1 flex h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-full ring-offset-background transition-transform duration-200 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    className="ml-1 h-11 w-11 sm:h-9 sm:w-9 rounded-full p-0 hover:scale-105 hover:bg-transparent transition-transform duration-200"
                 >
                     <Avatar className="h-9 w-9 border border-border/80 shadow-sm">
                         {user.photoURL && (
@@ -58,11 +60,11 @@ const UserMenu = ({ user, isAuthReady, onLogout }) => {
                                 alt={user.displayName || user.email || "Avatar"}
                             />
                         )}
-                        <AvatarFallback className="bg-primary/15 text-primary font-bold">
+                        <AvatarFallback className="bg-primary/15 text-primary dark:text-rose-400 font-bold">
                             {getUserInitial(user)}
                         </AvatarFallback>
                     </Avatar>
-                </button>
+                </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 align="end"

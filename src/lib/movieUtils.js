@@ -48,11 +48,69 @@ export const formatWatchDisplayTitle = ({
     if (totalChapters <= 1) return movieName;
 
     const epName = currentEpisode?.name?.trim();
-    const episodeLabel = epName
-        ? epName.toLowerCase().includes("tập")
-            ? epName
-            : `${episodePrefix} ${epName}`
-        : `${episodePrefix} ${episodeIndex + 1}`;
+    let episodeLabel;
+    if (epName && /^tập\s*/i.test(epName)) {
+        const suffix = epName.replace(/^tập\s*/i, "").trim();
+        episodeLabel = `${episodePrefix} ${suffix}`;
+    } else if (epName) {
+        episodeLabel = epName;
+    } else {
+        episodeLabel = `${episodePrefix} ${episodeIndex + 1}`;
+    }
 
     return movieName ? `${movieName} — ${episodeLabel}` : episodeLabel;
+};
+
+const API_CATEGORY_EN_MAP = {
+    "chinh kich": "Drama",
+    "tam ly": "Psychological",
+    "hanh dong": "Action",
+    "hai huoc": "Comedy",
+    "tinh cam": "Romance",
+    "vien tuong": "Sci-Fi",
+    "kinh di": "Horror",
+    "co trang": "Historical",
+    "phieu luu": "Adventure",
+    "hinh su": "Crime",
+    "bi an": "Mystery",
+    "khoa hoc": "Science",
+    "gia dinh": "Family",
+    "chien tranh": "War",
+    "hoat hinh": "Anime",
+    "hoc duong": "School",
+    "am nhac": "Music",
+    "the thao": "Sports",
+    "tai lieu": "Documentary",
+    "than thoai": "Mythology",
+    "tre em": "Kids",
+    "vo thuat": "Martial Arts",
+    "mien tay": "Western",
+    "kinh dien": "Classic",
+    "phim ngan": "Short",
+};
+
+const stripVietnameseAccents = (str) =>
+    str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase()
+        .trim();
+
+export const localizeMovieMetaText = (value, language) => {
+    if (!value || language !== "en") return value;
+    const raw = String(value).trim();
+    const normalized = stripVietnameseAccents(raw);
+
+    if (API_CATEGORY_EN_MAP[normalized]) {
+        return API_CATEGORY_EN_MAP[normalized];
+    }
+
+    return raw
+        .replace(/Hoàn Tất/gi, "Completed")
+        .replace(/^Tập\s+/i, "Ep ")
+        .replace(/\bphút\/tập\b/gi, "min/ep")
+        .replace(/\bphút\b/gi, "min")
+        .replace(/Đang cập nhật/gi, "Updating");
 };

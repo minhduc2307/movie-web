@@ -1,8 +1,16 @@
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import FeatureMovies from "@components/FeatureMovies";
 import MediaList from "@components/MediaList";
 import { TABS } from "@/lib/constants";
 
 function HomePage() {
+    const { t } = useTranslation();
+
+    useEffect(() => {
+        document.title = t("brand.name");
+    }, [t]);
+
     return (
         <div className="bg-background text-foreground">
             <FeatureMovies />

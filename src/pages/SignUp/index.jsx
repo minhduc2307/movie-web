@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -7,9 +7,6 @@ import {
     Clapperboard,
     User,
     Mail,
-    Lock,
-    Eye,
-    EyeOff,
     ArrowLeft,
     Loader2,
     AlertCircle,
@@ -21,6 +18,7 @@ import { EMAIL_PATTERN } from "@lib/userUtils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/common";
 import {
     Card,
     CardHeader,
@@ -37,8 +35,6 @@ const SignUp = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { user, isAuthReady } = useAuth();
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const {
         register,
@@ -57,6 +53,10 @@ const SignUp = () => {
     });
 
     const redirectTarget = getSafeRedirectPath(location.state, "/");
+
+    useEffect(() => {
+        document.title = `${t("auth.registerTitle")} — ${t("brand.name")}`;
+    }, [t]);
 
     useEffect(() => {
         if (isAuthReady && user && !isSubmitting) {
@@ -106,7 +106,7 @@ const SignUp = () => {
                         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-rose-700 text-primary-foreground shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
                             <Clapperboard className="h-5 w-5" />
                         </div>
-                        <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 dark:from-red-400 dark:via-rose-400 dark:to-amber-400 bg-clip-text text-transparent">
+                        <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-red-700 via-rose-600 to-amber-700 dark:from-red-400 dark:via-rose-400 dark:to-amber-400 bg-clip-text text-transparent">
                             {t("brand.name")}
                         </span>
                     </Link>
@@ -196,38 +196,20 @@ const SignUp = () => {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="password">{t("auth.passwordLabel")}</Label>
-                                    <div className="relative">
-                                        <Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-                                        <Input
-                                            id="password"
-                                            type={showPassword ? "text" : "password"}
-                                            autoComplete="new-password"
-                                            placeholder={t("auth.passwordPlaceholder")}
-                                            aria-invalid={Boolean(errors.password)}
-                                            className={`h-11 pl-10 pr-12 ${
-                                                errors.password ? "border-destructive focus-visible:ring-destructive" : ""
-                                            }`}
-                                            {...register("password", {
-                                                required: "auth.errors.passwordRequired",
-                                                minLength: {
-                                                    value: 6,
-                                                    message: "auth.errors.weakPassword",
-                                                },
-                                            })}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPassword((prev) => !prev)}
-                                            className="absolute right-1 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:text-foreground transition-colors"
-                                            aria-label={t("auth.togglePasswordVisibility")}
-                                        >
-                                            {showPassword ? (
-                                                <EyeOff className="h-4 w-4" />
-                                            ) : (
-                                                <Eye className="h-4 w-4" />
-                                            )}
-                                        </button>
-                                    </div>
+                                    <PasswordInput
+                                        id="password"
+                                        autoComplete="new-password"
+                                        placeholder={t("auth.passwordPlaceholder")}
+                                        toggleLabel={t("auth.togglePasswordVisibility")}
+                                        error={errors.password}
+                                        {...register("password", {
+                                            required: "auth.errors.passwordRequired",
+                                            minLength: {
+                                                value: 6,
+                                                message: "auth.errors.weakPassword",
+                                            },
+                                        })}
+                                    />
                                     {errors.password?.message && (
                                         <p className="text-xs font-medium text-destructive dark:text-rose-400">
                                             {t(errors.password.message)}
@@ -239,36 +221,18 @@ const SignUp = () => {
                                     <Label htmlFor="confirmPassword">
                                         {t("auth.confirmPasswordLabel")}
                                     </Label>
-                                    <div className="relative">
-                                        <Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-                                        <Input
-                                            id="confirmPassword"
-                                            type={showConfirmPassword ? "text" : "password"}
-                                            autoComplete="new-password"
-                                            placeholder={t("auth.confirmPasswordPlaceholder")}
-                                            aria-invalid={Boolean(errors.confirmPassword)}
-                                            className={`h-11 pl-10 pr-12 ${
-                                                errors.confirmPassword ? "border-destructive focus-visible:ring-destructive" : ""
-                                            }`}
-                                            {...register("confirmPassword", {
-                                                required: "auth.errors.confirmPasswordRequired",
-                                                validate: (val) =>
-                                                    val === watch("password") || "auth.passwordMismatch",
-                                            })}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowConfirmPassword((prev) => !prev)}
-                                            className="absolute right-1 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:text-foreground transition-colors"
-                                            aria-label={t("auth.toggleConfirmPasswordVisibility")}
-                                        >
-                                            {showConfirmPassword ? (
-                                                <EyeOff className="h-4 w-4" />
-                                            ) : (
-                                                <Eye className="h-4 w-4" />
-                                            )}
-                                        </button>
-                                    </div>
+                                    <PasswordInput
+                                        id="confirmPassword"
+                                        autoComplete="new-password"
+                                        placeholder={t("auth.confirmPasswordPlaceholder")}
+                                        toggleLabel={t("auth.toggleConfirmPasswordVisibility")}
+                                        error={errors.confirmPassword}
+                                        {...register("confirmPassword", {
+                                            required: "auth.errors.confirmPasswordRequired",
+                                            validate: (val) =>
+                                                val === watch("password") || "auth.passwordMismatch",
+                                        })}
+                                    />
                                     {errors.confirmPassword?.message && (
                                         <p className="text-xs font-medium text-destructive dark:text-rose-400">
                                             {t(errors.confirmPassword.message)}

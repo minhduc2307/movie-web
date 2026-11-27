@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Globe, Users, Clapperboard } from "lucide-react";
+import { localizeMovieMetaText } from "@lib/movieUtils";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const MovieInfoGrid = ({ movieInfo }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const cleanContent = movieInfo.content
         ? movieInfo.content.replace(/<[^>]*>/g, "").trim()
@@ -113,7 +114,7 @@ const MovieInfoGrid = ({ movieInfo }) => {
                                         {t("detail.duration")}
                                     </span>
                                     <span className="font-medium text-foreground">
-                                        {movieInfo.time}
+                                        {localizeMovieMetaText(movieInfo.time, i18n.language)}
                                     </span>
                                 </div>
                             )}
@@ -124,7 +125,7 @@ const MovieInfoGrid = ({ movieInfo }) => {
                                         {t("detail.status")}
                                     </span>
                                     <span className="font-medium text-foreground">
-                                        {movieInfo.episode_current}
+                                        {localizeMovieMetaText(movieInfo.episode_current, i18n.language)}
                                         {movieInfo.episode_total > 1 &&
                                         !String(movieInfo.episode_current).includes("/")
                                             ? ` / ${movieInfo.episode_total}`

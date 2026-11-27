@@ -1,6 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { Search, Loader2, Film, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { normalizeImageUrl } from "@/services/api";
 
 const SearchResultsDropdown = ({
@@ -13,8 +16,8 @@ const SearchResultsDropdown = ({
     const { t } = useTranslation();
 
     return (
-        <div className="absolute left-1/2 -translate-x-1/2 w-[min(92vw,760px)] top-12 z-50 overflow-hidden rounded-2xl border border-border bg-card shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150">
-            <div className="flex items-center justify-between border-b border-border/60 bg-muted/40 px-4 py-2.5 text-xs font-medium text-muted-foreground">
+        <div>
+            <div className="flex items-center justify-between bg-muted/40 px-4 py-2.5 text-xs font-medium text-muted-foreground">
                 <span className="flex items-center gap-2 min-w-0 truncate">
                     {isLoading ? (
                         <>
@@ -30,71 +33,78 @@ const SearchResultsDropdown = ({
                 </span>
 
                 {!isLoading && results.length > 0 && onViewAll && (
-                    <button
+                    <Button
                         type="button"
+                        variant="link"
+                        size="sm"
                         onClick={onViewAll}
-                        className="shrink-0 font-semibold text-primary dark:text-rose-400 hover:underline ml-3"
+                        className="ml-3 h-auto shrink-0 p-0 text-xs font-semibold text-primary dark:text-rose-400"
                     >
                         {t("search.viewAll")}
-                    </button>
+                    </Button>
                 )}
             </div>
 
-            <div className="max-h-[65dvh] sm:max-h-[480px] overflow-y-auto p-2">
-                {!isLoading && results.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-                        <Film className="h-9 w-9 text-muted-foreground/50 mb-2" />
-                        <p className="text-sm font-medium text-muted-foreground">
-                            {t("search.empty")}
-                        </p>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                        {results.map((movie) => (
-                            <button
-                                key={movie.id || movie._id}
-                                type="button"
-                                onClick={() => onSelectMovie(movie.slug)}
-                                className="flex w-full items-center gap-3.5 rounded-xl p-2.5 text-left hover:bg-muted/70 transition-colors group"
-                            >
-                                <img
-                                    src={normalizeImageUrl(movie.posterUrl || movie.poster_url)}
-                                    alt={movie.name}
-                                    loading="lazy"
-                                    decoding="async"
-                                    className="h-24 w-16 rounded-lg object-cover bg-muted shrink-0 border border-border/50 shadow-sm transition-transform duration-200 group-hover:scale-105"
-                                    onError={(e) => {
-                                        if (!e.target.src.endsWith("/NoImage.svg")) {
-                                            e.target.src = "/NoImage.svg";
-                                        }
-                                    }}
-                                />
-                                <div className="flex-1 min-w-0">
-                                    <p className="line-clamp-2 text-[15px] font-semibold leading-snug text-foreground group-hover:text-primary dark:group-hover:text-rose-400 transition-colors">
-                                        {movie.name}
-                                    </p>
-                                    <p className="truncate text-xs text-muted-foreground mt-1">
-                                        {movie.originName || movie.origin_name || ""}
-                                    </p>
-                                    <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                                        {movie.year && (
-                                            <Badge variant="outline" className="text-[11px] px-1.5 py-0 h-5">
-                                                {movie.year}
-                                            </Badge>
-                                        )}
-                                        {movie.quality && (
-                                            <Badge variant="secondary" className="text-[11px] px-1.5 py-0 h-5">
-                                                {movie.quality}
-                                            </Badge>
-                                        )}
+            <Separator />
+
+            <ScrollArea className="h-[min(65dvh,480px)]">
+                <div className="p-2">
+                    {!isLoading && results.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+                            <Film className="h-9 w-9 text-muted-foreground/50 mb-2" />
+                            <p className="text-sm font-medium text-muted-foreground">
+                                {t("search.empty")}
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                            {results.map((movie) => (
+                                <Button
+                                    key={movie.id || movie._id}
+                                    type="button"
+                                    variant="ghost"
+                                    onClick={() => onSelectMovie(movie.slug)}
+                                    className="group flex h-auto w-full items-center justify-start gap-3.5 rounded-xl p-2.5 text-left font-normal whitespace-normal hover:bg-muted/70"
+                                >
+                                    <img
+                                        src={normalizeImageUrl(movie.posterUrl || movie.poster_url)}
+                                        alt={movie.name}
+                                        loading="lazy"
+                                        decoding="async"
+                                        className="h-24 w-16 rounded-lg object-cover bg-muted shrink-0 border border-border/50 shadow-sm transition-transform duration-200 group-hover:scale-105"
+                                        onError={(e) => {
+                                            if (!e.target.src.endsWith("/NoImage.svg")) {
+                                                e.target.src = "/NoImage.svg";
+                                            }
+                                        }}
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <p className="line-clamp-2 text-[15px] font-semibold leading-snug text-foreground group-hover:text-primary dark:group-hover:text-rose-400 transition-colors">
+                                            {movie.name}
+                                        </p>
+                                        <p className="truncate text-xs text-muted-foreground mt-1">
+                                            {movie.originName || movie.origin_name || ""}
+                                        </p>
+                                        <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                                            {movie.year && (
+                                                <Badge variant="outline" className="text-[11px] px-1.5 py-0 h-5">
+                                                    {movie.year}
+                                                </Badge>
+                                            )}
+                                            {movie.quality && (
+                                                <Badge variant="secondary" className="text-[11px] px-1.5 py-0 h-5">
+                                                    {movie.quality}
+                                                </Badge>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                                <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary dark:group-hover:text-rose-400 group-hover:translate-x-0.5 transition-all shrink-0" />
-                            </button>
-                        ))}
-                    </div>
-                )}
-            </div>
+                                    <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary dark:group-hover:text-rose-400 group-hover:translate-x-0.5 transition-all shrink-0" />
+                                </Button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </ScrollArea>
         </div>
     );
 };

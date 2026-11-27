@@ -107,17 +107,19 @@ const PlayerOverlays = ({
             )}
 
             {controls && !hasStarted && !isPlaying && !isBusy && !errorType && (
-                <button
+                <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     onClick={(e) => {
                         e.stopPropagation();
                         onInitialPlay();
                     }}
                     aria-label={t("watch.player.play")}
-                    className="group/cta absolute left-1/2 top-1/2 z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/55 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-primary hover:bg-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-white sm:h-20 sm:w-20"
+                    className="group/cta absolute left-1/2 top-1/2 z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/55 text-white shadow-2xl backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-primary hover:bg-primary hover:text-white focus-visible:ring-white sm:h-20 sm:w-20"
                 >
                     <Play className="ml-1 h-6 w-6 fill-current transition-transform duration-200 group-hover/cta:scale-110 sm:h-9 sm:w-9" />
-                </button>
+                </Button>
             )}
 
             {feedbackBadge && (

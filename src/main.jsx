@@ -11,6 +11,7 @@ import AppToaster from "@components/AppToaster";
 import Spinner from "@components/Spinner";
 import ProtectedRoute from "@components/ProtectedRoute";
 import ErrorPage from "@pages/ErrorPage";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 const CatalogPage = lazy(() => import("@pages/CatalogPage"));
@@ -96,12 +97,14 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
     <StrictMode>
         <ThemeProvider>
-            <AppToaster />
-            <AuthProvider>
-                <FavoritesProvider>
-                    <RouterProvider router={router} />
-                </FavoritesProvider>
-            </AuthProvider>
+            <TooltipProvider delayDuration={300}>
+                <AppToaster />
+                <AuthProvider>
+                    <FavoritesProvider>
+                        <RouterProvider router={router} />
+                    </FavoritesProvider>
+                </AuthProvider>
+            </TooltipProvider>
         </ThemeProvider>
     </StrictMode>
 );
