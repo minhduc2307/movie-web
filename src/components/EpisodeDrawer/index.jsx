@@ -80,7 +80,10 @@ const EpisodeDrawer = ({
                     </div>
                 )}
 
-                <ScrollArea className="flex-1 px-5 py-4">
+                <ScrollArea
+                    className="flex-1 min-h-0 px-5 py-4"
+                    scrollbarClassName="[&>div]:bg-white/35 hover:[&>div]:bg-white/55"
+                >
                     <div className="grid grid-cols-3 gap-2">
                         {chapterList.map((chap, index) => {
                             const isActive = currentChap === index;

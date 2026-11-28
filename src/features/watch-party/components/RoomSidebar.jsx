@@ -79,7 +79,7 @@ const RoomSidebar = ({
                 </TabsContent>
 
                 <TabsContent value="members" className="mt-2 flex-1 min-h-0 overflow-hidden">
-                    <ScrollArea className="h-full">
+                    <ScrollArea className="h-full" scrollbarClassName="[&>div]:bg-white/35 hover:[&>div]:bg-white/55">
                         <MemberList
                             memberSlots={memberSlots}
                             hostUid={hostUid}
@@ -89,7 +89,7 @@ const RoomSidebar = ({
                 </TabsContent>
 
                 <TabsContent value="episodes" className="mt-2 flex-1 min-h-0 overflow-hidden">
-                    <ScrollArea className="h-full">
+                    <ScrollArea className="h-full" scrollbarClassName="[&>div]:bg-white/35 hover:[&>div]:bg-white/55">
                         <div className="p-3 space-y-3">
                     {servers.length > 1 && (
                         <div className="flex flex-wrap gap-1.5">

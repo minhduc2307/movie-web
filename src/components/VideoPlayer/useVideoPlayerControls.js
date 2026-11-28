@@ -94,6 +94,11 @@ export const useVideoPlayerControls = ({
     const lastVolumeRef = useRef(savedAudio.volume > 0 ? savedAudio.volume : 1);
     const isDraggingSeekRef = useRef(false);
     const isHoveringControlsRef = useRef(false);
+    const isFocusedControlsRef = useRef(false);
+    const lastInputWasKeyboardRef = useRef(false);
+    const lastSurfacePointerRef = useRef({ type: "mouse", time: 0 });
+    const showControlsRef = useRef(state.showControls);
+    showControlsRef.current = state.showControls;
 
     const canUsePip =
         typeof document !== "undefined" && Boolean(document.pictureInPictureEnabled);
@@ -126,6 +131,7 @@ export const useVideoPlayerControls = ({
                 state.settingsOpen ||
                 isDraggingSeekRef.current ||
                 isHoveringControlsRef.current ||
+                isFocusedControlsRef.current ||
                 pendingSeekRef.current !== null
             ) {
                 return;
@@ -193,11 +199,25 @@ export const useVideoPlayerControls = ({
             patch({ isFullscreen: Boolean(fsEl) });
         };
 
+        const markPointerIntent = () => {
+            lastInputWasKeyboardRef.current = false;
+        };
+
+        const markKeyboardIntent = (e) => {
+            if (!e.metaKey && !e.ctrlKey && !e.altKey) {
+                lastInputWasKeyboardRef.current = true;
+            }
+        };
+
         document.addEventListener("fullscreenchange", handleFsChange);
         document.addEventListener("webkitfullscreenchange", handleFsChange);
+        document.addEventListener("pointerdown", markPointerIntent, { capture: true, passive: true });
+        document.addEventListener("keydown", markKeyboardIntent, { capture: true, passive: true });
         return () => {
             document.removeEventListener("fullscreenchange", handleFsChange);
             document.removeEventListener("webkitfullscreenchange", handleFsChange);
+            document.removeEventListener("pointerdown", markPointerIntent, { capture: true });
+            document.removeEventListener("keydown", markKeyboardIntent, { capture: true });
             clearHideTimer();
             if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
             if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
@@ -454,6 +474,28 @@ export const useVideoPlayerControls = ({
         ]
     );
 
+    const handleSurfacePointerDown = useCallback((e) => {
+        lastSurfacePointerRef.current = {
+            type: e?.pointerType || "mouse",
+            time: Date.now(),
+        };
+    }, []);
+
+    const handleSurfaceTouchStart = useCallback(() => {
+        lastSurfacePointerRef.current = {
+            type: "touch",
+            time: Date.now(),
+        };
+    }, []);
+
+    const getEffectiveSurfacePointerType = useCallback((e) => {
+        if (e?.nativeEvent?.pointerType) return e.nativeEvent.pointerType;
+        if (Date.now() - lastSurfacePointerRef.current.time < 1000) {
+            return lastSurfacePointerRef.current.type;
+        }
+        return "mouse";
+    }, []);
+
     const handleSurfaceClick = useCallback(
         (e) => {
             if (!controls) return;
@@ -462,7 +504,7 @@ export const useVideoPlayerControls = ({
                 return;
             }
 
-            if (e.nativeEvent?.pointerType === "touch") {
+            if (getEffectiveSurfacePointerType(e) === "touch") {
                 const rect = containerRef.current?.getBoundingClientRect();
                 const ratio = rect && rect.width > 0 ? (e.clientX - rect.left) / rect.width : 0.5;
                 const zone = ratio < 0.32 ? "left" : ratio > 0.68 ? "right" : "center";
@@ -488,9 +530,10 @@ export const useVideoPlayerControls = ({
                 if (touchTapTimerRef.current) clearTimeout(touchTapTimerRef.current);
                 touchTapTimerRef.current = setTimeout(() => {
                     touchTapTimerRef.current = null;
-                    const next = !state.showControls;
+                    const next = !showControlsRef.current;
                     patch({ showControls: next });
                     if (next) scheduleHideControls();
+                    else clearHideTimer();
                 }, TOUCH_DOUBLE_TAP_MS);
                 return;
             }
@@ -505,24 +548,25 @@ export const useVideoPlayerControls = ({
             controls,
             containerRef,
             state.settingsOpen,
-            state.showControls,
+            getEffectiveSurfacePointerType,
             patch,
             skipBy,
             togglePlay,
             scheduleHideControls,
+            clearHideTimer,
         ]
     );
 
     const handleSurfaceDoubleClick = useCallback(
         (e) => {
-            if (!controls || e.nativeEvent?.pointerType === "touch") return;
+            if (!controls || getEffectiveSurfacePointerType(e) === "touch") return;
             if (clickTimerRef.current) {
                 clearTimeout(clickTimerRef.current);
                 clickTimerRef.current = null;
             }
             toggleFullscreen();
         },
-        [controls, toggleFullscreen]
+        [controls, getEffectiveSurfacePointerType, toggleFullscreen]
     );
 
     const handleVideoSeeked = useCallback(
@@ -546,15 +590,21 @@ export const useVideoPlayerControls = ({
         [clearHideTimer, scheduleHideControls]
     );
 
-    const handleControlsEnter = useCallback(() => {
-        isHoveringControlsRef.current = true;
-        clearHideTimer();
-        patch({ showControls: true });
-    }, [clearHideTimer, patch]);
-
-    const handleControlsLeave = useCallback(
+    const handleControlsPointerEnter = useCallback(
         (e) => {
-            // Keep locked if focus/pointer moves between child controls inside the bar
+            // Touch devices do not fire pointerleave reliably, so never hover-lock on touch
+            if (e?.pointerType === "touch") return;
+            isHoveringControlsRef.current = true;
+            clearHideTimer();
+            patch({ showControls: true });
+        },
+        [clearHideTimer, patch]
+    );
+
+    const handleControlsPointerLeave = useCallback(
+        (e) => {
+            if (e?.pointerType === "touch") return;
+            // Keep locked if pointer moves between child controls inside the bar
             if (
                 e?.currentTarget &&
                 e?.relatedTarget instanceof Node &&
@@ -566,6 +616,18 @@ export const useVideoPlayerControls = ({
             scheduleHideControls();
         },
         [scheduleHideControls]
+    );
+
+    const handleControlsFocus = useCallback(
+        (e) => {
+            if (!lastInputWasKeyboardRef.current || !e?.target?.matches?.(":focus-visible")) {
+                return;
+            }
+            isFocusedControlsRef.current = true;
+            clearHideTimer();
+            patch({ showControls: true });
+        },
+        [clearHideTimer, patch]
     );
 
     const handleControlsBlur = useCallback(
@@ -577,26 +639,47 @@ export const useVideoPlayerControls = ({
             ) {
                 return;
             }
-            if (e?.currentTarget?.matches?.(":hover")) {
-                return;
-            }
-            isHoveringControlsRef.current = false;
+            isFocusedControlsRef.current = false;
             scheduleHideControls();
         },
         [scheduleHideControls]
     );
 
-    const handleMouseLeave = useCallback(() => {
-        isHoveringControlsRef.current = false;
-        if (
-            state.isPlaying &&
-            !state.settingsOpen &&
-            !isDraggingSeekRef.current &&
-            pendingSeekRef.current === null
-        ) {
-            patch({ showControls: false });
-        }
-    }, [state.isPlaying, state.settingsOpen, patch]);
+    const handleControlsTouchInteract = useCallback(
+        (e) => {
+            if (e?.pointerType === "touch") {
+                isHoveringControlsRef.current = false;
+                isFocusedControlsRef.current = false;
+            }
+            revealControls();
+        },
+        [revealControls]
+    );
+
+    const handleContainerPointerMove = useCallback(
+        (e) => {
+            if (e?.pointerType === "touch") return;
+            revealControls();
+        },
+        [revealControls]
+    );
+
+    const handleContainerPointerLeave = useCallback(
+        (e) => {
+            if (e?.pointerType === "touch") return;
+            isHoveringControlsRef.current = false;
+            if (
+                state.isPlaying &&
+                !state.settingsOpen &&
+                !isDraggingSeekRef.current &&
+                !isFocusedControlsRef.current &&
+                pendingSeekRef.current === null
+            ) {
+                patch({ showControls: false });
+            }
+        },
+        [state.isPlaying, state.settingsOpen, patch]
+    );
 
     return {
         state,
@@ -612,13 +695,18 @@ export const useVideoPlayerControls = ({
         togglePictureInPicture,
         selectPlaybackRate,
         handleContainerKeyDown,
+        handleContainerPointerMove,
+        handleContainerPointerLeave,
+        handleSurfacePointerDown,
+        handleSurfaceTouchStart,
         handleSurfaceClick,
         handleSurfaceDoubleClick,
         handleVideoSeeked,
         handleDragStateChange,
-        handleControlsEnter,
+        handleControlsPointerEnter,
+        handleControlsPointerLeave,
+        handleControlsFocus,
         handleControlsBlur,
-        handleControlsLeave,
-        handleMouseLeave,
+        handleControlsTouchInteract,
     };
 };

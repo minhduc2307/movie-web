@@ -77,7 +77,7 @@ const MobileDrawer = ({ open, onOpenChange, user, isAuthReady, onLogout }) => {
 
                 <Separator />
 
-                <ScrollArea className="flex-1 px-4 py-4">
+                <ScrollArea className="flex-1 min-h-0 px-4 py-4">
                     <nav className="flex flex-col space-y-1">
                         {mobileNavItems.map((item) => {
                             const isActive = currentFullUrl === item.href;

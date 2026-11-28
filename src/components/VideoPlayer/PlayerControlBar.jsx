@@ -51,9 +51,11 @@ const PlayerControlBar = ({
     onTogglePip,
     onToggleFullscreen,
     onDragStateChange,
-    onControlsEnter,
+    onControlsPointerEnter,
+    onControlsPointerLeave,
+    onControlsFocus,
     onControlsBlur,
-    onControlsLeave,
+    onControlsTouchInteract,
 }) => {
     const { t } = useTranslation();
     const isDraggingRef = useRef(false);
@@ -122,11 +124,14 @@ const PlayerControlBar = ({
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                onPointerDown={(e) => e.stopPropagation()}
-                onMouseEnter={onControlsEnter}
-                onMouseLeave={onControlsLeave}
-                onFocusCapture={onControlsEnter}
-                onBlurCapture={onControlsBlur || onControlsLeave}
+                onPointerDownCapture={(e) => {
+                    e.stopPropagation();
+                    onControlsTouchInteract?.(e);
+                }}
+                onPointerEnter={onControlsPointerEnter}
+                onPointerLeave={onControlsPointerLeave}
+                onFocusCapture={onControlsFocus}
+                onBlurCapture={onControlsBlur}
                 className={cn(showControls ? "pointer-events-auto" : "pointer-events-none")}
             >
                 <PlayerSeekBar

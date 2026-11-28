@@ -95,8 +95,8 @@ const VideoPlayer = forwardRef(
                     ref={containerRef}
                     tabIndex={0}
                     onKeyDown={player.handleContainerKeyDown}
-                    onMouseMove={player.revealControls}
-                    onMouseLeave={player.handleMouseLeave}
+                    onPointerMove={player.handleContainerPointerMove}
+                    onPointerLeave={player.handleContainerPointerLeave}
                     className={cn(
                         FRAME_CLASS,
                         "group/player relative select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary",
@@ -110,6 +110,8 @@ const VideoPlayer = forwardRef(
                         className="h-full w-full object-contain"
                         playsInline
                         preload="metadata"
+                        onPointerDown={player.handleSurfacePointerDown}
+                        onTouchStart={player.handleSurfaceTouchStart}
                         onClick={player.handleSurfaceClick}
                         onDoubleClick={player.handleSurfaceDoubleClick}
                         onPlay={(e) => {
@@ -199,9 +201,11 @@ const VideoPlayer = forwardRef(
                             onTogglePip={player.togglePictureInPicture}
                             onToggleFullscreen={player.toggleFullscreen}
                             onDragStateChange={player.handleDragStateChange}
-                            onControlsEnter={player.handleControlsEnter}
+                            onControlsPointerEnter={player.handleControlsPointerEnter}
+                            onControlsPointerLeave={player.handleControlsPointerLeave}
+                            onControlsFocus={player.handleControlsFocus}
                             onControlsBlur={player.handleControlsBlur}
-                            onControlsLeave={player.handleControlsLeave}
+                            onControlsTouchInteract={player.handleControlsTouchInteract}
                         />
                     )}
                 </div>

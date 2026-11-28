@@ -326,7 +326,12 @@ const Watch = () => {
                                 <p className="text-xs font-bold uppercase tracking-wider text-slate-300">
                                     {t("watch.episodes")} ({chapterList.length})
                                 </p>
-                                <ScrollArea className="max-h-56 pr-2">
+                                <ScrollArea
+                                    type="always"
+                                    className="max-h-60 sm:max-h-72 pr-3"
+                                    viewportClassName="pr-1"
+                                    scrollbarClassName="[&>div]:bg-white/35 hover:[&>div]:bg-white/55"
+                                >
                                     <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                                         {chapterList.map((chap, index) => {
                                             const isActive = safeChapIndex === index;
