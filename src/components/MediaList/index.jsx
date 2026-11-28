@@ -1,18 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ChevronRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronRight, RefreshCw, AlertCircle } from "lucide-react";
 import { HOME_SECTION_LIMIT } from "@/lib/constants";
+import { queryKeys } from "@/lib/queryClient";
+import { Button } from "@/components/ui/button";
+import MovieCarouselRow from "@components/common/MovieCarouselRow";
 import MovieCard from "./MovieCard";
 import MovieCardSkeleton from "./MovieCardSkeleton";
 import { movieService } from "@/services/api";
+
+const CAROUSEL_ITEM_CLASS =
+    "w-[46vw] shrink-0 snap-start sm:w-[30vw] md:w-[22.5vw] lg:w-[19vw] xl:w-[15.7%]";
 
 const MediaList = ({ tab, deferLoad = false }) => {
     const { t } = useTranslation();
     const sectionRef = useRef(null);
     const [shouldFetch, setShouldFetch] = useState(!deferLoad);
-    const [mediaList, setMediaList] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const typeSlug = tab?.typeSlug;
 
     useEffect(() => {
         if (!deferLoad || shouldFetch) return;
@@ -36,34 +42,15 @@ const MediaList = ({ tab, deferLoad = false }) => {
         return () => observer.disconnect();
     }, [deferLoad, shouldFetch]);
 
-    useEffect(() => {
-        if (!shouldFetch) return;
-        let isMounted = true;
-        const typeSlug = tab?.typeSlug;
-        if (!typeSlug) return;
+    const { data, isLoading, isError, refetch } = useQuery({
+        queryKey: queryKeys.byType(typeSlug, { limit: HOME_SECTION_LIMIT }),
+        queryFn: ({ signal }) =>
+            movieService.getMoviesByType(typeSlug, { limit: HOME_SECTION_LIMIT }, signal),
+        enabled: Boolean(shouldFetch && typeSlug),
+    });
 
-        setIsLoading(true);
-        movieService
-            .getMoviesByType(typeSlug, { limit: HOME_SECTION_LIMIT })
-            .then((res) => {
-                if (isMounted) {
-                    setMediaList(res.items || []);
-                }
-            })
-            .catch((err) => {
-                console.error(`Error loading media list (${typeSlug}):`, err);
-            })
-            .finally(() => {
-                if (isMounted) {
-                    setIsLoading(false);
-                }
-            });
-
-        return () => {
-            isMounted = false;
-        };
-    }, [tab?.typeSlug, shouldFetch]);
-
+    const mediaList = data?.items || [];
+    const showSkeleton = !shouldFetch || isLoading;
     const sectionTitle = tab?.titleKey ? t(tab.titleKey) : tab?.title;
     const viewAllLink = tab?.typeSlug ? `/movies?type=${tab.typeSlug}` : "/movies";
 
@@ -86,28 +73,40 @@ const MediaList = ({ tab, deferLoad = false }) => {
                 </Link>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 min-[2000px]:gap-5">
-                {isLoading ? (
-                    Array.from({ length: HOME_SECTION_LIMIT }).map((_, index) => (
-                        <MovieCardSkeleton key={index} />
-                    ))
-                ) : (
-                    mediaList.map((media) => (
-                        <MovieCard
-                            key={media._id || media.id}
-                            name={media.name}
-                            posterUrl={media.posterUrl || media.poster_url}
-                            year={media.year}
-                            time={media.time}
-                            type={media.type}
-                            slug={media.slug}
-                            category={media.category}
-                            quality={media.quality || "FHD"}
-                            episodeCurrent={media.episodeCurrent || media.episode_current}
-                        />
-                    ))
-                )}
-            </div>
+            {isError ? (
+                <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border/70 bg-muted/30 px-4 py-8 text-center">
+                    <AlertCircle className="h-6 w-6 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground">{t("common.loadSectionError")}</p>
+                    <Button type="button" variant="outline" size="sm" onClick={() => refetch()} className="gap-1.5">
+                        <RefreshCw className="h-3.5 w-3.5" />
+                        <span>{t("watch.player.retry")}</span>
+                    </Button>
+                </div>
+            ) : (
+                <MovieCarouselRow>
+                    {showSkeleton
+                        ? Array.from({ length: HOME_SECTION_LIMIT }).map((_, index) => (
+                              <div key={index} className={CAROUSEL_ITEM_CLASS}>
+                                  <MovieCardSkeleton />
+                              </div>
+                          ))
+                        : mediaList.map((media) => (
+                              <div key={media._id || media.id} className={CAROUSEL_ITEM_CLASS}>
+                                  <MovieCard
+                                      name={media.name}
+                                      posterUrl={media.posterUrl || media.poster_url}
+                                      year={media.year}
+                                      time={media.time}
+                                      type={media.type}
+                                      slug={media.slug}
+                                      category={media.category}
+                                      quality={media.quality || "FHD"}
+                                      episodeCurrent={media.episodeCurrent || media.episode_current}
+                                  />
+                              </div>
+                          ))}
+                </MovieCarouselRow>
+            )}
         </section>
     );
 };

@@ -17,6 +17,7 @@
     "tvShows": "TV Shows",
     "theaterMovies": "Phim Chiếu Rạp",
     "favorites": "Phim yêu thích",
+    "profile": "Hồ sơ cá nhân",
     "account": "Tài khoản",
     "loggedIn": "Đã đăng nhập",
     "login": "Đăng nhập",
@@ -130,7 +131,8 @@
     "switchToLight": "Chuyển sang giao diện sáng",
     "switchToDark": "Chuyển sang giao diện tối",
     "backHome": "Trở về Trang chủ",
-    "loading": "Đang tải dữ liệu..."
+    "loading": "Đang tải dữ liệu...",
+    "loadSectionError": "Không thể tải dữ liệu lúc này. Vui lòng thử lại."
   },
   "auth": {
     "loginTitle": "Đăng nhập",
@@ -188,13 +190,51 @@
     "language": "Ngôn ngữ",
     "views": "Lượt xem",
     "episodes": "Số tập",
-    "notFound": "Không tìm thấy thông tin phim"
+    "notFound": "Không tìm thấy thông tin phim",
+    "relatedTitle": "Có thể bạn cũng thích"
+  },
+  "history": {
+    "continueWatching": "Tiếp tục xem",
+    "remainingMin": "Còn {{count}} phút",
+    "removeItem": "Xóa khỏi danh sách xem tiếp",
+    "resumeEpisode": "Xem tiếp {{episode}} ({{time}})",
+    "resumeMovie": "Xem tiếp ({{time}})"
+  },
+  "profile": {
+    "title": "Hồ sơ cá nhân",
+    "basicInfo": "Thông tin hiển thị",
+    "basicInfoDesc": "Cập nhật tên hiển thị của bạn trên Watch Party và tài khoản",
+    "saveChanges": "Lưu thay đổi",
+    "nameUpdated": "Đã cập nhật tên hiển thị",
+    "security": "Đổi mật khẩu",
+    "securityDesc": "Nhập mật khẩu hiện tại để xác thực trước khi đặt mật khẩu mới",
+    "currentPassword": "Mật khẩu hiện tại",
+    "newPassword": "Mật khẩu mới",
+    "updatePassword": "Cập nhật mật khẩu",
+    "passwordUpdated": "Đổi mật khẩu thành công",
+    "historyCount": "{{count}} phim đang xem dở",
+    "clearHistoryTitle": "Lịch sử xem phim",
+    "clearHistoryDesc": "Xóa toàn bộ tiến độ và danh sách Tiếp tục xem trên tài khoản này",
+    "clearHistoryBtn": "Xóa lịch sử xem",
+    "historyCleared": "Đã xóa toàn bộ lịch sử xem"
   },
   "watch": {
     "close": "Đóng trình phát",
     "episodes": "Danh sách tập",
     "server": "Máy chủ",
     "episodePrefix": "Tập",
+    "cinemaMode": "Chế độ rạp chiếu (Cinema Mode)",
+    "autoNextTitle": "Tập tiếp theo sau {{seconds}} giây",
+    "playNextNow": "Phát ngay",
+    "shortcutsTitle": "Phím tắt trình phát",
+    "shortcutsDesc": "Dùng bàn phím để điều khiển nhanh khi xem trên máy tính",
+    "shortcutPlayPause": "Phát / Tạm dừng",
+    "shortcutSeek": "Tua lùi / Tua tới 10 giây",
+    "shortcutVolume": "Tăng / Giảm âm lượng",
+    "shortcutMute": "Tắt / Bật tiếng",
+    "shortcutFullscreen": "Toàn màn hình",
+    "shortcutPip": "Hình trong hình (PiP)",
+    "shortcutPercent": "Nhảy tới 0% – 90% thời lượng",
     "player": {
       "play": "Phát (Space)",
       "pause": "Tạm dừng (Space)",

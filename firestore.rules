@@ -40,6 +40,56 @@ service cloud.firestore {
         && request.resource.data.addedAt == request.time;
     }
 
+    match /users/{uid}/history/{movieId} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly([
+          'movieId',
+          'slug',
+          'name',
+          'originName',
+          'posterUrl',
+          'thumbUrl',
+          'year',
+          'type',
+          'quality',
+          'serverIdx',
+          'episodeIndex',
+          'episodeName',
+          'currentTime',
+          'duration',
+          'updatedAt'
+        ])
+        && request.resource.data.movieId == movieId
+        && request.resource.data.movieId is string
+        && request.resource.data.movieId.size() >= 1
+        && request.resource.data.movieId.size() <= 128
+        && request.resource.data.slug is string
+        && request.resource.data.slug.size() >= 1
+        && request.resource.data.slug.size() <= 200
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 300
+        && (!('originName' in request.resource.data) || (request.resource.data.originName is string && request.resource.data.originName.size() <= 300))
+        && (!('posterUrl' in request.resource.data) || (request.resource.data.posterUrl is string && request.resource.data.posterUrl.size() <= 500))
+        && (!('thumbUrl' in request.resource.data) || (request.resource.data.thumbUrl is string && request.resource.data.thumbUrl.size() <= 500))
+        && (!('year' in request.resource.data) || request.resource.data.year == null || request.resource.data.year is int || request.resource.data.year is float)
+        && (!('type' in request.resource.data) || (request.resource.data.type is string && request.resource.data.type.size() <= 50))
+        && (!('quality' in request.resource.data) || (request.resource.data.quality is string && request.resource.data.quality.size() <= 50))
+        && request.resource.data.serverIdx is int
+        && request.resource.data.serverIdx >= 0
+        && request.resource.data.episodeIndex is int
+        && request.resource.data.episodeIndex >= 0
+        && (!('episodeName' in request.resource.data) || (request.resource.data.episodeName is string && request.resource.data.episodeName.size() <= 100))
+        && (request.resource.data.currentTime is int || request.resource.data.currentTime is float)
+        && request.resource.data.currentTime >= 0
+        && (request.resource.data.duration is int || request.resource.data.duration is float)
+        && request.resource.data.duration >= 0
+        && request.resource.data.updatedAt == request.time;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

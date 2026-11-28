@@ -17,6 +17,7 @@
     "tvShows": "TV Shows",
     "theaterMovies": "In Theaters",
     "favorites": "Favorites",
+    "profile": "Profile",
     "account": "Account",
     "loggedIn": "Signed in",
     "login": "Sign In",
@@ -130,7 +131,8 @@
     "switchToLight": "Switch to light mode",
     "switchToDark": "Switch to dark mode",
     "backHome": "Back to Home",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "loadSectionError": "Failed to load data right now. Please try again."
   },
   "auth": {
     "loginTitle": "Sign In",
@@ -188,13 +190,51 @@
     "language": "Language",
     "views": "Views",
     "episodes": "Episodes",
-    "notFound": "Movie details not found"
+    "notFound": "Movie details not found",
+    "relatedTitle": "More Like This"
+  },
+  "history": {
+    "continueWatching": "Continue Watching",
+    "remainingMin": "{{count}} min left",
+    "removeItem": "Remove from Continue Watching",
+    "resumeEpisode": "Resume {{episode}} ({{time}})",
+    "resumeMovie": "Resume ({{time}})"
+  },
+  "profile": {
+    "title": "Profile",
+    "basicInfo": "Display Profile",
+    "basicInfoDesc": "Update the display name shown across Watch Party and your account",
+    "saveChanges": "Save changes",
+    "nameUpdated": "Display name updated",
+    "security": "Change Password",
+    "securityDesc": "Verify your current password before choosing a new password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "updatePassword": "Update password",
+    "passwordUpdated": "Password updated successfully",
+    "historyCount": "{{count}} titles in progress",
+    "clearHistoryTitle": "Watch History",
+    "clearHistoryDesc": "Clear all saved playback progress and Continue Watching items",
+    "clearHistoryBtn": "Clear watch history",
+    "historyCleared": "Watch history cleared"
   },
   "watch": {
     "close": "Close player",
     "episodes": "Episodes",
     "server": "Server",
     "episodePrefix": "Ep",
+    "cinemaMode": "Cinema Mode",
+    "autoNextTitle": "Next episode in {{seconds}}s",
+    "playNextNow": "Play now",
+    "shortcutsTitle": "Player Keyboard Shortcuts",
+    "shortcutsDesc": "Control playback quickly with your keyboard",
+    "shortcutPlayPause": "Play / Pause",
+    "shortcutSeek": "Seek backward / forward 10s",
+    "shortcutVolume": "Volume up / down",
+    "shortcutMute": "Mute / Unmute",
+    "shortcutFullscreen": "Toggle fullscreen",
+    "shortcutPip": "Picture-in-Picture (PiP)",
+    "shortcutPercent": "Jump to 0% – 90% of video",
     "player": {
       "play": "Play (Space)",
       "pause": "Pause (Space)",

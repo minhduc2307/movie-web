@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { normalizeImageUrl, optimizeImageUrl } from "@/services/api";
 import { localizeMovieMetaText } from "@lib/movieUtils";
+import { formatMediaTime } from "@/components/VideoPlayer/playerUtils";
 import { useWatchPartyTrigger } from "@/hooks/useWatchPartyTrigger";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +27,7 @@ const MovieHero = ({
     movieInfo,
     episodes = [],
     trailerKey,
+    savedProgress = null,
     isFavorited,
     onToggleFavorite,
     onOpenTrailer,
@@ -37,6 +39,12 @@ const MovieHero = ({
         setCreateRoomOpen,
         openWatchParty,
     } = useWatchPartyTrigger(episodes);
+
+    const hasResumableProgress = Boolean(savedProgress && savedProgress.currentTime > 10);
+    const watchPath = hasResumableProgress && (savedProgress.serverIdx > 0 || savedProgress.episodeIndex > 0)
+        ? `/watch/${movieInfo.slug}?srv=${savedProgress.serverIdx + 1}&ep=${savedProgress.episodeIndex + 1}`
+        : `/watch/${movieInfo.slug}`;
+    const resumeTimeLabel = hasResumableProgress ? formatMediaTime(savedProgress.currentTime) : "";
 
     const voteAverage = movieInfo.tmdb?.vote_average
         ? Number(movieInfo.tmdb.vote_average).toFixed(1)
@@ -197,9 +205,18 @@ const MovieHero = ({
                                 size="lg"
                                 className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-semibold px-7 rounded-xl shadow-lg shadow-primary/30 gap-2"
                             >
-                                <Link to={`/watch/${movieInfo.slug}`}>
+                                <Link to={watchPath}>
                                     <Play className="h-5 w-5 fill-current" />
-                                    <span>{t("hero.watchNow")}</span>
+                                    <span>
+                                        {hasResumableProgress
+                                            ? savedProgress.episodeName
+                                                ? t("history.resumeEpisode", {
+                                                      episode: savedProgress.episodeName,
+                                                      time: resumeTimeLabel,
+                                                  })
+                                                : t("history.resumeMovie", { time: resumeTimeLabel })
+                                            : t("hero.watchNow")}
+                                    </span>
                                 </Link>
                             </Button>
 

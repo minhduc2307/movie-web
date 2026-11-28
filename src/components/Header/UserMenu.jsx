@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Heart, LogOut } from "lucide-react";
+import { Heart, LogOut, User } from "lucide-react";
 import { getUserInitial } from "@lib/userUtils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -81,6 +81,15 @@ const UserMenu = ({ user, isAuthReady, onLogout }) => {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                    <Link
+                        to="/profile"
+                        className="flex cursor-pointer items-center gap-2 font-medium"
+                    >
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        <span>{t("nav.profile")}</span>
+                    </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                     <Link
                         to="/favorites"

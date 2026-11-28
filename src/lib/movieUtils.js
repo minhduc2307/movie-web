@@ -1,3 +1,11 @@
+/**
+ * Strips raw HTML tags from API synopsis fields and trims whitespace.
+ */
+export const stripHtml = (value) => {
+    if (!value || typeof value !== "string") return "";
+    return value.replace(/<[^>]*>/g, "").trim();
+};
+
 export const isSafeHttpUrl = (url) => {
     if (!url || typeof url !== "string") return false;
     try {

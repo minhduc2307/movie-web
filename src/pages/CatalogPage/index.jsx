@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { SlidersHorizontal, RotateCcw, Film, Home } from "lucide-react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { SlidersHorizontal, RotateCcw, Film, Home, RefreshCw } from "lucide-react";
 import { movieService } from "@/services/api";
+import { queryKeys } from "@/lib/queryClient";
 import MovieCard from "@components/MediaList/MovieCard";
 import MovieCardSkeleton from "@components/MediaList/MovieCardSkeleton";
 import { Button } from "@/components/ui/button";
@@ -31,75 +33,73 @@ const CatalogPage = () => {
     const activeSort = searchParams.get("sort") || "modified.time";
     const activePage = Math.max(1, Number(searchParams.get("page")) || 1);
 
-    const [categories, setCategories] = useState([]);
-    const [countries, setCountries] = useState([]);
-    const [years, setYears] = useState([]);
-    const [movies, setMovies] = useState([]);
-    const [pagination, setPagination] = useState({ totalItems: 0, totalPages: 1 });
-    const [isLoading, setIsLoading] = useState(true);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-    useEffect(() => {
-        let isMounted = true;
-        Promise.all([
-            movieService.getCategories().catch(() => null),
-            movieService.getCountries().catch(() => null),
-            movieService.getYears().catch(() => null),
-        ]).then(([catRes, countryRes, yearRes]) => {
-            if (!isMounted) return;
-            setCategories(catRes?.data?.items || []);
-            setCountries(countryRes?.data?.items || []);
-            setYears((yearRes?.data?.items || []).slice(0, 15));
-        });
-        return () => {
-            isMounted = false;
-        };
-    }, []);
+    const { data: catRes } = useQuery({
+        queryKey: queryKeys.categories(),
+        queryFn: () => movieService.getCategories(),
+        staleTime: 10 * 60 * 1000,
+    });
+    const { data: countryRes } = useQuery({
+        queryKey: queryKeys.countries(),
+        queryFn: () => movieService.getCountries(),
+        staleTime: 10 * 60 * 1000,
+    });
+    const { data: yearRes } = useQuery({
+        queryKey: queryKeys.years(),
+        queryFn: () => movieService.getYears(),
+        staleTime: 10 * 60 * 1000,
+    });
+
+    const categories = catRes?.data?.items || [];
+    const countries = countryRes?.data?.items || [];
+    const years = (yearRes?.data?.items || []).slice(0, 15);
+
+    const catalogFilterKey = {
+        keyword: activeKeyword.trim(),
+        type: activeType,
+        category: activeCategory,
+        country: activeCountry,
+        year: activeYear,
+        sort: activeSort,
+        page: activePage,
+    };
+
+    const { data: catalogRes, isLoading, isError, refetch } = useQuery({
+        queryKey: queryKeys.catalog(catalogFilterKey),
+        queryFn: ({ signal }) =>
+            activeKeyword.trim()
+                ? movieService.searchMovies(
+                      activeKeyword.trim(),
+                      { page: activePage, limit: 24 },
+                      signal
+                  )
+                : movieService.getMoviesByType(
+                      activeType,
+                      {
+                          page: activePage,
+                          limit: 24,
+                          sort_field: activeSort,
+                          sort_type: "desc",
+                          ...(activeCategory ? { category: activeCategory } : {}),
+                          ...(activeCountry ? { country: activeCountry } : {}),
+                          ...(activeYear ? { year: activeYear } : {}),
+                      },
+                      signal
+                  ),
+        placeholderData: keepPreviousData,
+    });
+
+    const movies = catalogRes?.items || [];
+    const totalItems = catalogRes?.pagination?.totalItems || 0;
+    const perPage = catalogRes?.pagination?.totalItemsPerPage || 24;
+    const pagination = {
+        totalItems,
+        totalPages: Math.max(1, Math.ceil(totalItems / perPage)),
+    };
 
     useEffect(() => {
-        const controller = new AbortController();
-        setIsLoading(true);
-
-        const requestPromise = activeKeyword.trim()
-            ? movieService.searchMovies(
-                  activeKeyword.trim(),
-                  { page: activePage, limit: 24 },
-                  controller.signal
-              )
-            : movieService.getMoviesByType(
-                  activeType,
-                  {
-                      page: activePage,
-                      limit: 24,
-                      sort_field: activeSort,
-                      sort_type: "desc",
-                      ...(activeCategory ? { category: activeCategory } : {}),
-                      ...(activeCountry ? { country: activeCountry } : {}),
-                      ...(activeYear ? { year: activeYear } : {}),
-                  },
-                  controller.signal
-              );
-
-        requestPromise
-            .then((res) => {
-                if (controller.signal.aborted) return;
-                setMovies(res.items || []);
-                const totalItems = res.pagination?.totalItems || 0;
-                const perPage = res.pagination?.totalItemsPerPage || 24;
-                setPagination({
-                    totalItems,
-                    totalPages: Math.max(1, Math.ceil(totalItems / perPage)),
-                });
-            })
-            .catch((err) => {
-                if (err.name !== "AbortError") console.error("Catalog error:", err);
-            })
-            .finally(() => {
-                if (!controller.signal.aborted) setIsLoading(false);
-            });
-
         window.scrollTo({ top: 0, behavior: "smooth" });
-        return () => controller.abort();
     }, [activeKeyword, activeType, activeCategory, activeCountry, activeYear, activeSort, activePage]);
 
     const updateFilter = (key, value) => {
@@ -219,6 +219,15 @@ const CatalogPage = () => {
                                 {Array.from({ length: 12 }).map((_, idx) => (
                                     <MovieCardSkeleton key={idx} />
                                 ))}
+                            </div>
+                        ) : isError ? (
+                            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/40 py-20 px-4 text-center">
+                                <Film className="h-10 w-10 text-muted-foreground mb-3" />
+                                <p className="text-sm text-muted-foreground">{t("common.loadSectionError")}</p>
+                                <Button variant="outline" onClick={() => refetch()} className="mt-4 gap-2">
+                                    <RefreshCw className="h-4 w-4" />
+                                    <span>{t("watch.player.retry")}</span>
+                                </Button>
                             </div>
                         ) : movies.length === 0 ? (
                             <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/40 py-20 px-4 text-center">

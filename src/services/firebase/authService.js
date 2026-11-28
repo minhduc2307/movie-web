@@ -1,8 +1,11 @@
 import {
     createUserWithEmailAndPassword,
+    EmailAuthProvider,
     onAuthStateChanged,
+    reauthenticateWithCredential,
     signInWithEmailAndPassword,
     signOut,
+    updatePassword,
     updateProfile,
 } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase/auth";
@@ -71,6 +74,25 @@ export const signInWithEmail = async ({ email, password }) => {
 export const signOutUser = async () => {
     const auth = getFirebaseAuth();
     await signOut(auth);
+};
+
+export const updateUserDisplayName = async (displayName) => {
+    const auth = getFirebaseAuth();
+    if (!auth.currentUser) throw new Error("NOT_AUTHENTICATED");
+    const cleanName = String(displayName || "").trim();
+    await updateProfile(auth.currentUser, { displayName: cleanName });
+    profileListeners.forEach((listener) => listener(auth.currentUser));
+    return normalizeAuthUser(auth.currentUser);
+};
+
+export const changeUserPassword = async ({ currentPassword, newPassword }) => {
+    const auth = getFirebaseAuth();
+    const currentUser = auth.currentUser;
+    if (!currentUser?.email) throw new Error("NOT_AUTHENTICATED");
+
+    const credential = EmailAuthProvider.credential(currentUser.email, currentPassword);
+    await reauthenticateWithCredential(currentUser, credential);
+    await updatePassword(currentUser, newPassword);
 };
 
 export const mapAuthErrorToKey = (error) => {

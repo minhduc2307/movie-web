@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useRef } from "react";
+import { forwardRef, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useHlsPlayer } from "@/hooks/useHlsPlayer";
 import { isSafeHttpUrl } from "@lib/movieUtils";
@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import PlayerControlBar from "./PlayerControlBar";
 import PlayerOverlays from "./PlayerOverlays";
 import { useVideoPlayerControls } from "./useVideoPlayerControls";
+import { SEEK_STEP_SECONDS } from "./playerUtils";
 
 const FRAME_CLASS =
     "w-full max-w-[min(100%,calc((100dvh-6rem)*16/9))] aspect-video max-h-full overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-white/10";
@@ -16,6 +17,7 @@ const VideoPlayer = forwardRef(
             srcMovie,
             embedUrl,
             title,
+            posterUrl,
             autoPlay = true,
             controls = true,
             startWithControls = false,
@@ -29,6 +31,8 @@ const VideoPlayer = forwardRef(
             onPlay,
             onPause,
             onSeeked,
+            onTimeUpdate,
+            onNextEpisode,
             onWaiting,
             onCanPlay,
             onLoadedMetadata,
@@ -82,6 +86,48 @@ const VideoPlayer = forwardRef(
             onFatalError: onStreamError,
         });
 
+        useEffect(() => {
+            if (!controls || typeof navigator === "undefined" || !("mediaSession" in navigator)) {
+                return;
+            }
+            try {
+                if (typeof MediaMetadata !== "undefined" && title) {
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title,
+                        artwork: posterUrl ? [{ src: posterUrl }] : [],
+                    });
+                }
+                navigator.mediaSession.setActionHandler("play", () => {
+                    if (videoRef.current?.paused) player.togglePlay();
+                });
+                navigator.mediaSession.setActionHandler("pause", () => {
+                    if (videoRef.current && !videoRef.current.paused) player.togglePlay();
+                });
+                navigator.mediaSession.setActionHandler("seekbackward", () => {
+                    player.skipBy(-SEEK_STEP_SECONDS);
+                });
+                navigator.mediaSession.setActionHandler("seekforward", () => {
+                    player.skipBy(SEEK_STEP_SECONDS);
+                });
+                navigator.mediaSession.setActionHandler(
+                    "nexttrack",
+                    onNextEpisode ? () => onNextEpisode() : null
+                );
+            } catch {
+                // Ignore unsupported MediaSession actions
+            }
+
+            return () => {
+                try {
+                    ["play", "pause", "seekbackward", "seekforward", "nexttrack"].forEach(
+                        (action) => navigator.mediaSession.setActionHandler(action, null)
+                    );
+                } catch {
+                    // Ignore cleanup errors
+                }
+            };
+        }, [controls, title, posterUrl, onNextEpisode, player]);
+
         if (srcMovie && !state.useEmbedFallback) {
             const shouldHideCursor =
                 controls &&
@@ -131,6 +177,7 @@ const VideoPlayer = forwardRef(
                             player.handleVideoSeeked(e.currentTarget.currentTime);
                             onSeeked?.(e);
                         }}
+                        onTimeUpdate={(e) => onTimeUpdate?.(e)}
                         onWaiting={(e) => {
                             player.patch({ isBuffering: true });
                             onWaiting?.(e);

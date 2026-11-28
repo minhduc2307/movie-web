@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { normalizeImageUrl, optimizeImageUrl } from "@/services/api";
 import { localizeMovieMetaText } from "@lib/movieUtils";
+import { prefetchMovieDetail } from "@/lib/queryClient";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Play, Clock } from "lucide-react";
@@ -33,6 +34,7 @@ const MovieCard = ({
     episodeCurrent,
     reserveTopRight = false,
     fetchPriority = "low",
+    progressPercent = null,
 }) => {
     const { t, i18n } = useTranslation();
     const rawGenre =
@@ -44,9 +46,15 @@ const MovieCard = ({
     const statusBadge = localizeMovieMetaText(episodeCurrent || quality, i18n.language);
     const formattedTime = localizeMovieMetaText(time, i18n.language);
 
+    const handlePrefetch = () => {
+        if (slug) prefetchMovieDetail(slug);
+    };
+
     return (
         <Link
             to={`/movies/${slug}`}
+            onMouseEnter={handlePrefetch}
+            onFocus={handlePrefetch}
             className="group block h-full select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
         >
             <Card className="relative flex h-full flex-col overflow-hidden rounded-xl border-border/80 bg-card shadow-sm dark:shadow-none transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10">
@@ -96,6 +104,15 @@ const MovieCard = ({
                             <Play className="h-6 w-6 fill-current ml-0.5" />
                         </div>
                     </div>
+
+                    {typeof progressPercent === "number" && progressPercent > 0 && (
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-1 bg-white/25">
+                            <div
+                                className="h-full bg-primary transition-[width]"
+                                style={{ width: `${Math.min(100, Math.max(2, progressPercent))}%` }}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {/* Movie Info Block */}

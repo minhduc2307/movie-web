@@ -1,11 +1,13 @@
 import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
 import Root from "@pages/Root";
 import "./i18n";
 import "./index.css";
 import AuthProvider from "./context/AuthProvider";
 import FavoritesProvider from "./context/FavoritesProvider";
+import WatchHistoryProvider from "./context/WatchHistoryProvider";
 import ThemeProvider from "./context/ThemeProvider";
 import AppToaster from "@components/AppToaster";
 import Spinner from "@components/Spinner";
@@ -13,6 +15,7 @@ import ProtectedRoute from "@components/ProtectedRoute";
 import ErrorPage from "@pages/ErrorPage";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { movieService } from "@/services/api";
+import { queryClient } from "@/lib/queryClient";
 
 // Kick off Hero spotlight fetch in parallel with React route hydration on "/"
 if (typeof window !== "undefined" && window.location.pathname === "/") {
@@ -25,6 +28,7 @@ const MovieDetail = lazy(() => import("@pages/MovieDetail"));
 const Watch = lazy(() => import("@pages/Watch"));
 const RoomPage = lazy(() => import("@pages/RoomPage"));
 const FavoriteList = lazy(() => import("@pages/FavoriteList"));
+const ProfilePage = lazy(() => import("@pages/ProfilePage"));
 const SignIn = lazy(() => import("@pages/SignIn"));
 const SignUp = lazy(() => import("@pages/SignUp"));
 const NotFound = lazy(() => import("@pages/NotFound"));
@@ -51,6 +55,14 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <FavoriteList />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "/profile",
+                element: (
+                    <ProtectedRoute>
+                        <ProfilePage />
                     </ProtectedRoute>
                 ),
             },
@@ -102,15 +114,19 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
-        <ThemeProvider>
-            <TooltipProvider delayDuration={300}>
-                <AppToaster />
-                <AuthProvider>
-                    <FavoritesProvider>
-                        <RouterProvider router={router} />
-                    </FavoritesProvider>
-                </AuthProvider>
-            </TooltipProvider>
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+            <ThemeProvider>
+                <TooltipProvider delayDuration={300}>
+                    <AppToaster />
+                    <AuthProvider>
+                        <FavoritesProvider>
+                            <WatchHistoryProvider>
+                                <RouterProvider router={router} />
+                            </WatchHistoryProvider>
+                        </FavoritesProvider>
+                    </AuthProvider>
+                </TooltipProvider>
+            </ThemeProvider>
+        </QueryClientProvider>
     </StrictMode>
 );

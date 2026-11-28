@@ -10,6 +10,7 @@ import {
     Tv,
     MonitorPlay,
     Sparkles,
+    User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -98,16 +99,28 @@ const MobileDrawer = ({ open, onOpenChange, user, isAuthReady, onLogout }) => {
                         })}
 
                         {user && (
-                            <Button
-                                asChild
-                                variant={location.pathname === "/favorites" ? "default" : "ghost"}
-                                className="h-11 w-full justify-start gap-3 px-3.5 text-sm font-medium"
-                            >
-                                <Link to="/favorites" onClick={closeDrawer}>
-                                    <Heart className="h-4 w-4 text-rose-500 fill-rose-500/20" />
-                                    <span>{t("nav.favorites")}</span>
-                                </Link>
-                            </Button>
+                            <>
+                                <Button
+                                    asChild
+                                    variant={location.pathname === "/favorites" ? "default" : "ghost"}
+                                    className="h-11 w-full justify-start gap-3 px-3.5 text-sm font-medium"
+                                >
+                                    <Link to="/favorites" onClick={closeDrawer}>
+                                        <Heart className="h-4 w-4 text-rose-500 fill-rose-500/20" />
+                                        <span>{t("nav.favorites")}</span>
+                                    </Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    variant={location.pathname === "/profile" ? "default" : "ghost"}
+                                    className="h-11 w-full justify-start gap-3 px-3.5 text-sm font-medium"
+                                >
+                                    <Link to="/profile" onClick={closeDrawer}>
+                                        <User className="h-4 w-4" />
+                                        <span>{t("nav.profile")}</span>
+                                    </Link>
+                                </Button>
+                            </>
                         )}
                     </nav>
                 </ScrollArea>

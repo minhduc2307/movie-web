@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { normalizeImageUrl, optimizeImageUrl, movieService } from "@/services/api";
-import { localizeMovieMetaText } from "@lib/movieUtils";
+import { localizeMovieMetaText, stripHtml } from "@lib/movieUtils";
 import { cn } from "@/lib/utils";
 import HeroSlideContent from "./HeroSlideContent";
 
@@ -125,14 +125,14 @@ const Movie = ({ movies = [] }) => {
     const rating = rawRating && Number(rawRating) > 0 ? Number(rawRating).toFixed(1) : "8.6";
 
     const rawContent = activeDetail?.content || currentMovie.content || currentMovie.description;
-    const cleanDescription = rawContent
-        ? rawContent.replace(/<[^>]*>/g, "").trim()
-        : t("hero.fallbackDesc", {
-              name: currentMovie.name,
-              subtitle: currentMovie.originName || currentMovie.year || "",
-              genre: categoryName || t("genres.featured"),
-              quality: currentMovie.quality || "FHD",
-          });
+    const cleanDescription =
+        stripHtml(rawContent) ||
+        t("hero.fallbackDesc", {
+            name: currentMovie.name,
+            subtitle: currentMovie.originName || currentMovie.year || "",
+            genre: categoryName || t("genres.featured"),
+            quality: currentMovie.quality || "FHD",
+        });
 
     const handleTouchStart = (e) => {
         if (e.touches && e.touches[0]) {

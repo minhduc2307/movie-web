@@ -1,16 +1,14 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Globe, Users, Clapperboard } from "lucide-react";
-import { localizeMovieMetaText } from "@lib/movieUtils";
+import { localizeMovieMetaText, stripHtml } from "@lib/movieUtils";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const MovieInfoGrid = ({ movieInfo }) => {
     const { t, i18n } = useTranslation();
 
-    const cleanContent = movieInfo.content
-        ? movieInfo.content.replace(/<[^>]*>/g, "").trim()
-        : "";
+    const cleanContent = stripHtml(movieInfo.content);
     const directors = (movieInfo.director || []).filter(Boolean);
     const actors = (movieInfo.actor || []).filter(Boolean);
     const countries = movieInfo.country || [];

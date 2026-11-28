@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 import { Clapperboard } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,8 @@ import {
 import { AppTooltip } from "@/components/common";
 import { toast } from "sonner";
 import { movieService } from "@/services/api";
+import { queryKeys } from "@/lib/queryClient";
+import { localizeMovieMetaText } from "@lib/movieUtils";
 import { EMAIL_PATTERN } from "@lib/userUtils";
 import { Facebook, Youtube, Twitter, Instagram } from "./SocialIcons";
 
@@ -37,23 +40,6 @@ const DEFAULT_FEATURED_GENRES = [
     { name: "Tình Cảm", slug: "tinh-cam" },
     { name: "Viễn Tưởng", slug: "vien-tuong" },
 ];
-
-const GENRE_EN_MAP = {
-    "chinh-kich": "Drama",
-    "tam-ly": "Psychological",
-    "hanh-dong": "Action",
-    "hai-huoc": "Comedy",
-    "tinh-cam": "Romance",
-    "vien-tuong": "Sci-Fi",
-    "kinh-di": "Horror",
-    "co-trang": "Historical",
-    "phieu-luu": "Adventure",
-    "hinh-su": "Crime",
-    "bi-an": "Mystery",
-    "khoa-hoc": "Science",
-    "gia-dinh": "Family",
-    "chien-tranh": "War",
-};
 
 const SUPPORT_TOPICS = [
     { key: "topicDmca", labelKey: "footer.topicDmca", bodyKey: "footer.topics.dmca" },
@@ -96,23 +82,13 @@ const Footer = () => {
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState("");
     const [activeTopic, setActiveTopic] = useState(null);
-    const [featuredGenres, setFeaturedGenres] = useState(DEFAULT_FEATURED_GENRES);
 
-    useEffect(() => {
-        let isMounted = true;
-        movieService
-            .getCategories()
-            .then((res) => {
-                if (!isMounted) return;
-                setFeaturedGenres(selectFeaturedGenres(res?.data?.items));
-            })
-            .catch(() => {
-                // Keep API-aligned fallback genres silently
-            });
-        return () => {
-            isMounted = false;
-        };
-    }, []);
+    const { data: categoriesRes } = useQuery({
+        queryKey: queryKeys.categories(),
+        queryFn: () => movieService.getCategories(),
+        staleTime: 10 * 60 * 1000,
+    });
+    const featuredGenres = selectFeaturedGenres(categoriesRes?.data?.items);
 
     const exploreLinks = [
         { label: t("nav.newMovies"), to: "/movies" },
@@ -140,8 +116,6 @@ const Footer = () => {
         toast.success(t("footer.newsletterSuccess"), { id: "newsletter-ok" });
         setEmail("");
     };
-
-    const isEnglish = i18n.language === "en";
 
     return (
         <footer className="w-full border-t border-border/60 bg-card/30 text-muted-foreground transition-colors">
@@ -247,7 +221,7 @@ const Footer = () => {
                                         to={`/movies?category=${genre.slug}`}
                                         className="inline-block py-0.5 text-muted-foreground transition-colors hover:text-primary dark:hover:text-rose-400"
                                     >
-                                        {isEnglish ? GENRE_EN_MAP[genre.slug] || genre.name : genre.name}
+                                        {localizeMovieMetaText(genre.name, i18n.language)}
                                     </Link>
                                 </li>
                             ))}

@@ -57,6 +57,15 @@ input:-webkit-autofill:hover {
     content-visibility: auto;
     contain-intrinsic-size: 1px 420px;
   }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Custom sleek scrollbar for all scrollable containers (Light & Dark aware) */
